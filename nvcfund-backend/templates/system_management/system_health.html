@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}System Health - NVC Banking Platform{% endblock %}
+
+{% block head %}
+<style>
+    .system-health {
+        background: linear-gradient(135deg, #581c87 0%, #7c3aed 100%);
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 20px;
+    }
+    
+    .health-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="system-health">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-heartbeat"></i> System Health</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="health-card">
+                <h3>{{ health_data.cpu_usage or '0' }}%</h3>
+                <p>CPU Usage</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="health-card">
+                <h3>{{ health_data.memory_usage or '0' }}%</h3>
+                <p>Memory Usage</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="health-card">
+                <h3>{{ health_data.disk_usage or '0' }}%</h3>
+                <p>Disk Usage</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="health-card">
+                <h3>{{ health_data.uptime or '0' }}h</h3>
+                <p>System Uptime</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <h2>System Status</h2>
+            {% for service in health_data.services or [] %}
+            <div class="health-card">
+                <h5>{{ service.name }}</h5>
+                <p>Status: {{ service.status }}</p>
+                <small>Last Check: {{ service.last_check }}</small>
+            </div>
+            {% else %}
+            <div class="health-card">
+                <h5>All Systems Operational</h5>
+                <p>No issues detected with system services.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

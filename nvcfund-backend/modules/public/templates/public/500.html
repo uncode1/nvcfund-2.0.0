@@ -1,0 +1,44 @@
+{% extends "public/layout.html" %}
+
+{% block title %}Server Error - NVC Banking Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-6 mx-auto text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-danger">500</h1>
+                <h2 class="text-muted mb-4">Internal Server Error</h2>
+                <p class="lead mb-4">Something went wrong on our end. We're working to fix this issue.</p>
+                
+                <div class="card border-danger">
+                    <div class="card-body">
+                        <h5 class="card-title">What happened?</h5>
+                        <p class="card-text">
+                            Our system encountered an unexpected error while processing your request. 
+                            This issue has been automatically reported to our technical team.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="card border-info mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">What can you do?</h5>
+                        <ul class="list-unstyled">
+                            <li>• Try refreshing the page</li>
+                            <li>• Go back and try again</li>
+                            <li>• Wait a few minutes and retry</li>
+                            <li>• Contact support if the problem persists</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('public.index') }}" class="btn btn-primary me-2">Go Home</a>
+                    <a href="{{ url_for('public.contact') }}" class="btn btn-outline-danger">Report Issue</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

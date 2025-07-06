@@ -1,0 +1,117 @@
+<!-- Banking Transfer Form -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-exchange-alt"></i> Transfer Funds</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('banking.transfer') }}">
+            {{ csrf_token() }}
+            <input type="hidden" name="form_type" value="transfer">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="from_account">From Account</label>
+                        <select class="form-control" id="from_account" name="from_account_id" required>
+                            <option value="">Select source account</option>
+                            <option value="1">Checking - **** 1234 ($15,250.00)</option>
+                            <option value="2">Savings - **** 5678 ($75,500.00)</option>
+                            <option value="3">Business - **** 9012 ($125,750.00)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="to_account">To Account</label>
+                        <select class="form-control" id="to_account" name="to_account_id" required>
+                            <option value="">Select destination account</option>
+                            <option value="1">Checking - **** 1234</option>
+                            <option value="2">Savings - **** 5678</option>
+                            <option value="3">Business - **** 9012</option>
+                            <option value="external">External Account</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="external_account_fields" style="display: none;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="external_account_number">External Account Number</label>
+                            <input type="text" class="form-control" id="external_account_number" name="external_account_number" placeholder="Account number">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="routing_number">Routing Number</label>
+                            <input type="text" class="form-control" id="routing_number" name="routing_number" placeholder="9-digit routing number">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="amount">Transfer Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="amount" name="amount" 
+                                   step="0.01" min="0.01" max="50000" required placeholder="0.00">
+                        </div>
+                        <small class="form-text text-muted">Maximum transfer: $50,000 per day</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="currency">Currency</label>
+                        <select class="form-control" id="currency" name="currency" required>
+                            <option value="USD" selected>USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="CAD">CAD - Canadian Dollar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="description">Transfer Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" 
+                          placeholder="Optional description for this transfer" maxlength="255"></textarea>
+            </div>
+            
+            <div class="form-group mb-3">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="confirm_transfer" required>
+                    <label class="form-check-label" for="confirm_transfer">
+                        I confirm this transfer request and understand that funds will be moved immediately
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i> Submit Transfer
+            </button>
+            <button type="button" class="btn btn-secondary ms-2">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('to_account').addEventListener('change', function() {
+    const externalFields = document.getElementById('external_account_fields');
+    if (this.value === 'external') {
+        externalFields.style.display = 'block';
+        document.getElementById('external_account_number').required = true;
+        document.getElementById('routing_number').required = true;
+    } else {
+        externalFields.style.display = 'none';
+        document.getElementById('external_account_number').required = false;
+        document.getElementById('routing_number').required = false;
+    }
+});
+</script>

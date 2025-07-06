@@ -1,0 +1,298 @@
+{% extends "banking/enterprise_layout.html" %}
+
+{% block title %}Branch Management - NVC Banking Platform{% endblock %}
+
+{% block page_title %}Branch Management{% endblock %}
+{% block page_subtitle %}Monitor and manage all banking branch locations{% endblock %}
+{% block breadcrumb_section %}Administration{% endblock %}
+{% block breadcrumb_page %}Branches{% endblock %}
+
+{% block page_actions %}
+<a href="/admin_management/branches/new" class="btn btn-banking-primary">
+    <i class="fas fa-plus me-2"></i>Add New Branch
+</a>
+<a href="/admin_management/dashboard" class="btn btn-banking-outline">
+    <i class="fas fa-arrow-left me-2"></i>Back to Admin
+</a>
+{% endblock %}
+
+{% block content %}
+<!-- Branch Statistics -->
+<div class="banking-stats">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(40, 167, 69, 0.1); color: #28a745;">
+            <i class="fas fa-building"></i>
+        </div>
+        <div class="stat-value" style="color: #28a745;">{{ branches_data|length }}</div>
+        <div class="stat-label">Total Branches</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(0, 123, 255, 0.1); color: #007bff;">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-value" style="color: #007bff;">
+            {% set total_staff = branches_data|sum(attribute='staff') %}
+            {{ total_staff }}
+        </div>
+        <div class="stat-label">Total Staff</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(255, 193, 7, 0.1); color: #ffc107;">
+            <i class="fas fa-university"></i>
+        </div>
+        <div class="stat-value" style="color: #ffc107;">
+            {% set total_accounts = branches_data|sum(attribute='accounts') %}
+            {{ total_accounts }}
+        </div>
+        <div class="stat-label">Total Accounts</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(23, 162, 184, 0.1); color: #17a2b8;">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-value" style="color: #17a2b8;">100%</div>
+        <div class="stat-label">Active Branches</div>
+    </div>
+</div>
+
+<!-- Branch Management Table -->
+<div class="banking-card">
+    <div class="banking-card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-building me-2"></i>Branch Directory
+        </h5>
+    </div>
+    <div class="banking-card-body">
+        <div class="table-responsive">
+            <table class="banking-table">
+                <thead>
+                    <tr>
+                        <th>Branch Information</th>
+                        <th>Manager</th>
+                        <th>Accounts</th>
+                        <th>Staff</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for branch in branches_data %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <div class="branch-icon">
+                                        <i class="fas fa-building text-primary"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold">{{ branch.name }}</div>
+                                    <div class="text-muted small">Code: {{ branch.code }}</div>
+                                    <div class="text-muted small">{{ branch.address }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="fw-semibold">{{ branch.manager }}</div>
+                            <div class="text-muted small">Branch Manager</div>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-success">{{ "{:,}".format(branch.accounts) }}</div>
+                            <div class="text-muted small">Active accounts</div>
+                        </td>
+                        <td>
+                            <div class="fw-bold">{{ branch.staff }}</div>
+                            <div class="text-muted small">Team members</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-success">{{ branch.status }}</span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="/admin_management/branches/{{ branch.id }}" class="btn btn-banking-outline">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <a href="/admin_management/branches/{{ branch.id }}/edit" class="btn btn-banking-primary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Branch Performance Overview -->
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="banking-card">
+            <div class="banking-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>Branch Performance
+                </h5>
+            </div>
+            <div class="banking-card-body">
+                <div class="performance-list">
+                    {% for branch in branches_data %}
+                    <div class="performance-item">
+                        <div class="performance-info">
+                            <div class="performance-name">{{ branch.name }}</div>
+                            <div class="performance-metric">{{ "{:,}".format(branch.accounts) }} accounts</div>
+                        </div>
+                        <div class="performance-chart">
+                            <div class="progress">
+                                <div class="progress-bar bg-primary" 
+                                     style="width: {{ (branch.accounts / 1500 * 100)|round }%}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="banking-card">
+            <div class="banking-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-users me-2"></i>Staffing Overview
+                </h5>
+            </div>
+            <div class="banking-card-body">
+                <div class="staffing-list">
+                    {% for branch in branches_data %}
+                    <div class="staffing-item">
+                        <div class="staffing-branch">
+                            <div class="branch-name">{{ branch.name }}</div>
+                            <div class="branch-manager">{{ branch.manager }}</div>
+                        </div>
+                        <div class="staffing-count">
+                            <span class="staff-number">{{ branch.staff }}</span>
+                            <span class="staff-label">staff</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+.branch-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(0, 123, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.performance-list,
+.staffing-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.performance-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.performance-info {
+    flex: 1;
+}
+
+.performance-name {
+    font-weight: 600;
+    color: var(--banking-text-color);
+}
+
+.performance-metric {
+    font-size: 0.85rem;
+    color: var(--banking-muted-color);
+}
+
+.performance-chart {
+    width: 120px;
+}
+
+.progress {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    transition: width 0.3s ease;
+}
+
+.staffing-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(0, 123, 255, 0.05);
+    border-radius: var(--banking-border-radius);
+}
+
+.branch-name {
+    font-weight: 600;
+    color: var(--banking-text-color);
+}
+
+.branch-manager {
+    font-size: 0.85rem;
+    color: var(--banking-muted-color);
+}
+
+.staffing-count {
+    text-align: center;
+}
+
+.staff-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--banking-primary-color);
+    display: block;
+}
+
+.staff-label {
+    font-size: 0.75rem;
+    color: var(--banking-muted-color);
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    .performance-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .performance-chart {
+        width: 100%;
+    }
+    
+    .staffing-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+}
+</style>
+{% endblock %}

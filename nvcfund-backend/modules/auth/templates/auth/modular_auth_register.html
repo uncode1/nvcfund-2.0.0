@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - NVC Banking Platform</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+    body {
+        background: linear-gradient(135deg, #0a2447 0%, #1e3a5f 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .register-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .register-header {
+        background: linear-gradient(135deg, #0a2447 0%, #1e3a5f 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .register-header h2 {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    
+    .register-form {
+        padding: 2rem;
+    }
+    
+    .section-title {
+        color: #0a2447;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+    
+    .account-type-cards {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+    
+    .account-type-card {
+        flex: 1;
+        min-width: 200px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .account-type-card:hover {
+        border-color: #0a2447;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(10, 36, 71, 0.2);
+    }
+    
+    .account-type-card.selected {
+        border-color: #0a2447;
+        background: #f8f9fa;
+        box-shadow: 0 5px 15px rgba(10, 36, 71, 0.3);
+    }
+    
+    .account-type-card i {
+        color: #0a2447;
+        margin-bottom: 1rem;
+    }
+    
+    .account-type-card h6 {
+        color: #0a2447;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #0a2447;
+        box-shadow: 0 0 0 0.2rem rgba(10, 36, 71, 0.25);
+    }
+    
+    .form-label {
+        color: #0a2447;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #0a2447 0%, #1e3a5f 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(10, 36, 71, 0.3);
+    }
+    
+    .alert {
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+    
+    /* Header and Footer Styles */
+    .main-header {
+        background: linear-gradient(135deg, #0a2447 0%, #1e3a5f 100%);
+        color: white;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white !important;
+    }
+    
+    .navbar-nav .nav-link {
+        color: white !important;
+        font-weight: 500;
+        margin: 0 0.5rem;
+        transition: color 0.3s ease;
+    }
+    
+    .navbar-nav .nav-link:hover {
+        color: #66ccff !important;
+    }
+    
+    .main-footer {
+        background: #0a2447;
+        color: white;
+        padding: 2rem 0 1rem;
+        margin-top: 3rem;
+    }
+    
+    .footer-section h6 {
+        color: #66ccff;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .footer-section ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-section ul li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .footer-section ul li a {
+        color: #e9ecef;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .footer-section ul li a:hover {
+        color: #66ccff;
+    }
+    
+    .footer-bottom {
+        border-top: 1px solid #1e3a5f;
+        padding-top: 1rem;
+        margin-top: 1rem;
+        text-align: center;
+        color: #adb5bd;
+    }
+    
+    .register-container {
+        margin-top: 2rem;
+    }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="main-header">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <a class="navbar-brand" href="{{ url_for('public.index') }}">
+                <i class="fas fa-university"></i> NVC Banking Platform
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('public.index') }}">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('public.about') }}">
+                            <i class="fas fa-info-circle"></i> About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('public.contact') }}">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+    <div class="register-container">
+        <div class="register-header">
+            <h2><i class="fas fa-user-plus"></i> Create Your Account</h2>
+            <p class="mb-0">Join NVC Banking Platform with bank-level security</p>
+        </div>
+        
+        <div class="register-form">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-{{ 'exclamation-circle' if category == 'error' else 'info-circle' }}"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Account Type Selection -->
+            <div id="accountTypeSelection" class="mb-4">
+                <h5 class="section-title"><i class="fas fa-user-tag"></i> Choose Your Account Type</h5>
+                <div class="account-type-cards">
+                    <div class="account-type-card" onclick="showForm('USER')">
+                        <i class="fas fa-user fa-2x"></i>
+                        <h6>Individual Account</h6>
+                        <p class="small text-muted">Personal banking services</p>
+                        <ul class="list-unstyled small">
+                            <li>✓ Personal banking</li>
+                            <li>✓ Digital payments</li>
+                            <li>✓ Basic investment tools</li>
+                        </ul>
+                        <button type="button" class="btn btn-primary mt-2">Select Individual</button>
+                    </div>
+                    <div class="account-type-card" onclick="showForm('BUSINESS_USER')">
+                        <i class="fas fa-building fa-2x"></i>
+                        <h6>Business Client</h6>
+                        <p class="small text-muted">Commercial banking services</p>
+                        <ul class="list-unstyled small">
+                            <li>✓ Business banking</li>
+                            <li>✓ Merchant services</li>
+                            <li>✓ Advanced analytics</li>
+                        </ul>
+                        <button type="button" class="btn btn-primary mt-2">Select Business</button>
+                    </div>
+                    <div class="account-type-card" onclick="showForm('PARTNER')">
+                        <i class="fas fa-handshake fa-2x"></i>
+                        <h6>Partner Program</h6>
+                        <p class="small text-muted">Enhanced banking partnership</p>
+                        <ul class="list-unstyled small">
+                            <li>✓ Premium services</li>
+                            <li>✓ Service access</li>
+                            <li>✓ Custom solutions</li>
+                        </ul>
+                        <button type="button" class="btn btn-primary mt-2">Select Partner</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Individual Account Form -->
+            <div id="individualForm" class="registration-form" style="display: none;">
+                <!-- Professional Header -->
+                <div class="form-nav-header mb-4 p-3" style="background: linear-gradient(135deg, #0a2447 0%, #1a365d 100%); border-radius: 8px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="text-white mb-0">
+                                <i class="fas fa-user me-2"></i>Individual Account Registration
+                            </h4>
+                            <small class="text-light">Complete your personal banking account setup</small>
+                        </div>
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="backToSelection()">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Selection
+                        </button>
+                    </div>
+                </div>
+                
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input type="hidden" name="account_type" value="USER">
+                
+                <!-- Personal Information -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-id-card"></i> Personal Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="ind_first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="ind_first_name" name="first_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ind_last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="ind_last_name" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="ind_dob" class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" id="ind_dob" name="date_of_birth" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ind_id_type" class="form-label">ID Type</label>
+                            <select class="form-control" id="ind_id_type" name="id_type" required>
+                                <option value="">Select ID Type</option>
+                                <option value="ssn">US Social Security Number</option>
+                                <option value="passport">Passport Number</option>
+                                <option value="national_id">National ID</option>
+                                <option value="itin">Individual Taxpayer ID (ITIN)</option>
+                                <option value="other">Other Government ID</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="ind_id_number" class="form-label">ID Number</label>
+                            <input type="text" class="form-control" id="ind_id_number" name="id_number" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ind_country" class="form-label">Country of Origin</label>
+                            <select class="form-control" id="ind_country" name="country_of_origin" required>
+                                <option value="">Select Country</option>
+                                <option value="US">United States</option>
+                                <option value="CA">Canada</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="AU">Australia</option>
+                                <option value="DE">Germany</option>
+                                <option value="FR">France</option>
+                                <option value="JP">Japan</option>
+                                <option value="CN">China</option>
+                                <option value="IN">India</option>
+                                <option value="BR">Brazil</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-envelope"></i> Contact Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="ind_email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="ind_email" name="email" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ind_phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="ind_phone" name="phone" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="ind_address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="ind_address" name="address" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Security -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-shield-alt"></i> Account Security</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="ind_username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="ind_username" name="username" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ind_password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="ind_password" name="password" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Terms and Submit -->
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="ind_terms" name="terms_accepted" required>
+                        <label class="form-check-label" for="ind_terms">
+                            I agree to the Terms & Conditions and Privacy Policy
+                        </label>
+                    </div>
+                </div>
+                
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus"></i> Create Individual Account
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Professional Footer -->
+                <div class="form-nav-footer mt-4 p-3 text-center" style="background: #f8f9fa; border-radius: 8px; border-top: 3px solid #0a2447;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt text-primary"></i> Secure Registration
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <i class="fas fa-clock text-primary"></i> 24/7 Support
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <i class="fas fa-lock text-primary"></i> Bank-Grade Security
+                            </small>
+                        </div>
+                    </div>
+                    <hr class="my-2">
+                    <small class="text-muted">
+                        Already have an account? 
+                        <a href="{{ url_for('auth.login') }}" class="text-primary">Sign In</a>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Business Account Form -->
+            <div id="businessForm" class="registration-form" style="display: none;">
+                <!-- Professional Header -->
+                <div class="form-nav-header mb-4 p-3" style="background: linear-gradient(135deg, #0a2447 0%, #1a365d 100%); border-radius: 8px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="text-white mb-0">
+                                <i class="fas fa-building me-2"></i>Business Account Registration
+                            </h4>
+                            <small class="text-light">Setup your business banking account</small>
+                        </div>
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="backToSelection()">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Selection
+                        </button>
+                    </div>
+                </div>
+                
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input type="hidden" name="account_type" value="BUSINESS_USER">
+                
+                <!-- Business Information -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-building"></i> Business Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="bus_company_name" class="form-label">Company Name</label>
+                            <input type="text" class="form-control" id="bus_company_name" name="company_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bus_business_type" class="form-label">Business Type</label>
+                            <select class="form-control" id="bus_business_type" name="business_type" required>
+                                <option value="">Select Business Type</option>
+                                <option value="corporation">Corporation</option>
+                                <option value="llc">Limited Liability Company (LLC)</option>
+                                <option value="partnership">Partnership</option>
+                                <option value="sole_proprietorship">Sole Proprietorship</option>
+                                <option value="nonprofit">Non-Profit Organization</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="bus_tax_id" class="form-label">Tax ID / EIN</label>
+                            <input type="text" class="form-control" id="bus_tax_id" name="tax_id" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bus_industry" class="form-label">Industry</label>
+                            <select class="form-control" id="bus_industry" name="industry" required>
+                                <option value="">Select Industry</option>
+                                <option value="technology">Technology</option>
+                                <option value="finance">Finance</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="retail">Retail</option>
+                                <option value="manufacturing">Manufacturing</option>
+                                <option value="services">Professional Services</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Primary Contact -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-user-tie"></i> Primary Contact</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="bus_first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="bus_first_name" name="first_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bus_last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="bus_last_name" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="bus_title" class="form-label">Job Title</label>
+                            <input type="text" class="form-control" id="bus_title" name="job_title" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bus_email" class="form-label">Business Email</label>
+                            <input type="email" class="form-control" id="bus_email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="bus_phone" class="form-label">Business Phone</label>
+                            <input type="tel" class="form-control" id="bus_phone" name="phone" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bus_website" class="form-label">Company Website</label>
+                            <input type="url" class="form-control" id="bus_website" name="website" placeholder="https://www.example.com">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Business Address -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-map-marker-alt"></i> Business Address</h6>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="bus_address" class="form-label">Business Address</label>
+                            <input type="text" class="form-control" id="bus_address" name="address" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Security -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-shield-alt"></i> Account Security</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="bus_username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="bus_username" name="username" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bus_password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="bus_password" name="password" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Terms and Submit -->
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="bus_terms" name="terms_accepted" required>
+                        <label class="form-check-label" for="bus_terms">
+                            I agree to the Terms & Conditions and authorize business account creation
+                        </label>
+                    </div>
+                </div>
+                
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-building"></i> Create Business Account
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Professional Footer -->
+                <div class="form-nav-footer mt-4 p-3 text-center" style="background: #f8f9fa; border-radius: 8px; border-top: 3px solid #0a2447;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <i class="fas fa-chart-line text-primary"></i> Business Solutions
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <i class="fas fa-users text-primary"></i> Dedicated Support
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt text-primary"></i> Enterprise Security
+                            </small>
+                        </div>
+                    </div>
+                    <hr class="my-2">
+                    <small class="text-muted">
+                        Already have an account? 
+                        <a href="{{ url_for('auth.login') }}" class="text-primary">Sign In</a>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Partner Account Form -->
+            <div id="partnerForm" class="registration-form" style="display: none;">
+                <!-- Professional Header -->
+                <div class="form-nav-header mb-4 p-3" style="background: linear-gradient(135deg, #0a2447 0%, #1a365d 100%); border-radius: 8px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="text-white mb-0">
+                                <i class="fas fa-handshake me-2"></i>Partner Program Registration
+                            </h4>
+                            <small class="text-light">Join our exclusive partnership program</small>
+                        </div>
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="backToSelection()">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Selection
+                        </button>
+                    </div>
+                </div>
+                
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input type="hidden" name="account_type" value="PARTNER">
+                
+                <!-- Organization Information -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-briefcase"></i> Organization Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="part_org_name" class="form-label">Organization Name</label>
+                            <input type="text" class="form-control" id="part_org_name" name="organization_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="part_org_type" class="form-label">Organization Type</label>
+                            <select class="form-control" id="part_org_type" name="organization_type" required>
+                                <option value="">Select Organization Type</option>
+                                <option value="financial_institution">Financial Institution</option>
+                                <option value="fintech">FinTech Company</option>
+                                <option value="enterprise">Enterprise Corporation</option>
+                                <option value="government">Government Agency</option>
+                                <option value="technology_provider">Technology Provider</option>
+                                <option value="investment_firm">Investment Firm</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="part_license_number" class="form-label">License/Registration Number</label>
+                            <input type="text" class="form-control" id="part_license_number" name="license_number" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="part_regulatory_body" class="form-label">Regulatory Body</label>
+                            <select class="form-control" id="part_regulatory_body" name="regulatory_body" required>
+                                <option value="">Select Regulatory Body</option>
+                                <option value="fdic">FDIC</option>
+                                <option value="occ">OCC</option>
+                                <option value="fed">Federal Reserve</option>
+                                <option value="sec">SEC</option>
+                                <option value="cftc">CFTC</option>
+                                <option value="international">International</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Executive Contact -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-user-crown"></i> Executive Contact</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="part_first_name" class="form-label">Executive First Name</label>
+                            <input type="text" class="form-control" id="part_first_name" name="first_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="part_last_name" class="form-label">Executive Last Name</label>
+                            <input type="text" class="form-control" id="part_last_name" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="part_exec_title" class="form-label">Executive Title</label>
+                            <select class="form-control" id="part_exec_title" name="executive_title" required>
+                                <option value="">Select Title</option>
+                                <option value="ceo">CEO</option>
+                                <option value="cfo">CFO</option>
+                                <option value="cto">CTO</option>
+                                <option value="president">President</option>
+                                <option value="vp">Vice President</option>
+                                <option value="director">Director</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="part_email" class="form-label">Executive Email</label>
+                            <input type="email" class="form-control" id="part_email" name="email" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Partnership Details -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-handshake"></i> Partnership Interest</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="part_services" class="form-label">Services of Interest</label>
+                            <select class="form-control" id="part_services" name="services_interest" required>
+                                <option value="">Select Services</option>
+                                <option value="api_integration">Service Integration</option>
+                                <option value="white_label">White Label Solutions</option>
+                                <option value="correspondent_banking">Correspondent Banking</option>
+                                <option value="blockchain_services">Blockchain Services</option>
+                                <option value="treasury_services">Treasury Services</option>
+                                <option value="custom_solutions">Custom Solutions</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="part_volume" class="form-label">Expected Transaction Volume</label>
+                            <select class="form-control" id="part_volume" name="transaction_volume" required>
+                                <option value="">Select Volume Range</option>
+                                <option value="1M-10M">$1M - $10M annually</option>
+                                <option value="10M-100M">$10M - $100M annually</option>
+                                <option value="100M-1B">$100M - $1B annually</option>
+                                <option value="1B+">$1B+ annually</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Security -->
+                <div class="mb-4">
+                    <h6 class="section-title"><i class="fas fa-shield-alt"></i> Account Security</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="part_username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="part_username" name="username" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="part_password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="part_password" name="password" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Terms and Submit -->
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="part_terms" name="terms_accepted" required>
+                        <label class="form-check-label" for="part_terms">
+                            I agree to the Partner Terms & Conditions and authorize partnership evaluation
+                        </label>
+                    </div>
+                </div>
+                
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-handshake"></i> Submit Partner Application
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Professional Footer -->
+                <div class="form-nav-footer mt-4 p-3 text-center" style="background: #f8f9fa; border-radius: 8px; border-top: 3px solid #0a2447;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <i class="fas fa-crown text-primary"></i> Premium Partnership
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <i class="fas fa-handshake text-primary"></i> Strategic Alliance
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <i class="fas fa-rocket text-primary"></i> Enterprise Solutions
+                            </small>
+                        </div>
+                    </div>
+                    <hr class="my-2">
+                    <small class="text-muted">
+                        Already have an account? 
+                        <a href="{{ url_for('auth.login') }}" class="text-primary">Sign In</a>
+                    </small>
+                </div>
+            </div>
+            
+            <!-- Already have account link for account type selection -->
+            <div class="text-center mt-4" id="loginLink">
+                <p class="mb-0">Already have an account? 
+                    <a href="{{ url_for('auth.login') }}" class="text-primary">Sign In</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="main-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 footer-section">
+                <h6><i class="fas fa-university"></i> NVC Banking</h6>
+                <p class="small">Secure, innovative banking solutions with enterprise-grade blockchain technology.</p>
+                <div class="social-links">
+                    <a href="/contact" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="/contact" class="text-white me-3"><i class="fab fa-linkedin"></i></a>
+                    <a href="/contact" class="text-white me-3"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="col-md-3 footer-section">
+                <h6>Banking Services</h6>
+                <ul>
+                    <li><a href="/contact">Personal Banking</a></li>
+                    <li><a href="/contact">Business Banking</a></li>
+                    <li><a href="/contact">Investment Services</a></li>
+                    <li><a href="/contact">Digital Payments</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 footer-section">
+                <h6>Support</h6>
+                <ul>
+                    <li><a href="{{ url_for('public.contact') }}">Contact Us</a></li>
+                    <li><a href="/contact">Help Center</a></li>
+                    <li><a href="/contact">Security</a></li>
+                    <li><a href="/contact">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 footer-section">
+                <h6>Account Access</h6>
+                <ul>
+                    <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
+                    <li><a href="{{ url_for('auth.register') }}">Create Account</a></li>
+                    <li><a href="/contact">Mobile App</a></li>
+                    <li><a href="/contact">Service Access</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 NVC Banking Platform. All rights reserved. | FDIC Insured | Equal Housing Lender</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+// Show specific form based on account type
+function showForm(accountType) {
+    // Hide account type selection
+    document.getElementById('accountTypeSelection').style.display = 'none';
+    document.getElementById('loginLink').style.display = 'none';
+    
+    // Hide all forms
+    document.getElementById('individualForm').style.display = 'none';
+    document.getElementById('businessForm').style.display = 'none';
+    document.getElementById('partnerForm').style.display = 'none';
+    
+    // Show selected form
+    switch(accountType) {
+        case 'USER':
+            document.getElementById('individualForm').style.display = 'block';
+            break;
+        case 'BUSINESS_USER':
+            document.getElementById('businessForm').style.display = 'block';
+            break;
+        case 'PARTNER':
+            document.getElementById('partnerForm').style.display = 'block';
+            break;
+    }
+}
+
+// Go back to account type selection
+function backToSelection() {
+    // Show account type selection
+    document.getElementById('accountTypeSelection').style.display = 'block';
+    document.getElementById('loginLink').style.display = 'block';
+    
+    // Hide all forms
+    document.getElementById('individualForm').style.display = 'none';
+    document.getElementById('businessForm').style.display = 'none';
+    document.getElementById('partnerForm').style.display = 'none';
+}
+
+// Form validation for all forms
+function validateForm(formId) {
+    const form = document.getElementById(formId);
+    const password = form.querySelector('input[name="password"]').value;
+    const requiredFields = form.querySelectorAll('[required]');
+    
+    // Check required fields
+    for (let field of requiredFields) {
+        if (!field.value.trim()) {
+            alert(`Please fill in the ${field.name.replace('_', ' ')} field`);
+            field.focus();
+            return false;
+        }
+    }
+    
+    // Password validation
+    if (password.length < 8) {
+        alert('Password must be at least 8 characters long');
+        return false;
+    }
+    
+    return true;
+}
+
+// Add event listeners to all forms
+document.addEventListener('DOMContentLoaded', function() {
+    // Individual form validation
+    document.getElementById('individualForm').addEventListener('submit', function(e) {
+        if (!validateForm('individualForm')) {
+            e.preventDefault();
+        }
+    });
+    
+    // Business form validation
+    document.getElementById('businessForm').addEventListener('submit', function(e) {
+        if (!validateForm('businessForm')) {
+            e.preventDefault();
+        }
+    });
+    
+    // Partner form validation
+    document.getElementById('partnerForm').addEventListener('submit', function(e) {
+        if (!validateForm('partnerForm')) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Generate Statement - NVC Banking{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <h1 class="page-title">Generate Account Statement</h1>
+                <div class="page-subtitle">Create detailed statements for your accounts</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Statement Generation</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('banking.generate_statement') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="account_id" class="form-label">Select Account</label>
+                                <select class="form-select" id="account_id" name="account_id" required>
+                                    <option value="">Choose an account...</option>
+                                    {% for account in accounts %}
+                                    <option value="{{ account.id }}">
+                                        {{ account.account_number }} - {{ account.account_type }} 
+                                        ({{ account.currency }} {{ "%.2f"|format(account.balance) }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="period" class="form-label">Statement Period</label>
+                                <select class="form-select" id="period" name="period" required>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="yearly">Yearly</option>
+                                    <option value="custom">Custom Date Range</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3" id="custom-date-range" style="display: none;">
+                            <div class="col-md-6">
+                                <label for="start_date" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="end_date" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="end_date" name="end_date">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="format" class="form-label">Statement Format</label>
+                                <select class="form-select" id="format" name="format">
+                                    <option value="pdf">PDF Document</option>
+                                    <option value="csv">CSV File</option>
+                                    <option value="excel">Excel Spreadsheet</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="delivery_method" class="form-label">Delivery Method</label>
+                                <select class="form-select" id="delivery_method" name="delivery_method">
+                                    <option value="download">Download Now</option>
+                                    <option value="email">Email to Registered Address</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="include_transactions" name="include_transactions" checked>
+                                    <label class="form-check-label" for="include_transactions">
+                                        Include transaction details
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="include_charts" name="include_charts">
+                                    <label class="form-check-label" for="include_charts">
+                                        Include spending analysis charts
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="include_summary" name="include_summary" checked>
+                                    <label class="form-check-label" for="include_summary">
+                                        Include account summary
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-file-alt me-2"></i>Generate Statement
+                                </button>
+                                <a href="{{ url_for('banking.statements') }}" class="btn btn-secondary ms-2">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Statements
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const periodSelect = document.getElementById('period');
+    const customDateRange = document.getElementById('custom-date-range');
+    
+    periodSelect.addEventListener('change', function() {
+        if (this.value === 'custom') {
+            customDateRange.style.display = 'block';
+            document.getElementById('start_date').required = true;
+            document.getElementById('end_date').required = true;
+        } else {
+            customDateRange.style.display = 'none';
+            document.getElementById('start_date').required = false;
+            document.getElementById('end_date').required = false;
+        }
+    });
+});
+</script>
+{% endblock %}

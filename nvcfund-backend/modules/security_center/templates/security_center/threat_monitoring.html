@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Threat Monitoring - NVC Banking Platform{% endblock %}
+
+{% block head %}
+<style>
+    .threat-monitoring {
+        background: linear-gradient(135deg, #7c2d12 0%, #991b1b 100%);
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 20px;
+    }
+    
+    .threat-alert {
+        background: rgba(220, 38, 38, 0.2);
+        border: 1px solid rgba(220, 38, 38, 0.5);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .status-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="threat-monitoring">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-eye"></i> Threat Monitoring</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="status-card">
+                <h3>{{ threat_status.high_risk }}</h3>
+                <p>High Risk Threats</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="status-card">
+                <h3>{{ threat_status.medium_risk }}</h3>
+                <p>Medium Risk Threats</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="status-card">
+                <h3>{{ threat_status.low_risk }}</h3>
+                <p>Low Risk Threats</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <h2>Active Threats</h2>
+            {% for threat in active_threats %}
+            <div class="threat-alert">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5>{{ threat.name }}</h5>
+                        <p>{{ threat.description }}</p>
+                    </div>
+                    <div>
+                        <span class="badge bg-danger">{{ threat.severity }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

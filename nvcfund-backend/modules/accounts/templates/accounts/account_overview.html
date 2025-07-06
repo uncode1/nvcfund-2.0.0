@@ -1,0 +1,456 @@
+{% extends "base.html" %}
+
+{% block title %}Account Overview - NVC Banking Platform{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Account Overview Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-info">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="h2 text-white mb-2">
+                                <i class="fas fa-wallet me-2"></i>Account Overview
+                            </h1>
+                            <p class="text-light mb-0">Comprehensive view of all customer accounts and balances</p>
+                        </div>
+                        <div class="col-auto">
+                            <div class="btn-group">
+                                <button class="btn btn-light btn-sm" data-action="new_account">
+                                    <i class="fas fa-plus me-1"></i>New Account
+                                </button>
+                                <button class="btn btn-outline-light btn-sm" data-action="export_data">
+                                    <i class="fas fa-download me-1"></i>Export
+                                </button>
+                                <button class="btn btn-outline-light btn-sm" data-action="refresh_data">
+                                    <i class="fas fa-sync me-1"></i>Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Summary -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-primary dashboard-stat-card" data-metric="accounts">
+                <div class="card-body text-center">
+                    <i class="fas fa-university fa-3x text-white-50 mb-3"></i>
+                    <h4 class="text-white">Total Accounts</h4>
+                    <h2 class="text-white" data-metric="total_accounts">{{ account_stats.total_accounts|default("0") }}</h2>
+                    <small class="text-light">All Accounts</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-success dashboard-stat-card" data-metric="balance">
+                <div class="card-body text-center">
+                    <i class="fas fa-dollar-sign fa-3x text-white-50 mb-3"></i>
+                    <h4 class="text-white">Total Balance</h4>
+                    <h2 class="text-white" data-metric="balance">${{ "{:,.2f}".format(account_stats.total_balance)|default("0") }}</h2>
+                    <small class="text-light">All Accounts</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-warning">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x text-white-50 mb-3"></i>
+                    <h4 class="text-white">Average Balance</h4>
+                    <h2 class="text-white">${{ "{:,.0f}".format(account_stats.average_balance)|default("0") }}</h2>
+                    <small class="text-light">Per Account</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-danger">
+                <div class="card-body text-center">
+                    <i class="fas fa-exclamation-triangle fa-3x text-white-50 mb-3"></i>
+                    <h4 class="text-white">Flagged Accounts</h4>
+                    <h2 class="text-white">{{ account_stats.flagged_accounts|default("12") }}</h2>
+                    <small class="text-light">Require Attention</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Types & Search -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h5><i class="fas fa-search me-2"></i>Account Search & Management</h5>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary active">All</button>
+                        <button class="btn btn-outline-primary">Checking</button>
+                        <button class="btn btn-outline-primary">Savings</button>
+                        <button class="btn btn-outline-primary">Business</button>
+                        <button class="btn btn-outline-primary">Investment</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Search Form -->
+                    <form class="mb-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control search-input" placeholder="Search accounts..." data-search-target="accounts">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option value="">All Account Types</option>
+                                    <option value="checking">Checking</option>
+                                    <option value="savings">Savings</option>
+                                    <option value="business">Business</option>
+                                    <option value="investment">Investment</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option value="">All Statuses</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="frozen">Frozen</option>
+                                    <option value="closed">Closed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">Search</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Account List -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Account Number</th>
+                                    <th>Customer</th>
+                                    <th>Type</th>
+                                    <th>Balance</th>
+                                    <th>Status</th>
+                                    <th>Last Activity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for account in accounts %}
+                                <tr data-searchable="accounts">
+                                    <td><strong>{{ account.account_number }}</strong></td>
+                                    <td>
+                                        <div>
+                                            <h6 class="mb-0">{{ account.account_name }}</h6>
+                                            <small class="text-muted">{{ account.account_type }} Account</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if account.account_type == 'Checking' %}
+                                            <span class="badge bg-primary">{{ account.account_type }}</span>
+                                        {% elif account.account_type == 'Savings' %}
+                                            <span class="badge bg-success">{{ account.account_type }}</span>
+                                        {% elif account.account_type == 'Business' %}
+                                            <span class="badge bg-warning">{{ account.account_type }}</span>
+                                        {% elif account.account_type == 'Investment' %}
+                                            <span class="badge bg-info">{{ account.account_type }}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ account.account_type }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>${{ "{:,.2f}".format(account.current_balance) }}</td>
+                                    <td>
+                                        {% if account.status == 'Active' %}
+                                            <span class="badge bg-success">{{ account.status }}</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">{{ account.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ account.opened_date }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="View Details" data-action="account_details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-info" title="Transactions" data-action="transaction_history">
+                                                <i class="fas fa-list"></i>
+                                            </button>
+                                            <button class="btn btn-outline-warning" title="Edit" data-action="edit_account">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                            </button>
+                                            <button class="btn btn-outline-info" title="Transactions">
+                                                <i class="fas fa-list"></i>
+                                            </button>
+                                            <button class="btn btn-outline-warning" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>3001-234-567</strong></td>
+                                    <td>
+                                        <div>
+                                            <h6 class="mb-0">Mike Davis</h6>
+                                            <small class="text-muted">mike.davis@email.com</small>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-success">Savings</span></td>
+                                    <td>$89,456.78</td>
+                                    <td><span class="badge bg-warning">Frozen</span></td>
+                                    <td>{{ "3 days ago"|default("--") }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-danger" title="Unfreeze">
+                                                <i class="fas fa-unlock"></i>
+                                            </button>
+                                            <button class="btn btn-outline-warning" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>4001-987-654</strong></td>
+                                    <td>
+                                        <div>
+                                            <h6 class="mb-0">Emily Wilson</h6>
+                                            <small class="text-muted">emily.w@investment.com</small>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-info">Investment</span></td>
+                                    <td>$1,247,892.45</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>{{ "30 minutes ago"|default("--") }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-info" title="Portfolio">
+                                                <i class="fas fa-chart-pie"></i>
+                                            </button>
+                                            <button class="btn btn-outline-warning" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav aria-label="Account list pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Analytics -->
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-pie me-2"></i>Account Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="accountChart" height="250"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Account Activities -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5><i class="fas fa-clock me-2"></i>Recent Activities</h5>
+                </div>
+                <div class="card-body">
+                    <div class="activity-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-plus text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">New Account Opened</h6>
+                                <p class="mb-1 text-muted small">Robert Chen - Checking Account</p>
+                                <small class="text-muted">{{ "1 hour ago"|default("--") }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-warning rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-lock text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Account Frozen</h6>
+                                <p class="mb-1 text-muted small">Account #3001-234-567 - Suspicious Activity</p>
+                                <small class="text-muted">{{ "2 hours ago"|default("--") }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-info rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-edit text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Account Updated</h6>
+                                <p class="mb-1 text-muted small">Lisa Park - Contact Information</p>
+                                <small class="text-muted">{{ "3 hours ago"|default("--") }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-times text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Account Closed</h6>
+                                <p class="mb-1 text-muted small">Account #5001-111-222 - Customer Request</p>
+                                <small class="text-muted">{{ "1 day ago"|default("--") }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Type Analytics -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-bar me-2"></i>Account Performance Analytics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="account-type-stat text-center">
+                                <h6>Checking Accounts</h6>
+                                <h4 class="text-primary">{{ "8,492"|default("0") }}</h4>
+                                <p class="text-muted">Avg Balance: ${{ "8,247"|default("0") }}</p>
+                                <div class="progress">
+                                    <div class="progress-bar bg-primary" style="width: 54%"></div>
+                                </div>
+                                <small class="text-muted">54% of total</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="account-type-stat text-center">
+                                <h6>Savings Accounts</h6>
+                                <h4 class="text-success">{{ "4,234"|default("0") }}</h4>
+                                <p class="text-muted">Avg Balance: ${{ "24,567"|default("0") }}</p>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" style="width: 27%"></div>
+                                </div>
+                                <small class="text-muted">27% of total</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="account-type-stat text-center">
+                                <h6>Business Accounts</h6>
+                                <h4 class="text-warning">{{ "2,847"|default("0") }}</h4>
+                                <p class="text-muted">Avg Balance: ${{ "89,234"|default("0") }}</p>
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning" style="width: 18%"></div>
+                                </div>
+                                <small class="text-muted">18% of total</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="account-type-stat text-center">
+                                <h6>Investment Accounts</h6>
+                                <h4 class="text-info">{{ "274"|default("0") }}</h4>
+                                <p class="text-muted">Avg Balance: ${{ "247,891"|default("0") }}</p>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" style="width: 1%"></div>
+                                </div>
+                                <small class="text-muted">1% of total</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Account Distribution Chart
+    const accountCtx = document.getElementById('accountChart').getContext('2d');
+    new Chart(accountCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Checking', 'Savings', 'Business', 'Investment'],
+            datasets: [{
+                data: [8492, 4234, 2847, 274],
+                backgroundColor: [
+                    '#0d6efd',
+                    '#198754',
+                    '#ffc107',
+                    '#17a2b8'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+
+// Account management functions
+function viewAccountDetails(accountNumber) {
+    // Account details view
+    window.location.href = `/accounts/details/${accountNumber}`;
+}
+
+function freezeAccount(accountNumber) {
+    if (confirm('Are you sure you want to freeze this account?')) {
+        // Account freeze process
+        alert('Account has been frozen successfully');
+    }
+}
+
+function unfreezeAccount(accountNumber) {
+    if (confirm('Are you sure you want to unfreeze this account?')) {
+        // Account unfreeze process
+        alert('Account has been unfrozen successfully');
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Maintenance Mode{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Maintenance Mode</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-{{ 'danger' if maintenance_data.maintenance_mode else 'success' }}">
+                                    <i class="fas fa-{{ 'exclamation-triangle' if maintenance_data.maintenance_mode else 'check' }}"></i>
+                                </span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">System Status</span>
+                                    <span class="info-box-number">{{ maintenance_data.system_status|title }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Maintenance Information</h4>
+                            <p>Current maintenance mode: <strong>{{ 'Enabled' if maintenance_data.maintenance_mode else 'Disabled' }}</strong></p>
+                            {% if maintenance_data.scheduled_maintenance %}
+                            <h5>Scheduled Maintenance</h5>
+                            <ul>
+                                {% for item in maintenance_data.scheduled_maintenance %}
+                                <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p>No scheduled maintenance.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

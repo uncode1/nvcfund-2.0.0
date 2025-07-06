@@ -1,0 +1,137 @@
+<!-- Banking Withdrawal Form -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-minus-circle"></i> Withdraw Funds</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('banking.withdrawal') }}">
+            {{ csrf_token() }}
+            <input type="hidden" name="form_type" value="withdrawal">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="account_id">Withdraw From Account</label>
+                        <select class="form-control" id="account_id" name="account_id" required>
+                            <option value="">Select account</option>
+                            <option value="1">Checking - **** 1234 ($15,250.00)</option>
+                            <option value="2">Savings - **** 5678 ($75,500.00)</option>
+                            <option value="3">Business - **** 9012 ($125,750.00)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="withdrawal_method">Withdrawal Method</label>
+                        <select class="form-control" id="withdrawal_method" name="withdrawal_method" required>
+                            <option value="">Select method</option>
+                            <option value="atm">ATM Withdrawal</option>
+                            <option value="teller">Teller Withdrawal</option>
+                            <option value="check">Cashier's Check</option>
+                            <option value="wire">Wire Transfer</option>
+                            <option value="ach">ACH Transfer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="amount">Withdrawal Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="amount" name="amount" 
+                                   step="0.01" min="0.01" max="25000" required placeholder="0.00">
+                        </div>
+                        <small class="form-text text-muted">Daily withdrawal limit: $25,000</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="currency">Currency</label>
+                        <select class="form-control" id="currency" name="currency" required>
+                            <option value="USD" selected>USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="CAD">CAD - Canadian Dollar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="external_transfer_details" style="display: none;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="external_account">External Account Number</label>
+                            <input type="text" class="form-control" id="external_account" name="external_account_number" placeholder="Account number">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="routing_number">Routing Number</label>
+                            <input type="text" class="form-control" id="routing_number" name="routing_number" placeholder="9-digit routing number">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="beneficiary_name">Beneficiary Name</label>
+                    <input type="text" class="form-control" id="beneficiary_name" name="beneficiary_name" placeholder="Full name of recipient">
+                </div>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="purpose">Purpose of Withdrawal</label>
+                <select class="form-control" id="purpose" name="purpose" required>
+                    <option value="">Select purpose</option>
+                    <option value="personal">Personal Use</option>
+                    <option value="business">Business Expense</option>
+                    <option value="investment">Investment</option>
+                    <option value="bill_payment">Bill Payment</option>
+                    <option value="loan_payment">Loan Payment</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="description">Withdrawal Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" 
+                          placeholder="Optional description for this withdrawal" maxlength="255"></textarea>
+            </div>
+            
+            <div class="form-group mb-3">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="confirm_withdrawal" required>
+                    <label class="form-check-label" for="confirm_withdrawal">
+                        I authorize this withdrawal and understand applicable fees may apply
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-warning">
+                <i class="fas fa-minus"></i> Process Withdrawal
+            </button>
+            <button type="button" class="btn btn-secondary ms-2">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('withdrawal_method').addEventListener('change', function() {
+    const externalDetails = document.getElementById('external_transfer_details');
+    if (this.value === 'wire' || this.value === 'ach') {
+        externalDetails.style.display = 'block';
+        document.getElementById('external_account').required = true;
+        document.getElementById('routing_number').required = true;
+        document.getElementById('beneficiary_name').required = true;
+    } else {
+        externalDetails.style.display = 'none';
+        document.getElementById('external_account').required = false;
+        document.getElementById('routing_number').required = false;
+        document.getElementById('beneficiary_name').required = false;
+    }
+});
+</script>

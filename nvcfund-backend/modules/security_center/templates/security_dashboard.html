@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Security Center Dashboard</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-success"><i class="fas fa-shield-alt"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Threat Level</span>
+                                    <span class="info-box-number">{{ security_data.threat_level }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-warning"><i class="fas fa-exclamation-triangle"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Active Threats</span>
+                                    <span class="info-box-number">{{ security_data.active_threats }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-info"><i class="fas fa-ban"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Blocked Attempts</span>
+                                    <span class="info-box-number">{{ security_data.blocked_attempts }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-primary"><i class="fas fa-eye"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Security Events</span>
+                                    <span class="info-box-number">{{ security_data.security_events }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle"></i> System Status: {{ security_data.system_status }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

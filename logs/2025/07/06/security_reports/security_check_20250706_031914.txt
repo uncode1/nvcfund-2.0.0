@@ -1,0 +1,15 @@
+NVC Banking Platform - Simple Security Check
+==================================================
+Flask Version: 3.1.0 (OK)
+
+Critical Package Imports:
+  ✓ flask: OK
+  ✓ sqlalchemy: OK
+  ✓ flask_login: OK
+  ✓ flask_cors: OK
+  ✓ werkzeug: OK
+
+Flask Ecosystem Packages: 12 found
+
+==================================================
+Status: ✓ Package environment is healthy

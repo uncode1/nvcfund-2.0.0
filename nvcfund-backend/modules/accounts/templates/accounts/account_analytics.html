@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Analytics - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #0a2447;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+        }
+        .main-content {
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .card {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border: 1px solid #66ccff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(102, 204, 255, 0.3);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #0a2447 0%, #1e3c72 100%);
+            border-bottom: 1px solid #66ccff;
+            color: #66ccff;
+            font-weight: bold;
+        }
+        .metric-card {
+            background: rgba(30, 60, 114, 0.3);
+            border: 1px solid rgba(102, 204, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 204, 255, 0.4);
+        }
+        .metric-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .metric-label {
+            font-size: 0.9em;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+        .metric-change {
+            font-size: 0.8em;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        .change-positive { background: rgba(40, 167, 69, 0.2); color: #28a745; }
+        .change-negative { background: rgba(220, 53, 69, 0.2); color: #dc3545; }
+        .change-neutral { background: rgba(108, 117, 125, 0.2); color: #6c757d; }
+        .chart-container {
+            background: rgba(30, 60, 114, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            height: 350px;
+        }
+        .account-item {
+            background: rgba(30, 60, 114, 0.2);
+            border: 1px solid rgba(102, 204, 255, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        .account-item:hover {
+            background: rgba(30, 60, 114, 0.4);
+        }
+        .account-type {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .type-checking { background: rgba(40, 167, 69, 0.2); color: #28a745; }
+        .type-savings { background: rgba(23, 162, 184, 0.2); color: #17a2b8; }
+        .type-business { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+        .type-investment { background: rgba(220, 53, 69, 0.2); color: #dc3545; }
+        .btn-primary {
+            background: linear-gradient(135deg, #66ccff 0%, #4da6d9 100%);
+            border: none;
+            color: #0a2447;
+            font-weight: bold;
+        }
+        .form-control, .form-select {
+            background: #1e3c72;
+            border: 1px solid #66ccff;
+            color: #ffffff;
+        }
+        .form-control:focus, .form-select:focus {
+            background: #1e3c72;
+            border-color: #66ccff;
+            color: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(102, 204, 255, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1><i class="fas fa-chart-line"></i> Account Analytics</h1>
+                            <p class="mb-0">Comprehensive analytics and insights for your banking accounts</p>
+                        </div>
+                        <div>
+                            <select class="form-select" style="width: auto;" onchange="changeTimeframe(this.value)">
+                                <option value="30d" selected>Last 30 Days</option>
+                                <option value="90d">Last 90 Days</option>
+                                <option value="1y">Last Year</option>
+                                <option value="all">All Time</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Total Balance</div>
+                        <div class="metric-value text-primary">$127,845.32</div>
+                        <div class="metric-change change-positive">+$4,782.15 (30d)</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Monthly Income</div>
+                        <div class="metric-value text-success">$8,450.00</div>
+                        <div class="metric-change change-positive">+5.2% vs last month</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Monthly Spending</div>
+                        <div class="metric-value text-warning">$3,667.85</div>
+                        <div class="metric-change change-negative">+12.3% vs last month</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Net Growth</div>
+                        <div class="metric-value text-info">$4,782.15</div>
+                        <div class="metric-change change-positive">+3.9% portfolio growth</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Balance Trends -->
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-area"></i> Balance Trends</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="balanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Spending Categories -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-pie"></i> Spending Analysis</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="spendingChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="incomeChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Performance -->
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5><i class="fas fa-university"></i> Account Performance</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="account-item">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong>Primary Checking</strong>
+                                        <div><span class="account-type type-checking">Checking</span></div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="h6 mb-0">$45,234.67</div>
+                                        <small class="text-success">+$1,245.32</small>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 4px;">
+                                    <div class="progress-bar bg-success" style="width: 78%"></div>
+                                </div>
+                                <small class="text-muted">78% of target balance</small>
+                            </div>
+
+                            <div class="account-item">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong>High Yield Savings</strong>
+                                        <div><span class="account-type type-savings">Savings</span></div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="h6 mb-0">$67,890.43</div>
+                                        <small class="text-success">+$2,156.78</small>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 4px;">
+                                    <div class="progress-bar bg-info" style="width: 92%"></div>
+                                </div>
+                                <small class="text-muted">92% of savings goal</small>
+                            </div>
+
+                            <div class="account-item">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong>Investment Portfolio</strong>
+                                        <div><span class="account-type type-investment">Investment</span></div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="h6 mb-0">$14,720.22</div>
+                                        <small class="text-success">+$1,380.05</small>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 4px;">
+                                    <div class="progress-bar bg-danger" style="width: 65%"></div>
+                                </div>
+                                <small class="text-muted">65% allocation target</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Health Score -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-heartbeat"></i> Financial Health</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <div class="display-4 text-success mb-3">85</div>
+                                <h6>Excellent Financial Health</h6>
+                                <div class="progress mb-3" style="height: 10px;">
+                                    <div class="progress-bar bg-success" style="width: 85%"></div>
+                                </div>
+                            </div>
+
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="metric-card">
+                                        <div class="metric-value small text-success">92</div>
+                                        <div class="metric-label">Savings Rate</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="metric-card">
+                                        <div class="metric-value small text-warning">78</div>
+                                        <div class="metric-label">Spending</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="metric-card">
+                                        <div class="metric-value small text-info">85</div>
+                                        <div class="metric-label">Investment</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <h6>Recommendations</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><i class="fas fa-check text-success"></i> Maintain current savings rate</li>
+                                    <li class="mb-2"><i class="fas fa-exclamation text-warning"></i> Review monthly subscriptions</li>
+                                    <li class="mb-2"><i class="fas fa-arrow-up text-info"></i> Consider increasing investment allocation</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction Insights -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-calendar-alt"></i> Monthly Comparison</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="monthlyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-clock"></i> Cash Flow Pattern</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="cashFlowChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Chart configurations
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#ffffff'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(102, 204, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(102, 204, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
+                }
+            }
+        };
+
+        // Balance Chart
+        const balanceCtx = document.getElementById('balanceChart').getContext('2d');
+        new Chart(balanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Total Balance',
+                    data: [98000, 105000, 112000, 118000, 123000, 127845],
+                    borderColor: '#66ccff',
+                    backgroundColor: 'rgba(102, 204, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Savings',
+                    data: [45000, 48000, 52000, 58000, 63000, 67890],
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: chartOptions
+        });
+
+        // Spending Chart
+        const spendingCtx = document.getElementById('spendingChart').getContext('2d');
+        new Chart(spendingCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Housing', 'Food', 'Transportation', 'Utilities', 'Entertainment', 'Other'],
+                datasets: [{
+                    data: [1200, 450, 300, 180, 250, 287.85],
+                    backgroundColor: ['#dc3545', '#ffc107', '#28a745', '#17a2b8', '#6f42c1', '#fd7e14']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#ffffff'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Income Chart
+        const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+        new Chart(incomeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Salary', 'Investments', 'Freelance', 'Other'],
+                datasets: [{
+                    data: [7200, 850, 300, 100],
+                    backgroundColor: ['#28a745', '#17a2b8', '#ffc107', '#6c757d']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#ffffff'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Monthly Chart
+        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(monthlyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Income',
+                    data: [8200, 8100, 8450, 8300, 8550, 8450],
+                    backgroundColor: 'rgba(40, 167, 69, 0.8)'
+                }, {
+                    label: 'Expenses',
+                    data: [3200, 3150, 3800, 3400, 3250, 3668],
+                    backgroundColor: 'rgba(220, 53, 69, 0.8)'
+                }]
+            },
+            options: chartOptions
+        });
+
+        // Cash Flow Chart
+        const cashFlowCtx = document.getElementById('cashFlowChart').getContext('2d');
+        new Chart(cashFlowCtx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Net Cash Flow',
+                    data: [2100, 1850, 1200, 1632],
+                    borderColor: '#66ccff',
+                    backgroundColor: 'rgba(102, 204, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: chartOptions
+        });
+
+        function changeTimeframe(period) {
+            console.log('Changing timeframe to:', period);
+            // This would update all charts with new data
+        }
+    </script>
+</body>
+</html>

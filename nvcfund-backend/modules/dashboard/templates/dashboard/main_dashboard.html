@@ -1,0 +1,288 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Main Dashboard - NVC Banking Platform{% endblock %}
+
+{% block page_title %}Main Dashboard{% endblock %}
+{% block page_subtitle %}Comprehensive overview of your banking operations{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Key Statistics -->
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="dashboard-stat-card">
+            <div class="dashboard-stat-number">{{ accounts_count | default(0) }}</div>
+            <div class="dashboard-stat-label">Active Accounts</div>
+            <i class="fas fa-university position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="dashboard-stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+            <div class="dashboard-stat-number">${{ "%.2f"|format(total_balance | default(0)) }}</div>
+            <div class="dashboard-stat-label">Total Balance</div>
+            <i class="fas fa-dollar-sign position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="dashboard-stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);">
+            <div class="dashboard-stat-number">{{ recent_transactions | length | default(0) }}</div>
+            <div class="dashboard-stat-label">Recent Transactions</div>
+            <i class="fas fa-exchange-alt position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="dashboard-stat-card" style="background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);">
+            <div class="dashboard-stat-number">{{ quick_actions | length | default(4) }}</div>
+            <div class="dashboard-stat-label">Quick Actions</div>
+            <i class="fas fa-bolt position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Quick Actions -->
+    <div class="col-lg-6 mb-4">
+        <div class="dashboard-card">
+            <div class="dashboard-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="dashboard-card-body">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <a href="/banking/accounts/create" class="dashboard-quick-action">
+                            <i class="fas fa-plus-circle mb-2" style="font-size: 2rem;"></i>
+                            <div>Create Account</div>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="/banking/transfers" class="dashboard-quick-action">
+                            <i class="fas fa-paper-plane mb-2" style="font-size: 2rem;"></i>
+                            <div>Send Transfer</div>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="/banking/bill-payment" class="dashboard-quick-action">
+                            <i class="fas fa-receipt mb-2" style="font-size: 2rem;"></i>
+                            <div>Pay Bills</div>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="/banking/statements" class="dashboard-quick-action">
+                            <i class="fas fa-file-invoice mb-2" style="font-size: 2rem;"></i>
+                            <div>View Statements</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Transactions -->
+    <div class="col-lg-6 mb-4">
+        <div class="dashboard-card">
+            <div class="dashboard-card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-history me-2"></i>Recent Transactions
+                </h5>
+                <a href="/banking/history" class="btn btn-sm btn-outline-light">View All</a>
+            </div>
+            <div class="dashboard-card-body">
+                {% if recent_transactions %}
+                    {% for transaction in recent_transactions[:5] %}
+                    <div class="dashboard-recent-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-semibold">{{ transaction.description | default('Transaction') }}</div>
+                                <small class="text-muted">{{ transaction.date | default('Today') }}</small>
+                            </div>
+                            <div class="text-end">
+                                <div class="fw-bold {{ 'text-success' if transaction.amount > 0 else 'text-danger' }}">
+                                    {{ '+' if transaction.amount > 0 else '' }}${{ "%.2f"|format(transaction.amount | default(0)) }}
+                                </div>
+                                <small class="text-muted">{{ transaction.type | default('Transfer') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-inbox fa-2x mb-3"></i>
+                        <p>No recent transactions</p>
+                        <a href="/banking/transfers" class="btn btn-dashboard-primary btn-sm">
+                            <i class="fas fa-plus me-1"></i>Make Your First Transaction
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Account Overview -->
+    <div class="col-lg-8 mb-4">
+        <div class="dashboard-card">
+            <div class="dashboard-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>Account Overview
+                </h5>
+            </div>
+            <div class="dashboard-card-body">
+                <div class="dashboard-chart-container">
+                    <canvas id="balanceChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Account Summary -->
+    <div class="col-lg-4 mb-4">
+        <div class="dashboard-card">
+            <div class="dashboard-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-wallet me-2"></i>Account Summary
+                </h5>
+            </div>
+            <div class="dashboard-card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Checking Account</span>
+                    <span class="fw-bold">$5,250.00</span>
+                </div>
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 75%"></div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Savings Account</span>
+                    <span class="fw-bold">$12,340.00</span>
+                </div>
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Investment Account</span>
+                    <span class="fw-bold">$8,750.00</span>
+                </div>
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 60%"></div>
+                </div>
+                
+                <a href="/accounts/" class="btn btn-dashboard-primary w-100">
+                    <i class="fas fa-eye me-1"></i>View All Accounts
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Status (for admins) -->
+{% if current_user.role and current_user.role.value in ['admin', 'super_admin'] %}
+<div class="row">
+    <div class="col-12">
+        <div class="dashboard-card">
+            <div class="dashboard-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-server me-2"></i>System Status
+                </h5>
+            </div>
+            <div class="dashboard-card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
+                            <div class="fw-semibold">Banking Core</div>
+                            <small class="text-success">Operational</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
+                            <div class="fw-semibold">Payment Processing</div>
+                            <small class="text-success">Operational</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-exclamation-triangle text-warning fa-2x mb-2"></i>
+                            <div class="fw-semibold">API Gateway</div>
+                            <small class="text-warning">Degraded</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
+                            <div class="fw-semibold">Security Services</div>
+                            <small class="text-success">Operational</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Initialize balance chart
+    const ctx = document.getElementById('balanceChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Account Balance',
+                    data: [5000, 5250, 5100, 5500, 5800, 6200],
+                    borderColor: '#66ccff',
+                    backgroundColor: 'rgba(102, 204, 255, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    }
+                },
+                elements: {
+                    point: {
+                        radius: 6,
+                        hoverRadius: 8
+                    }
+                }
+            }
+        });
+    }
+    
+    // Auto-refresh dashboard data
+    setInterval(function() {
+        // Update timestamps and refresh data
+        updateTimestamp();
+    }, 30000);
+</script>
+{% endblock %}

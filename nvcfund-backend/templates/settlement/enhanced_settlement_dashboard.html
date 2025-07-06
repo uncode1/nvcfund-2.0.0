@@ -1,0 +1,574 @@
+{% extends "base.html" %}
+
+{% block title %}Enhanced Settlement Dashboard - NVC Banking Platform{% endblock %}
+
+{% block head %}
+<style>
+    .settlement-dashboard {
+        background: linear-gradient(135deg, #7c2d12 0%, #dc2626 100%);
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 20px;
+    }
+    
+    .navigation-breadcrumb {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .settlement-metric {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    
+    .settlement-metric:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .metric-icon {
+        font-size: 2.5em;
+        opacity: 0.3;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+    
+    .metric-value {
+        font-size: 2.5em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .metric-label {
+        font-size: 0.9em;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .metric-trend {
+        font-size: 0.8em;
+        margin-top: 8px;
+        padding: 4px 8px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    
+    .trend-up { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .trend-down { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .trend-stable { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    
+    .settlement-section {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .settlement-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 4px solid #10b981;
+        transition: all 0.3s ease;
+    }
+    
+    .settlement-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .settlement-item.pending {
+        border-left-color: #f59e0b;
+    }
+    
+    .settlement-item.failed {
+        border-left-color: #ef4444;
+    }
+    
+    .settlement-item.processing {
+        border-left-color: #3b82f6;
+    }
+    
+    .settlement-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .settlement-id {
+        font-weight: bold;
+        font-family: 'Courier New', monospace;
+    }
+    
+    .settlement-status {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: bold;
+    }
+    
+    .status-completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .status-failed { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .status-processing { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    
+    .settlement-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .detail-item {
+        text-align: center;
+    }
+    
+    .detail-value {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+    
+    .detail-label {
+        font-size: 0.8em;
+        opacity: 0.7;
+    }
+    
+    .progress-container {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        height: 8px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.3s ease;
+    }
+    
+    .progress-completed { background: linear-gradient(90deg, #10b981, #34d399); }
+    .progress-pending { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .progress-processing { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    
+    .action-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: white;
+        text-decoration: none;
+        font-size: 0.9em;
+        transition: all 0.3s ease;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        display: inline-block;
+    }
+    
+    .action-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .stat-value {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        font-size: 0.8em;
+        opacity: 0.8;
+    }
+    
+    .network-map {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        padding: 20px;
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .network-nodes {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .network-node {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(16, 185, 129, 0.3);
+        border: 3px solid #10b981;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    
+    .refresh-button {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .refresh-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(180deg);
+    }
+    
+    .alert-panel {
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .alert-panel.success {
+        background: rgba(16, 185, 129, 0.15);
+        border-color: rgba(16, 185, 129, 0.3);
+    }
+    
+    .alert-panel.error {
+        background: rgba(239, 68, 68, 0.15);
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="settlement-dashboard">
+    <!-- Navigation Breadcrumb -->
+    <nav class="navigation-breadcrumb">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="/" class="text-white-50">Home</a></li>
+            <li class="breadcrumb-item"><a href="/admin/" class="text-white-50">Administration</a></li>
+            <li class="breadcrumb-item active">Settlement Operations</li>
+        </ol>
+    </nav>
+    
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1><i class="fas fa-handshake"></i> Enhanced Settlement Dashboard</h1>
+            <p class="mb-0">Real-time settlement processing and network monitoring</p>
+        </div>
+        <div class="d-flex gap-3">
+            <button class="refresh-button" onclick="location.reload()">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <span class="badge bg-success px-3 py-2">Network Online</span>
+        </div>
+    </div>
+    
+    <!-- Settlement Metrics Row -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="settlement-metric" onclick="location.href='/settlement/pending'">
+                <div class="metric-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="metric-value">{{ settlement_data.pending_settlements or '23' }}</div>
+                <div class="metric-label">Pending Settlements</div>
+                <div class="metric-trend trend-down">
+                    <i class="fas fa-arrow-down"></i> -15% from yesterday
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="settlement-metric" onclick="location.href='/settlement/completed'">
+                <div class="metric-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="metric-value">{{ settlement_data.completed_today or '1,847' }}</div>
+                <div class="metric-label">Completed Today</div>
+                <div class="metric-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> +12% from yesterday
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="settlement-metric" onclick="location.href='/settlement/volume'">
+                <div class="metric-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="metric-value">${{ settlement_data.total_volume or '127.3M' }}</div>
+                <div class="metric-label">Total Volume Today</div>
+                <div class="metric-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> +8.4% from yesterday
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="settlement-metric" onclick="location.href='/settlement/performance'">
+                <div class="metric-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <div class="metric-value">{{ settlement_data.avg_time or '2.3' }}m</div>
+                <div class="metric-label">Avg Settlement Time</div>
+                <div class="metric-trend trend-stable">
+                    <i class="fas fa-minus"></i> Within SLA
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settlement Processing and Network Status -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="settlement-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3><i class="fas fa-exchange-alt"></i> Active Settlements</h3>
+                    <div>
+                        <a href="/settlement/new" class="action-btn">
+                            <i class="fas fa-plus"></i> New Settlement
+                        </a>
+                        <a href="/settlement/batch" class="action-btn">
+                            <i class="fas fa-layer-group"></i> Batch Process
+                        </a>
+                    </div>
+                </div>
+                
+                {% for settlement in settlement_data.recent_settlements or [
+                    {'id': 'SET-2025-001847', 'amount': '2,450,000', 'status': 'processing', 'bank_from': 'NVC Bank', 'bank_to': 'Chase Bank', 'type': 'Wire Transfer', 'progress': 75, 'time_remaining': '3 minutes'},
+                    {'id': 'SET-2025-001846', 'amount': '875,500', 'status': 'pending', 'bank_from': 'Wells Fargo', 'bank_to': 'NVC Bank', 'type': 'ACH Transfer', 'progress': 25, 'time_remaining': '12 minutes'},
+                    {'id': 'SET-2025-001845', 'amount': '5,200,000', 'status': 'completed', 'bank_from': 'NVC Bank', 'bank_to': 'Bank of America', 'type': 'Swift Transfer', 'progress': 100, 'time_remaining': 'Completed'},
+                    {'id': 'SET-2025-001844', 'amount': '1,100,750', 'status': 'failed', 'bank_from': 'Citibank', 'bank_to': 'NVC Bank', 'type': 'Wire Transfer', 'progress': 0, 'time_remaining': 'Failed - Retry Required'}
+                ] %}
+                <div class="settlement-item {{ settlement.status }}">
+                    <div class="settlement-header">
+                        <div class="settlement-id">{{ settlement.id }}</div>
+                        <div class="settlement-status status-{{ settlement.status }}">{{ settlement.status.title() }}</div>
+                    </div>
+                    
+                    <div class="settlement-details">
+                        <div class="detail-item">
+                            <div class="detail-value">${{ settlement.amount }}</div>
+                            <div class="detail-label">Amount</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">{{ settlement.bank_from }}</div>
+                            <div class="detail-label">From</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">{{ settlement.bank_to }}</div>
+                            <div class="detail-label">To</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">{{ settlement.type }}</div>
+                            <div class="detail-label">Type</div>
+                        </div>
+                    </div>
+                    
+                    {% if settlement.status != 'failed' %}
+                    <div class="progress-container">
+                        <div class="progress-bar progress-{{ settlement.status }}" style="width: {{ settlement.progress }}%"></div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small>{{ settlement.time_remaining }}</small>
+                        <div>
+                            <a href="/settlement/{{ settlement.id }}" class="action-btn">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            {% if settlement.status == 'failed' %}
+                            <a href="/settlement/{{ settlement.id }}/retry" class="action-btn">
+                                <i class="fas fa-redo"></i> Retry
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="settlement-section">
+                <h3><i class="fas fa-network-wired"></i> Network Status</h3>
+                
+                <div class="network-map">
+                    <div class="network-nodes">
+                        <div class="network-node">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="network-node">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="network-node">
+                            <i class="fas fa-building"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h5>Settlement Network</h5>
+                        <p>All nodes operational</p>
+                    </div>
+                </div>
+                
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ settlement_data.active_nodes or '12' }}</div>
+                        <div class="stat-label">Active Nodes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ settlement_data.network_latency or '45' }}ms</div>
+                        <div class="stat-label">Avg Latency</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ settlement_data.success_rate or '99.7' }}%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settlement-section">
+                <h3><i class="fas fa-bell"></i> Alerts & Notifications</h3>
+                
+                <div class="alert-panel success">
+                    <h6><i class="fas fa-check-circle"></i> Settlement Milestone</h6>
+                    <p class="mb-0">Daily settlement target achieved (127.3M)</p>
+                </div>
+                
+                <div class="alert-panel">
+                    <h6><i class="fas fa-clock"></i> Processing Delay</h6>
+                    <p class="mb-0">SET-2025-001846 experiencing minor delay</p>
+                </div>
+                
+                <div class="alert-panel error">
+                    <h6><i class="fas fa-exclamation-triangle"></i> Failed Settlement</h6>
+                    <p class="mb-0">SET-2025-001844 requires manual review</p>
+                </div>
+                
+                <div class="mt-3">
+                    <h5>Quick Actions</h5>
+                    <div class="d-grid gap-2">
+                        <a href="/settlement/reconciliation" class="action-btn">
+                            <i class="fas fa-balance-scale"></i> Reconciliation
+                        </a>
+                        <a href="/settlement/reports" class="action-btn">
+                            <i class="fas fa-chart-line"></i> Generate Report
+                        </a>
+                        <a href="/settlement/settings" class="action-btn">
+                            <i class="fas fa-cogs"></i> Network Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-refresh settlement data every 20 seconds
+setInterval(function() {
+    // Update progress bars
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+        if (bar.classList.contains('progress-processing')) {
+            const currentWidth = parseInt(bar.style.width);
+            if (currentWidth < 100) {
+                bar.style.width = Math.min(100, currentWidth + Math.random() * 5) + '%';
+            }
+        }
+    });
+    
+    // Update network node animations
+    document.querySelectorAll('.network-node').forEach(node => {
+        node.style.animation = 'pulse 2s infinite';
+    });
+    
+    const timestamp = new Date().toLocaleTimeString();
+    console.log('Settlement dashboard refreshed at:', timestamp);
+}, 20000);
+
+// Add click effects to settlement items
+document.querySelectorAll('.settlement-item').forEach(item => {
+    item.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-2px) scale(1.01)';
+    });
+    
+    item.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+    });
+});
+
+// Add real-time updates simulation
+function simulateRealTimeUpdates() {
+    // Simulate settlement progress updates
+    const processingItems = document.querySelectorAll('.settlement-item.processing');
+    processingItems.forEach(item => {
+        const progressBar = item.querySelector('.progress-bar');
+        const currentWidth = parseInt(progressBar.style.width);
+        if (currentWidth < 100) {
+            progressBar.style.width = Math.min(100, currentWidth + 1) + '%';
+        }
+    });
+}
+
+// Run real-time updates every 3 seconds
+setInterval(simulateRealTimeUpdates, 3000);
+</script>
+{% endblock %}

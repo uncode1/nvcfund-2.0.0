@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Threat Monitoring - Security Center{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Threat Monitoring Dashboard</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-danger"><i class="fas fa-shield-alt"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Active Threats</span>
+                                    <span class="info-box-number">{{ threat_data.active_threats }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-success"><i class="fas fa-ban"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Blocked Attempts</span>
+                                    <span class="info-box-number">{{ threat_data.blocked_attempts }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-warning"><i class="fas fa-exclamation-triangle"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Threat Level</span>
+                                    <span class="info-box-number">{{ threat_data.threat_level }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Recent Threats</h4>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Source</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for threat in threat_data.recent_threats %}
+                                    <tr>
+                                        <td>{{ threat.type }}</td>
+                                        <td>{{ threat.source }}</td>
+                                        <td>{{ threat.time }}</td>
+                                        <td><span class="badge badge-success">{{ threat.status }}</span></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

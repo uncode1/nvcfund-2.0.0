@@ -1,0 +1,88 @@
+<!-- Treasury Officer Navbar - Treasury-focused Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <!-- Brand -->
+        <a class="navbar-brand" href="{{ url_for('public.index') }}">
+            <i class="fas fa-university me-2"></i>
+            <strong>NVC Banking</strong>
+        </a>
+
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Main Navigation -->
+            <ul class="navbar-nav me-auto">
+                <!-- Dashboard -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('treasury.dashboard') }}">
+                        <i class="fas fa-tachometer-alt me-1"></i> Treasury Dashboard
+                    </a>
+                </li>
+                
+                <!-- NVCT Operations -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="nvctDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-coins me-1"></i> NVCT Operations
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern">
+                        <li><a class="dropdown-item" href="{{ url_for('nvct_stablecoin.dashboard') }}"><i class="fas fa-chart-line me-1"></i> NVCT Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('nvct_stablecoin.supply_management') }}"><i class="fas fa-cogs me-1"></i> Supply Management</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('nvct_stablecoin.bridge_operations') }}"><i class="fas fa-exchange-alt me-1"></i> Bridge Operations</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('nvct_stablecoin.governance') }}"><i class="fas fa-vote-yea me-1"></i> Governance</a></li>
+                    </ul>
+                </li>
+
+                <!-- Treasury Management -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="treasuryDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-university me-1"></i> Treasury Management
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern">
+                        <li><a class="dropdown-item" href="{{ url_for('treasury.asset_management') }}"><i class="fas fa-chart-pie me-1"></i> Asset Management</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('treasury.liquidity_management') }}"><i class="fas fa-tint me-1"></i> Liquidity Management</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('treasury.risk_management') }}"><i class="fas fa-shield-alt me-1"></i> Risk Management</a></li>
+                    </ul>
+                </li>
+
+                <!-- Analytics -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('analytics.dashboard') }}">
+                        <i class="fas fa-chart-line me-1"></i> Analytics
+                    </a>
+                </li>
+
+                <!-- Compliance -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('compliance.dashboard') }}">
+                        <i class="fas fa-balance-scale me-1"></i> Compliance
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Right Side Navigation -->
+            <ul class="navbar-nav">
+                <!-- User Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-1"></i> {{ current_user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-modern">
+                        <li><h6 class="dropdown-header"><i class="fas fa-user me-1"></i> Account</h6></li>
+                        <li><a class="dropdown-item" href="/profile"><i class="fas fa-user-edit me-1"></i> My Profile</a></li>
+                        <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog me-1"></i> Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><span class="dropdown-item-text text-muted">
+                            <small><i class="fas fa-shield-alt me-1"></i> Role: {{ current_user.role.replace('_', ' ').title() }}</small>
+                        </span></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

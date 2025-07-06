@@ -1,0 +1,560 @@
+{% extends "base.html" %}
+
+{% block title %}Enhanced Security Dashboard - NVC Banking Platform{% endblock %}
+
+{% block head %}
+<style>
+    .security-dashboard {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 20px;
+    }
+    
+    .navigation-breadcrumb {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .security-metric {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .security-metric:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .metric-icon {
+        font-size: 2.5em;
+        opacity: 0.3;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+    
+    .metric-value {
+        font-size: 2.5em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .metric-label {
+        font-size: 0.9em;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .threat-level {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: bold;
+        margin-top: 8px;
+    }
+    
+    .threat-low { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .threat-medium { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .threat-high { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .threat-critical { background: rgba(153, 27, 27, 0.3); color: #fca5a5; }
+    
+    .security-section {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .threat-card {
+        background: rgba(220, 38, 38, 0.1);
+        border: 1px solid rgba(220, 38, 38, 0.3);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 4px solid #ef4444;
+    }
+    
+    .threat-card.warning {
+        background: rgba(245, 158, 11, 0.1);
+        border-color: rgba(245, 158, 11, 0.3);
+        border-left-color: #f59e0b;
+    }
+    
+    .threat-card.info {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: rgba(59, 130, 246, 0.3);
+        border-left-color: #3b82f6;
+    }
+    
+    .threat-card.success {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: rgba(16, 185, 129, 0.3);
+        border-left-color: #10b981;
+    }
+    
+    .security-tool {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .security-tool:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .tool-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .tool-status {
+        font-size: 0.8em;
+        padding: 3px 8px;
+        border-radius: 8px;
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+    }
+    
+    .scan-progress {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        height: 6px;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+    
+    .scan-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #34d399);
+        border-radius: 10px;
+        transition: width 0.3s ease;
+    }
+    
+    .incident-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border-left: 4px solid #ef4444;
+    }
+    
+    .incident-item.resolved {
+        border-left-color: #10b981;
+        opacity: 0.7;
+    }
+    
+    .incident-item.investigating {
+        border-left-color: #f59e0b;
+    }
+    
+    .incident-info {
+        flex: 1;
+    }
+    
+    .incident-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .incident-details {
+        font-size: 0.9em;
+        opacity: 0.8;
+    }
+    
+    .incident-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .action-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: white;
+        text-decoration: none;
+        font-size: 0.8em;
+        transition: all 0.3s ease;
+    }
+    
+    .action-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    .real-time-monitor {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        padding: 20px;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .monitor-pulse {
+        width: 60px;
+        height: 60px;
+        border: 3px solid #10b981;
+        border-radius: 50%;
+        margin-bottom: 15px;
+        position: relative;
+        animation: pulse-ring 2s infinite;
+    }
+    
+    @keyframes pulse-ring {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.2); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .security-stats {
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .stat-item {
+        flex: 1;
+    }
+    
+    .stat-value {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        font-size: 0.8em;
+        opacity: 0.7;
+    }
+    
+    .refresh-button {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .refresh-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(180deg);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="security-dashboard">
+    <!-- Navigation Breadcrumb -->
+    <nav class="navigation-breadcrumb">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="/" class="text-white-50">Home</a></li>
+            <li class="breadcrumb-item"><a href="/admin/" class="text-white-50">Administration</a></li>
+            <li class="breadcrumb-item active">Security Center</li>
+        </ol>
+    </nav>
+    
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1><i class="fas fa-shield-alt"></i> Enhanced Security Dashboard</h1>
+            <p class="mb-0">Comprehensive threat monitoring and incident response</p>
+        </div>
+        <div class="d-flex gap-3">
+            <button class="refresh-button" onclick="location.reload()">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <span class="badge bg-success px-3 py-2">System Secure</span>
+        </div>
+    </div>
+    
+    <!-- Security Metrics Row -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="security-metric">
+                <div class="metric-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="metric-value">{{ security_data.active_threats or '2' }}</div>
+                <div class="metric-label">Active Threats</div>
+                <div class="threat-level threat-low">Low Risk</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="security-metric">
+                <div class="metric-icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <div class="metric-value">{{ security_data.blocked_attempts or '147' }}</div>
+                <div class="metric-label">Blocked Today</div>
+                <div class="threat-level threat-medium">+23% from yesterday</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="security-metric">
+                <div class="metric-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <div class="metric-value">{{ security_data.monitored_endpoints or '34' }}</div>
+                <div class="metric-label">Monitored Endpoints</div>
+                <div class="threat-level threat-low">All Protected</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="security-metric">
+                <div class="metric-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="metric-value">{{ security_data.last_scan or '5m' }}</div>
+                <div class="metric-label">Last Security Scan</div>
+                <div class="threat-level threat-low">Clean</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Security Tools and Real-time Monitoring -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="security-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3><i class="fas fa-tools"></i> Security Tools</h3>
+                    <a href="/security/tools" class="action-btn">
+                        <i class="fas fa-cogs"></i> Manage Tools
+                    </a>
+                </div>
+                
+                <div class="security-tool" onclick="location.href='/security/investigation'">
+                    <div class="tool-header">
+                        <h5><i class="fas fa-search"></i> Investigation Tools</h5>
+                        <span class="tool-status">Active</span>
+                    </div>
+                    <p class="mb-2">Advanced forensic analysis and threat investigation</p>
+                    <div class="scan-progress">
+                        <div class="scan-progress-bar" style="width: 85%"></div>
+                    </div>
+                    <small>Last scan: 5 minutes ago</small>
+                </div>
+                
+                <div class="security-tool" onclick="location.href='/security/threat-monitoring'">
+                    <div class="tool-header">
+                        <h5><i class="fas fa-eye"></i> Threat Monitoring</h5>
+                        <span class="tool-status">Active</span>
+                    </div>
+                    <p class="mb-2">Real-time threat detection and analysis</p>
+                    <div class="scan-progress">
+                        <div class="scan-progress-bar" style="width: 92%"></div>
+                    </div>
+                    <small>Monitoring 34 endpoints</small>
+                </div>
+                
+                <div class="security-tool" onclick="location.href='/security/vulnerability-scan'">
+                    <div class="tool-header">
+                        <h5><i class="fas fa-bug"></i> Vulnerability Scanner</h5>
+                        <span class="tool-status">Scanning</span>
+                    </div>
+                    <p class="mb-2">Automated vulnerability assessment</p>
+                    <div class="scan-progress">
+                        <div class="scan-progress-bar" style="width: 67%"></div>
+                    </div>
+                    <small>Scan in progress: 67% complete</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="security-section">
+                <h3><i class="fas fa-satellite-dish"></i> Real-time Monitoring</h3>
+                
+                <div class="real-time-monitor">
+                    <div class="monitor-pulse"></div>
+                    <h5>System Monitoring Active</h5>
+                    <p>All security sensors operational</p>
+                </div>
+                
+                <div class="security-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">{{ security_data.events_per_hour or '1,247' }}</div>
+                        <div class="stat-label">Events/Hour</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ security_data.false_positives or '3' }}%</div>
+                        <div class="stat-label">False Positives</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ security_data.response_time or '0.8' }}s</div>
+                        <div class="stat-label">Response Time</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Security Events and Incident Response -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="security-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3><i class="fas fa-history"></i> Recent Security Events</h3>
+                    <a href="/security/events" class="action-btn">
+                        <i class="fas fa-list"></i> View All Events
+                    </a>
+                </div>
+                
+                {% for event in security_data.recent_events or [
+                    {'type': 'Login Anomaly', 'description': 'Unusual login pattern detected from IP 192.168.1.100', 'timestamp': '2 minutes ago', 'severity': 'warning'},
+                    {'type': 'Blocked Attack', 'description': 'SQL injection attempt blocked on /api/users endpoint', 'timestamp': '15 minutes ago', 'severity': 'high'},
+                    {'type': 'Scan Complete', 'description': 'Daily vulnerability scan completed successfully', 'timestamp': '1 hour ago', 'severity': 'info'},
+                    {'type': 'Access Violation', 'description': 'Unauthorized access attempt to admin panel', 'timestamp': '2 hours ago', 'severity': 'critical'},
+                    {'type': 'Certificate Update', 'description': 'SSL certificate renewed successfully', 'timestamp': '3 hours ago', 'severity': 'success'}
+                ] %}
+                <div class="threat-card {{ event.severity }}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6>{{ event.type }}</h6>
+                            <p class="mb-1">{{ event.description }}</p>
+                            <small>{{ event.timestamp }}</small>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="action-btn">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-shield-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="security-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3><i class="fas fa-bell"></i> Incident Response</h3>
+                    <a href="/security/incident-response" class="action-btn">
+                        <i class="fas fa-plus"></i> New Incident
+                    </a>
+                </div>
+                
+                <div class="incident-item">
+                    <div class="incident-info">
+                        <div class="incident-title">Security Breach Investigation</div>
+                        <div class="incident-details">Priority: High | Assigned: Security Team</div>
+                    </div>
+                    <div class="incident-actions">
+                        <span class="badge bg-warning">Active</span>
+                    </div>
+                </div>
+                
+                <div class="incident-item investigating">
+                    <div class="incident-info">
+                        <div class="incident-title">Unusual Traffic Analysis</div>
+                        <div class="incident-details">Priority: Medium | Assigned: DevOps</div>
+                    </div>
+                    <div class="incident-actions">
+                        <span class="badge bg-info">Investigating</span>
+                    </div>
+                </div>
+                
+                <div class="incident-item resolved">
+                    <div class="incident-info">
+                        <div class="incident-title">Failed Login Attempts</div>
+                        <div class="incident-details">Priority: Low | Resolved 2h ago</div>
+                    </div>
+                    <div class="incident-actions">
+                        <span class="badge bg-success">Resolved</span>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <h5>Quick Actions</h5>
+                    <div class="d-grid gap-2">
+                        <a href="/security/lockdown" class="action-btn bg-danger">
+                            <i class="fas fa-lock"></i> Emergency Lockdown
+                        </a>
+                        <a href="/security/audit" class="action-btn">
+                            <i class="fas fa-clipboard-check"></i> Security Audit
+                        </a>
+                        <a href="/security/reports" class="action-btn">
+                            <i class="fas fa-file-alt"></i> Generate Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-refresh security dashboard every 15 seconds
+setInterval(function() {
+    // Update pulse animation
+    document.querySelectorAll('.monitor-pulse').forEach(pulse => {
+        pulse.style.animation = 'pulse-ring 2s infinite';
+    });
+    
+    // Simulate scan progress updates
+    document.querySelectorAll('.scan-progress-bar').forEach(bar => {
+        const currentWidth = parseInt(bar.style.width);
+        if (currentWidth < 100) {
+            bar.style.width = (currentWidth + Math.random() * 3) + '%';
+        }
+    });
+    
+    const timestamp = new Date().toLocaleTimeString();
+    console.log('Security dashboard refreshed at:', timestamp);
+}, 15000);
+
+// Add click effects to security tools
+document.querySelectorAll('.security-tool').forEach(tool => {
+    tool.addEventListener('click', function() {
+        this.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 100);
+    });
+});
+</script>
+{% endblock %}

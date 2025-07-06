@@ -1,0 +1,497 @@
+{% extends "base.html" %}
+
+{% block title %}System Logs Viewer{% endblock %}
+
+{% block extra_css %}
+<style>
+.log-viewer {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.log-filters {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.log-content {
+    background: #1e1e1e;
+    color: #f8f8f2;
+    border-radius: 6px;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid #444;
+}
+
+.log-line {
+    padding: 2px 0;
+    border-bottom: 1px solid #333;
+    word-wrap: break-word;
+}
+
+.log-line:hover {
+    background-color: #2d2d2d;
+}
+
+.log-timestamp {
+    color: #88c999;
+    font-weight: 500;
+}
+
+.log-level-debug { color: #6c757d; }
+.log-level-info { color: #17a2b8; }
+.log-level-warning { color: #ffc107; }
+.log-level-error { color: #dc3545; }
+.log-level-critical { 
+    color: #dc3545; 
+    font-weight: bold;
+    background-color: #2d1b1b;
+}
+
+.log-message {
+    color: #f8f8f2;
+}
+
+.category-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.category-security_reports { background-color: #dc3545; color: white; }
+.category-compliance { background-color: #28a745; color: white; }
+.category-banking { background-color: #007bff; color: white; }
+.category-admin { background-color: #6f42c1; color: white; }
+.category-errors { background-color: #fd7e14; color: white; }
+.category-audit { background-color: #20c997; color: white; }
+.category-system { background-color: #6c757d; color: white; }
+.category-transactions { background-color: #ffc107; color: black; }
+.category-auth { background-color: #e83e8c; color: white; }
+.category-application { background-color: #17a2b8; color: white; }
+.category-api { background-color: #343a40; color: white; }
+
+.stats-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.file-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.file-item {
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.file-item:hover {
+    background-color: #f8f9fa;
+}
+
+.file-item.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+.loading-spinner {
+    display: none;
+    text-align: center;
+    padding: 20px;
+}
+
+.pagination-info {
+    background: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-file-alt"></i> System Logs Viewer</h2>
+                <div>
+                    <span class="badge bg-info">Role: {{ current_user.role.title() }}</span>
+                    <span class="badge bg-success" id="accessCount">{{ accessible_categories|length }} Categories</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Sidebar: Navigation -->
+        <div class="col-md-3">
+            <!-- Date Selection -->
+            <div class="stats-card">
+                <h6><i class="fas fa-calendar"></i> Date Selection</h6>
+                <select class="form-select" id="dateSelect">
+                    <option value="">Select Date...</option>
+                    {% for date in available_dates %}
+                    <option value="{{ date.path }}" 
+                            {% if loop.first %}selected{% endif %}>
+                        {{ date.display_date }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Category Selection -->
+            <div class="stats-card">
+                <h6><i class="fas fa-tags"></i> Log Categories</h6>
+                <div id="categoryList">
+                    {% for category in accessible_categories %}
+                    <div class="form-check">
+                        <input class="form-check-input category-checkbox" 
+                               type="checkbox" value="{{ category }}" 
+                               id="cat_{{ category }}" checked>
+                        <label class="form-check-label" for="cat_{{ category }}">
+                            <span class="category-badge category-{{ category }}">
+                                {{ category.replace('_', ' ').title() }}
+                            </span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Log Statistics -->
+            <div class="stats-card" id="logStats" style="display: none;">
+                <h6><i class="fas fa-chart-bar"></i> Statistics</h6>
+                <div id="statsContent"></div>
+            </div>
+
+            <!-- File List -->
+            <div class="stats-card" id="fileListCard" style="display: none;">
+                <h6><i class="fas fa-files-o"></i> Log Files</h6>
+                <div class="file-list" id="fileList"></div>
+            </div>
+        </div>
+
+        <!-- Main Content: Filters and Log Display -->
+        <div class="col-md-9">
+            <!-- Filters -->
+            <div class="log-filters">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Log Level</label>
+                        <select class="form-select" id="levelFilter">
+                            <option value="">All Levels</option>
+                            <option value="DEBUG">Debug</option>
+                            <option value="INFO">Info</option>
+                            <option value="WARNING">Warning</option>
+                            <option value="ERROR">Error</option>
+                            <option value="CRITICAL">Critical</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchFilter" 
+                               placeholder="Search in logs...">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Max Lines</label>
+                        <select class="form-select" id="maxLinesFilter">
+                            <option value="100">100</option>
+                            <option value="500" selected>500</option>
+                            <option value="1000">1000</option>
+                            <option value="5000">5000</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Actions</label>
+                        <div>
+                            <button class="btn btn-primary btn-sm" onclick="applyFilters()">
+                                <i class="fas fa-search"></i> Filter
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Export</label>
+                        <div>
+                            <button class="btn btn-success btn-sm" onclick="exportLogs()" 
+                                    id="exportBtn" disabled>
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p>Loading logs...</p>
+            </div>
+
+            <!-- Log Content Display -->
+            <div class="log-viewer" id="logViewer" style="display: none;">
+                <div class="pagination-info" id="paginationInfo"></div>
+                <div class="log-content" id="logContent">
+                    <div class="text-center text-muted p-4">
+                        <i class="fas fa-file-alt fa-2x mb-2"></i>
+                        <p>Select a date and log file to view content</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentFile = null;
+let currentFilters = {};
+
+// Initialize on page load
+$(document).ready(function() {
+    loadDateLogs();
+    
+    // Event handlers
+    $('#dateSelect').change(loadDateLogs);
+    $('.category-checkbox').change(updateFileList);
+    $('#searchFilter').on('input', debounce(function() {
+        if (currentFile) applyFilters();
+    }, 500));
+});
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function loadDateLogs() {
+    const selectedDate = $('#dateSelect').val();
+    if (!selectedDate) {
+        $('#logStats, #fileListCard, #logViewer').hide();
+        return;
+    }
+    
+    // Load statistics
+    $.get(`/admin_management/logs/api/stats/${selectedDate}`)
+        .done(function(data) {
+            displayStats(data);
+            $('#logStats').show();
+        })
+        .fail(function() {
+            console.error('Failed to load log statistics');
+        });
+    
+    updateFileList();
+}
+
+function displayStats(stats) {
+    let html = `
+        <div class="row text-center">
+            <div class="col-6">
+                <strong>${stats.total_files}</strong>
+                <br><small>Files</small>
+            </div>
+            <div class="col-6">
+                <strong>${stats.total_size_human}</strong>
+                <br><small>Total Size</small>
+            </div>
+        </div>
+        <hr>
+    `;
+    
+    for (const [category, info] of Object.entries(stats.categories)) {
+        html += `
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="category-badge category-${category}">${category.replace('_', ' ')}</span>
+                <small>${info.files} files (${info.size_human})</small>
+            </div>
+        `;
+    }
+    
+    $('#statsContent').html(html);
+}
+
+function updateFileList() {
+    const selectedDate = $('#dateSelect').val();
+    if (!selectedDate) return;
+    
+    const selectedCategories = $('.category-checkbox:checked').map(function() {
+        return this.value;
+    }).get();
+    
+    if (selectedCategories.length === 0) {
+        $('#fileListCard').hide();
+        return;
+    }
+    
+    $.post('/admin_management/logs/api/files', {
+        date_path: selectedDate,
+        categories: selectedCategories
+    })
+    .done(function(data) {
+        displayFileList(data.files);
+        $('#fileListCard').show();
+    })
+    .fail(function() {
+        console.error('Failed to load file list');
+    });
+}
+
+function displayFileList(files) {
+    if (files.length === 0) {
+        $('#fileList').html('<p class="text-muted">No log files found</p>');
+        return;
+    }
+    
+    let html = '';
+    files.forEach(file => {
+        const sizeKB = (file.size / 1024).toFixed(1);
+        const modifiedDate = new Date(file.modified).toLocaleString();
+        
+        html += `
+            <div class="file-item" onclick="loadLogFile('${file.path}')">
+                <div class="d-flex justify-content-between">
+                    <strong>${file.name}</strong>
+                    <small>${sizeKB} KB</small>
+                </div>
+                <small class="text-muted">${modifiedDate}</small>
+            </div>
+        `;
+    });
+    
+    $('#fileList').html(html);
+}
+
+function loadLogFile(filePath) {
+    currentFile = filePath;
+    
+    // Update active file
+    $('.file-item').removeClass('active');
+    $(`[onclick="loadLogFile('${filePath}')"]`).addClass('active');
+    
+    // Show loading
+    $('#loadingSpinner').show();
+    $('#logViewer').hide();
+    
+    applyFilters();
+}
+
+function applyFilters() {
+    if (!currentFile) return;
+    
+    currentFilters = {
+        level: $('#levelFilter').val(),
+        search: $('#searchFilter').val(),
+        max_lines: $('#maxLinesFilter').val()
+    };
+    
+    $.post('/admin_management/logs/api/content', {
+        file_path: currentFile,
+        filters: currentFilters
+    })
+    .done(function(data) {
+        if (data.error) {
+            $('#logContent').html(`<div class="alert alert-danger">${data.error}</div>`);
+        } else {
+            displayLogContent(data);
+            $('#exportBtn').prop('disabled', false);
+        }
+        $('#loadingSpinner').hide();
+        $('#logViewer').show();
+    })
+    .fail(function() {
+        $('#logContent').html('<div class="alert alert-danger">Failed to load log content</div>');
+        $('#loadingSpinner').hide();
+        $('#logViewer').show();
+    });
+}
+
+function displayLogContent(data) {
+    // Update pagination info
+    $('#paginationInfo').html(`
+        Showing ${data.filtered_lines} of ${data.total_lines} lines 
+        from ${data.file_info.name} (${data.file_info.category})
+    `);
+    
+    if (data.content.length === 0) {
+        $('#logContent').html('<div class="text-center text-muted p-4">No matching log entries found</div>');
+        return;
+    }
+    
+    let html = '';
+    data.content.forEach(line => {
+        html += `
+            <div class="log-line">
+                <span class="log-timestamp">${line.timestamp}</span>
+                <span class="log-level-${line.level.toLowerCase()}">[${line.level}]</span>
+                <span class="log-message">${escapeHtml(line.message)}</span>
+            </div>
+        `;
+    });
+    
+    $('#logContent').html(html);
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function exportLogs() {
+    if (!currentFile) return;
+    
+    const exportData = {
+        file_path: currentFile,
+        filters: currentFilters,
+        format: 'csv'
+    };
+    
+    // Create download link
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/admin_management/logs/api/export';
+    
+    for (const [key, value] of Object.entries(exportData)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = typeof value === 'object' ? JSON.stringify(value) : value;
+        form.appendChild(input);
+    }
+    
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+}
+</script>
+{% endblock %}

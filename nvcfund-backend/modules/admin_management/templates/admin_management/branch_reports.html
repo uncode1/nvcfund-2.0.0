@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Branch Reports - NVC Banking Platform{% endblock %}
+
+{% block head %}
+<style>
+    .branch-reports {
+        background: linear-gradient(135deg, #065f46 0%, #059669 100%);
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 20px;
+    }
+    
+    .report-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="branch-reports">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-chart-bar"></i> Branch Reports</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="report-card">
+                <h3>{{ report_data.total_transactions or '0' }}</h3>
+                <p>Total Transactions</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="report-card">
+                <h3>${{ report_data.total_volume or '0' }}</h3>
+                <p>Total Volume</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="report-card">
+                <h3>{{ report_data.avg_transaction or '0' }}</h3>
+                <p>Avg Transaction</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="report-card">
+                <h3>{{ report_data.growth_rate or '0' }}%</h3>
+                <p>Growth Rate</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <h2>Branch Performance</h2>
+            {% for branch in report_data.branch_performance or [] %}
+            <div class="report-card">
+                <h5>{{ branch.name }}</h5>
+                <p>Transactions: {{ branch.transactions }}</p>
+                <p>Volume: ${{ branch.volume }}</p>
+                <small>Performance: {{ branch.performance }}</small>
+            </div>
+            {% else %}
+            <div class="report-card">
+                <h5>No Report Data Available</h5>
+                <p>Branch performance data will appear here once available.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

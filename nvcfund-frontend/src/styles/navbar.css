@@ -1,0 +1,209 @@
+/* Enhanced Navbar Dropdown Styling - Matching Backend Template */
+/* Based on backend layout.html color scheme and styling */
+
+.navbar {
+  background-color: #0a2447 !important;
+  border-bottom: 2px solid #66ccff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #ffffff !important;
+}
+
+.nav-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #66ccff !important;
+}
+
+/* Enhanced Dropdown Menu Styling */
+.dropdown-menu {
+  background-color: #0a2447 !important;
+  border: 1px solid #66ccff !important;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  max-height: 80vh;
+  overflow-y: auto;
+  min-width: 220px;
+  padding: 0.5rem 0;
+  backdrop-filter: blur(10px);
+  z-index: 1100;
+}
+
+.dropdown-item {
+  color: #ffffff !important;
+  padding: 0.7rem 1.2rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  margin: 0 0.25rem;
+}
+
+.dropdown-item:hover {
+  background-color: #66ccff !important;
+  color: #061c38 !important;
+  transform: translateX(2px);
+}
+
+.dropdown-item:focus {
+  background-color: #66ccff !important;
+  color: #061c38 !important;
+  outline: none;
+}
+
+.dropdown-header {
+  color: #66ccff !important;
+  font-weight: bold;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.7rem 1.2rem 0.4rem;
+  margin: 0;
+}
+
+.dropdown-divider {
+  border-color: #66ccff !important;
+  margin: 0.5rem 0.25rem;
+  opacity: 0.7;
+}
+
+/* Enhanced visibility for dropdown toggle */
+.dropdown-toggle::after {
+  color: #ffffff !important;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-toggle[aria-expanded="true"]::after {
+  transform: rotate(180deg);
+}
+
+.dropdown-toggle:hover::after {
+  color: #66ccff !important;
+}
+
+/* Special styling for warning/danger items */
+.dropdown-item.text-danger {
+  color: #ff6b6b !important;
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: #ff6b6b !important;
+  color: #ffffff !important;
+}
+
+.dropdown-item.text-warning {
+  color: #ffa726 !important;
+}
+
+.dropdown-item.text-warning:hover {
+  background-color: #ffa726 !important;
+  color: #061c38 !important;
+}
+
+/* Enhanced icon spacing */
+.dropdown-item i {
+  width: 16px;
+  text-align: center;
+  margin-right: 0.5rem;
+  opacity: 0.8;
+}
+
+.dropdown-item:hover i {
+  opacity: 1;
+}
+
+/* Navbar toggler for mobile */
+.navbar-toggler {
+  border-color: #66ccff !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28102, 204, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* Mobile dropdown adjustments */
+@media (max-width: 991.98px) {
+  .dropdown-menu {
+    position: static !important;
+    float: none;
+    width: 100%;
+    margin-top: 0;
+    background-color: #0a2447 !important;
+    border: none !important;
+    border-radius: 0;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dropdown-item {
+    padding-left: 2rem;
+  }
+}
+
+/* Improved focus states for accessibility */
+.nav-link:focus,
+.dropdown-item:focus {
+  outline: 2px solid #66ccff;
+  outline-offset: 2px;
+}
+
+/* Animation for dropdown show/hide */
+.dropdown-menu.show {
+  animation: dropdownFadeIn 0.3s ease;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced submenu indicators */
+.dropdown-item.has-submenu::after {
+  content: '→';
+  float: right;
+  color: #66ccff;
+  font-weight: bold;
+}
+
+/* Banking-specific color overrides */
+.navbar-brand .text-primary {
+  color: #66ccff !important;
+}
+
+/* Ensure dropdown visibility above other elements */
+.navbar .dropdown-menu {
+  z-index: 1050;
+}
+
+/* Professional fade effect for better UX */
+.dropdown-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.dropdown-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(102, 204, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.dropdown-item:hover::before {
+  left: 100%;
+}

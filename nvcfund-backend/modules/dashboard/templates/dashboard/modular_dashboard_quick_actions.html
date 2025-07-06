@@ -1,0 +1,101 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Quick Actions - NVC Banking Platform{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-gradient-dark">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h1 class="card-title text-white mb-0">
+                                    <i class="fas fa-bolt mr-2"></i>Quick Actions
+                                </h1>
+                                <p class="card-description text-light mb-0">Fast access to banking services for {{ username }}</p>
+                            </div>
+                            <div class="col-auto">
+                                <a href="{{ url_for('dashboard.home') }}" class="btn btn-light">
+                                    <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Grid -->
+        <div class="row">
+            {% for action in available_actions %}
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                <div class="card h-100 action-card">
+                    <div class="card-body text-center d-flex flex-column">
+                        <div class="mb-3">
+                            <i class="fas fa-arrow-right fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">{{ action.name }}</h5>
+                        <p class="card-text flex-grow-1">{{ action.description or "Quick access to " + action.name.lower() }}</p>
+                        <a href="{{ action.url }}" class="btn btn-primary mt-auto">
+                            <i class="fas fa-external-link-alt mr-2"></i>Open
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Additional Services -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">
+                            <i class="fas fa-plus-circle mr-2"></i>Additional Services
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <a href="/contact" class="btn btn-outline-info btn-block">
+                                    <i class="fas fa-mobile-alt mr-2"></i>Mobile Banking
+                                </a>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <a href="/contact" class="btn btn-outline-success btn-block">
+                                    <i class="fas fa-chart-line mr-2"></i>Investment Tools
+                                </a>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <a href="/contact" class="btn btn-outline-warning btn-block">
+                                    <i class="fas fa-shield-alt mr-2"></i>Security Settings
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if error_message %}
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>{{ error_message }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.action-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+</style>
+{% endblock %}

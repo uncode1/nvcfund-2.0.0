@@ -1,0 +1,2 @@
+2025-07-06T03:19:40.167646 - SECURITY - audit_report - {"timestamp": "2025-07-06T03:19:40.167646", "event_type": "audit_report", "user_id": "test_user_123", "data": {"report_type": "comprehensive_security_audit", "status": "completed"}, "category": "security"}
+2025-07-06T03:26:58.295828 - SECURITY - audit_report - {"timestamp": "2025-07-06T03:26:58.295828", "event_type": "audit_report", "user_id": "test_user_123", "data": {"report_type": "comprehensive_security_audit", "status": "completed"}, "category": "security"}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Teller Operations{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Teller Operations</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-info"><i class="fas fa-users"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total Tellers</span>
+                                    <span class="info-box-number">{{ teller_data.total_tellers }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-success"><i class="fas fa-user-check"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Active Tellers</span>
+                                    <span class="info-box-number">{{ teller_data.active_tellers }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Teller Activity</h4>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Branch</th>
+                                        <th>Transactions</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for teller in teller_data.tellers %}
+                                    <tr>
+                                        <td>{{ teller.id }}</td>
+                                        <td>{{ teller.name }}</td>
+                                        <td>{{ teller.branch }}</td>
+                                        <td>{{ teller.transactions }}</td>
+                                        <td><span class="badge badge-success">{{ teller.status }}</span></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

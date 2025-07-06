@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Officer Dashboard - NVC Banking Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .dashboard-card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            transition: box-shadow 0.15s ease-in-out;
+        }
+        .dashboard-card:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        .loan-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .status-pending { background-color: #ffc107; color: #000; }
+        .status-approved { background-color: #28a745; color: #fff; }
+        .status-rejected { background-color: #dc3545; color: #fff; }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard">
+                <i class="fas fa-university me-2"></i>NVC Banking
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3">
+                    Welcome, {{ username }}
+                </span>
+                <a class="nav-link" href="/logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2><i class="fas fa-hand-holding-usd me-2"></i>Loan Officer Dashboard</h2>
+                        <p class="text-muted">Role: {{ user_role|title }} | Last Login: {{ last_login }}</p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-success fs-6">
+                            <i class="fas fa-circle me-1"></i>Credit Systems Online
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics Row -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card dashboard-card metric-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-alt fa-2x mb-2"></i>
+                        <h4>{{ loan_applications or 12 }}</h4>
+                        <p class="mb-0">Pending Applications</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card dashboard-card metric-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-line fa-2x mb-2"></i>
+                        <h4>{{ portfolio_value or '$2.5M' }}</h4>
+                        <p class="mb-0">Portfolio Value</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card dashboard-card metric-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-percentage fa-2x mb-2"></i>
+                        <h4>{{ default_rate or '0.8%' }}</h4>
+                        <p class="mb-0">Default Rate</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card dashboard-card metric-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <h4>{{ approval_rate or '87%' }}</h4>
+                        <p class="mb-0">Approval Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loan Applications and Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card dashboard-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-list me-2"></i>Recent Loan Applications</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Application ID</th>
+                                        <th>Applicant</th>
+                                        <th>Amount</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>LA-2025-001</td>
+                                        <td>John Smith</td>
+                                        <td>$50,000</td>
+                                        <td>Personal</td>
+                                        <td><span class="loan-status status-pending">Pending</span></td>
+                                        <td><a href="/loans/review/LA-2025-001" class="btn btn-sm btn-primary">Review</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>LA-2025-002</td>
+                                        <td>ABC Corp</td>
+                                        <td>$250,000</td>
+                                        <td>Business</td>
+                                        <td><span class="loan-status status-approved">Approved</span></td>
+                                        <td><a href="/loans/view/LA-2025-002" class="btn btn-sm btn-info">View</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>LA-2025-003</td>
+                                        <td>Mary Johnson</td>
+                                        <td>$30,000</td>
+                                        <td>Auto</td>
+                                        <td><span class="loan-status status-pending">Pending</span></td>
+                                        <td><a href="/loans/review/LA-2025-003" class="btn btn-sm btn-primary">Review</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card dashboard-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-tools me-2"></i>Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="/loans/applications" class="btn btn-success btn-sm">
+                                <i class="fas fa-file-alt me-2"></i>Review Applications
+                            </a>
+                            <a href="/loans/portfolio" class="btn btn-primary btn-sm">
+                                <i class="fas fa-chart-pie me-2"></i>Portfolio Overview
+                            </a>
+                            <a href="/loans/credit-analysis" class="btn btn-info btn-sm">
+                                <i class="fas fa-calculator me-2"></i>Credit Analysis
+                            </a>
+                            <a href="/loans/reports" class="btn btn-warning btn-sm">
+                                <i class="fas fa-chart-bar me-2"></i>Generate Reports
+                            </a>
+                            <a href="/loans/risk-assessment" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-shield-alt me-2"></i>Risk Assessment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

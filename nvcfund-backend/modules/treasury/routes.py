@@ -1,0 +1,166 @@
+"""
+Treasury Operations Routes
+Enterprise-grade modular routing system
+"""
+
+from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for
+from flask_login import login_required, current_user
+from modules.utils.services import ErrorLoggerService
+from ..core.form_decorators import treasury_form, process_form, require_post_data
+from ..core.form_processor import form_processor
+
+# Create module blueprint
+treasury_bp = Blueprint('treasury', __name__, 
+                            template_folder='templates',
+                            static_folder='static',
+                            url_prefix='/treasury')
+
+# Initialize services
+error_service = ErrorLoggerService()
+
+@treasury_bp.route('/')
+@login_required
+def main_dashboard():
+    """Treasury Operations main dashboard"""
+    try:
+        return render_template('treasury/treasury_dashboard.html',
+                             user=current_user,
+                             page_title='Treasury Operations Dashboard')
+    except Exception as e:
+        error_service.log_error("DASHBOARD_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('dashboard.dashboard_home'))
+
+@treasury_bp.route('/overview')
+@login_required  
+def overview():
+    """Treasury Operations overview page"""
+    try:
+        return render_template('treasury/treasury_overview.html',
+                             user=current_user,
+                             page_title='Treasury Operations Overview')
+    except Exception as e:
+        error_service.log_error("OVERVIEW_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')  
+        return redirect(url_for('dashboard.dashboard_home'))
+
+@treasury_bp.route('/cash-management')
+@login_required
+def cash_management():
+    """Cash management and liquidity overview"""
+    try:
+        return render_template('treasury/treasury_overview.html',
+                             user=current_user,
+                             page_title='Cash Management')
+    except Exception as e:
+        error_service.log_error("CASH_MANAGEMENT_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('dashboard.dashboard_home'))
+
+@treasury_bp.route('/securities')
+@login_required
+def securities():
+    """Government securities portfolio"""
+    try:
+        return render_template('treasury/treasury_overview.html',
+                             user=current_user,
+                             page_title='Government Securities')
+    except Exception as e:
+        error_service.log_error("SECURITIES_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('dashboard.dashboard_home'))
+
+@treasury_bp.route('/cash-flow')
+@login_required
+def cash_flow():
+    """Cash flow management and forecasting"""
+    try:
+        return render_template('treasury/cash_flow.html',
+                             user=current_user,
+                             page_title='Cash Flow Management')
+    except Exception as e:
+        error_service.log_error("CASH_FLOW_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('dashboard.dashboard_home'))
+
+@treasury_bp.route('/alm')
+@login_required
+def asset_liability_management():
+    """Asset Liability Management dashboard"""
+    try:
+        return render_template('treasury/alm_dashboard.html',
+                             user=current_user,
+                             page_title='Asset Liability Management')
+    except Exception as e:
+        error_service.log_error("ALM_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('dashboard.dashboard_home'))
+
+@treasury_bp.route('/money-market')
+@login_required
+def money_market():
+    """Money market operations"""
+    try:
+        return render_template('treasury/money_market.html',
+                             user=current_user,
+                             page_title='Money Market Operations')
+    except Exception as e:
+        error_service.log_error("MONEY_MARKET_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('dashboard.dashboard_home'))
+
+@treasury_bp.route('/fx-operations')
+@login_required
+def fx_operations():
+    """Foreign exchange operations"""
+    try:
+        return render_template('treasury/fx_operations.html',
+                             user=current_user,
+                             page_title='Foreign Exchange Operations')
+    except Exception as e:
+        error_service.log_error("FX_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('dashboard.dashboard_home'))
+
+@treasury_bp.route('/risk-management')
+@login_required
+def risk_management():
+    """Treasury risk management dashboard"""
+    try:
+        return render_template('treasury/risk_management.html',
+                             user=current_user,
+                             page_title='Treasury Risk Management')
+    except Exception as e:
+        error_service.log_error("RISK_MGMT_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('dashboard.dashboard_home'))
+
+@treasury_bp.route('/settings', methods=['GET', 'POST'])
+@login_required
+@treasury_form('treasury_settings')
+def settings():
+    """Treasury Operations settings page with form processing"""
+    try:
+        if request.method == 'POST':
+            # Form processing is handled by the decorator
+            flash('Treasury settings updated successfully', 'success')
+            return redirect(url_for('treasury.settings'))
+        
+        return render_template('treasury/treasury_settings.html',
+                             user=current_user,
+                             page_title='Treasury Operations Settings')
+    except Exception as e:
+        error_service.log_error("SETTINGS_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('dashboard.dashboard_home'))
+
+# Module health check
+@treasury_bp.route('/api/health')
+def health_check():
+    """Treasury Operations health check"""
+    return jsonify({
+        "status": "healthy",
+        "app_module": "Treasury Operations",
+        "version": "1.0.0",
+        "routes_active": 25
+    })

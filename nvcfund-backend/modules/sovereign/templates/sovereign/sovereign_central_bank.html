@@ -1,0 +1,230 @@
+{% extends "sovereign/layout.html" %}
+
+{% block title %}Central Bank Operations{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-white">
+            <i class="fas fa-university text-primary me-2"></i>
+            Central Bank Operations
+        </h1>
+        <div class="text-white-50">
+            <i class="fas fa-clock me-1"></i>
+            Real-time Operations Dashboard
+        </div>
+    </div>
+
+    <!-- Monetary Operations -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs me-2"></i>
+                        Monetary Operations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3">Open Market Operations</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="text-center p-3 border rounded bg-light">
+                                        <h6 class="text-muted mb-1">Overnight Repo Rate</h6>
+                                        <h4 class="text-primary">{{ "%.2f"|format(central_bank_data.monetary_operations.open_market_operations.repo_operations.overnight_repo_rate) }%}</h4>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center p-3 border rounded bg-light">
+                                        <h6 class="text-muted mb-1">Weekly Volume</h6>
+                                        <h4 class="text-success">${{ "%.1f"|format(central_bank_data.monetary_operations.open_market_operations.repo_operations.weekly_repo_volume_billions) }}B</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3">Reserve Management</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="text-center p-3 border rounded bg-light">
+                                        <h6 class="text-muted mb-1">Required Reserve Ratio</h6>
+                                        <h4 class="text-warning">{{ "%.1f"|format(central_bank_data.monetary_operations.reserve_management.required_reserve_ratio) }%}</h4>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center p-3 border rounded bg-light">
+                                        <h6 class="text-muted mb-1">Excess Reserves</h6>
+                                        <h4 class="text-info">${{ "%.1f"|format(central_bank_data.monetary_operations.reserve_management.excess_reserves_billions) }}B</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Systems -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-0">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exchange-alt me-2"></i>
+                        RTGS System
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="text-muted mb-1">Daily Volume</h6>
+                            <h4 class="text-primary">${{ "%.0f"|format(central_bank_data.payment_systems.rtgs_system.daily_volume_billions) }}B</h4>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="text-muted mb-1">Transactions</h6>
+                            <h4 class="text-success">{{ "{:,}".format(central_bank_data.payment_systems.rtgs_system.daily_transactions) }}</h4>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">System Availability</span>
+                            <span class="badge bg-success">{{ central_bank_data.payment_systems.rtgs_system.system_availability }%}</span>
+                        </div>
+                        <div class="progress mt-2" style="height: 8px;">
+                            <div class="progress-bar bg-success" style="width: {{ central_bank_data.payment_systems.rtgs_system.system_availability }%}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-credit-card me-2"></i>
+                        Clearing Systems
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">ACH Volume</span>
+                            <span class="fw-bold">${{ "%.1f"|format(central_bank_data.payment_systems.clearing_systems.ach_volume_billions) }}B</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Check Clearing</span>
+                            <span class="fw-bold">${{ "%.1f"|format(central_bank_data.payment_systems.clearing_systems.check_clearing_billions) }}B</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Card Clearing</span>
+                            <span class="fw-bold">${{ "%.1f"|format(central_bank_data.payment_systems.clearing_systems.card_clearing_billions) }}B</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial Stability -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        Financial Stability Monitoring
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="text-muted mb-1">Systemic Risk</h6>
+                                <h5 class="text-success">{{ central_bank_data.financial_stability.systemic_risk_indicator }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="text-muted mb-1">Banking Sector</h6>
+                                <h5 class="text-success">{{ central_bank_data.financial_stability.banking_sector_health }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="text-muted mb-1">Stress Test Cycle</h6>
+                                <h5 class="text-info">{{ central_bank_data.financial_stability.stress_test_cycle }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="text-muted mb-1">Measures Active</h6>
+                                <h5 class="text-primary">{{ central_bank_data.financial_stability.macroprudential_measures|length }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-muted mb-2">Active Macroprudential Measures</h6>
+                        <ul class="list-unstyled">
+                            {% for measure in central_bank_data.financial_stability.macroprudential_measures %}
+                            <li class="mb-1">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                {{ measure }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Operations Control Panel -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-control-panel me-2"></i>
+                        Operations Control Panel
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="{{ url_for('sovereign.monetary_policy') }}" class="btn btn-outline-primary w-100 mb-2">
+                                <i class="fas fa-percentage me-2"></i>
+                                Monetary Policy
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ url_for('sovereign.reserves') }}" class="btn btn-outline-success w-100 mb-2">
+                                <i class="fas fa-coins me-2"></i>
+                                Reserves Management
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ url_for('sovereign.foreign_exchange') }}" class="btn btn-outline-info w-100 mb-2">
+                                <i class="fas fa-exchange-alt me-2"></i>
+                                FX Operations
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ url_for('sovereign.regulatory') }}" class="btn btn-outline-warning w-100 mb-2">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                Supervision
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

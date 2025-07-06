@@ -1,0 +1,461 @@
+
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Banking Officer Dashboard - NVC Banking Platform{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-3">
+    <!-- Dashboard Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="fas fa-user-tie text-primary me-2"></i>
+                        Banking Officer Dashboard
+                    </h2>
+                    <p class="text-muted mb-0">Transaction Processing & Client Services</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#quickProcessModal">
+                        <i class="fas fa-bolt me-1"></i> Quick Process
+                    </button>
+                    <a href="{{ url_for('banking_operations.dashboard') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-chart-line me-1"></i> Performance
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title text-warning">Pending Approvals</h6>
+                            <h4 class="text-warning mb-0">{{ data.pending_approvals or '12' }}</h4>
+                            <small class="text-muted">Requires attention</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x text-warning opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title text-success">Transactions Processed</h6>
+                            <h4 class="text-success mb-0">{{ data.performance_metrics.transactions_processed or '156' }}</h4>
+                            <small class="text-muted">Today</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x text-success opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title text-info">Client Inquiries</h6>
+                            <h4 class="text-info mb-0">{{ data.account_inquiries or '15' }}</h4>
+                            <small class="text-muted">Active cases</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x text-info opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-primary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title text-primary">Processing Time</h6>
+                            <h4 class="text-primary mb-0">{{ data.performance_metrics.processing_time or '2.3' }}min</h4>
+                            <small class="text-success">Average today</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-stopwatch fa-2x text-primary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- Banking Operations -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-university text-primary me-2"></i>
+                        Banking Operations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4 col-6">
+                            <a href="{{ url_for('banking_transfers.transfers') }}" class="btn btn-outline-primary w-100 h-100 d-flex flex-column justify-content-center py-3">
+                                <i class="fas fa-exchange-alt fa-2x mb-2"></i>
+                                <span>Process Transfers</span>
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <a href="{{ url_for('banking_accounts.accounts') }}" class="btn btn-outline-success w-100 h-100 d-flex flex-column justify-content-center py-3">
+                                <i class="fas fa-user-plus fa-2x mb-2"></i>
+                                <span>Account Opening</span>
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <a href="{{ url_for('banking_loans.dashboard') }}" class="btn btn-outline-warning w-100 h-100 d-flex flex-column justify-content-center py-3">
+                                <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
+                                <span>Loan Processing</span>
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <a href="{{ url_for('banking_cards.new_card') }}" class="btn btn-outline-info w-100 h-100 d-flex flex-column justify-content-center py-3">
+                                <i class="fas fa-credit-card fa-2x mb-2"></i>
+                                <span>Card Services</span>
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <a href="{{ url_for('specialized_customer_service.dashboard') }}" class="btn btn-outline-secondary w-100 h-100 d-flex flex-column justify-content-center py-3">
+                                <i class="fas fa-headset fa-2x mb-2"></i>
+                                <span>Customer Service</span>
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <a href="{{ url_for('specialized_correspondent.dashboard') }}" class="btn btn-outline-dark w-100 h-100 d-flex flex-column justify-content-center py-3">
+                                <i class="fas fa-building fa-2x mb-2"></i>
+                                <span>Correspondent Banking</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction Queue -->
+            <div class="card mb-4">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list text-warning me-2"></i>
+                        Transaction Queue
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-warning" onclick="refreshQueue()">
+                            <i class="fas fa-sync-alt me-1"></i> Refresh
+                        </button>
+                        <a href="{{ url_for('banking.transactions') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Priority</th>
+                                    <th>Transaction ID</th>
+                                    <th>Client</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge bg-danger">High</span></td>
+                                    <td>TXN-2025-001247</td>
+                                    <td>Sarah Johnson</td>
+                                    <td>Wire Transfer</td>
+                                    <td>$25,000.00</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-success me-1" onclick="approveTransaction('TXN-2025-001247')">Approve</button>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="reviewTransaction('TXN-2025-001247')">Review</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-warning">Medium</span></td>
+                                    <td>TXN-2025-001246</td>
+                                    <td>Global Corp Ltd</td>
+                                    <td>ACH Transfer</td>
+                                    <td>$5,500.00</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-success me-1" onclick="approveTransaction('TXN-2025-001246')">Approve</button>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="reviewTransaction('TXN-2025-001246')">Review</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-info">Normal</span></td>
+                                    <td>TXN-2025-001245</td>
+                                    <td>Michael Chen</td>
+                                    <td>Bill Payment</td>
+                                    <td>$1,200.00</td>
+                                    <td><span class="badge bg-info">Under Review</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-success me-1" onclick="approveTransaction('TXN-2025-001245')">Approve</button>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="reviewTransaction('TXN-2025-001245')">Review</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-4">
+            <!-- Performance Summary -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-chart-bar text-success me-2"></i>
+                        Performance Summary
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small>Customer Satisfaction</small>
+                            <small>{{ data.performance_metrics.customer_satisfaction or '94.2%' }}</small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" style="width: 94%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small>Processing Efficiency</small>
+                            <small>87%</small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-primary" style="width: 87%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small>Error Rate</small>
+                            <small>0.3%</small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" style="width: 97%"></div>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('banking_operations.dashboard') }}" class="btn btn-sm btn-outline-primary w-100">Detailed Analytics</a>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-history text-primary me-2"></i>
+                        Recent Activities
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% for activity in data.recent_activities[:3] %}
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-{{ activity.type == 'transaction' and 'exchange-alt' or 'user' }} text-primary me-2"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold small">{{ activity.description or 'Wire transfer processed' }}</div>
+                            {% if activity.amount %}
+                            <div class="text-success small">{{ activity.amount }}</div>
+                            {% endif %}
+                            <div class="text-muted small">{{ activity.timestamp or 'Just now' }}</div>
+                        </div>
+                        <span class="badge bg-{{ 'success' if activity.status == 'completed' else 'warning' }} small">
+                            {{ activity.status or 'Completed' }}
+                        </span>
+                    </div>
+                    {% else %}
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exchange-alt text-primary me-2"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold small">Wire transfer processed</div>
+                            <div class="text-success small">$25,000.00</div>
+                            <div class="text-muted small">2 minutes ago</div>
+                        </div>
+                        <span class="badge bg-success small">Completed</span>
+                    </div>
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-user text-primary me-2"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold small">Account inquiry resolved</div>
+                            <div class="text-muted small">15 minutes ago</div>
+                        </div>
+                        <span class="badge bg-success small">Resolved</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Quick Approval -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">
+                        <i class="fas fa-gavel me-2"></i>
+                        Quick Approval
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-3">Fast-track routine transactions under $5,000</p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success btn-sm" onclick="quickApproveRoutine()">
+                            <i class="fas fa-check me-2"></i>Approve Routine (5)
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm" onclick="reviewHold()">
+                            <i class="fas fa-pause me-2"></i>Review on Hold (2)
+                        </button>
+                        <a href="{{ url_for('banking.transactions') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-list me-2"></i>Full Queue
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Communications -->
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-comments text-info me-2"></i>
+                        Client Communications
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>Pending Messages</span>
+                        <span class="badge bg-warning">3</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>Scheduled Calls</span>
+                        <span class="badge bg-info">2</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>Follow-ups Due</span>
+                        <span class="badge bg-primary">1</span>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('specialized_customer_service.dashboard') }}" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-inbox me-2"></i>Message Center
+                        </a>
+                        <a href="{{ url_for('public_support.schedule_demo') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-calendar me-2"></i>Schedule Meeting
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Process Modal -->
+<div class="modal fade" id="quickProcessModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Quick Process Transaction</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Transaction Type</label>
+                        <select class="form-select">
+                            <option>Wire Transfer</option>
+                            <option>ACH Transfer</option>
+                            <option>Bill Payment</option>
+                            <option>Account Opening</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select">
+                            <option>Normal</option>
+                            <option>High</option>
+                            <option>Urgent</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Client</label>
+                        <input type="text" class="form-control" placeholder="Search client name or account">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Amount</label>
+                        <input type="number" class="form-control" placeholder="0.00">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Currency</label>
+                        <select class="form-select">
+                            <option>USD</option>
+                            <option>EUR</option>
+                            <option>GBP</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Process Transaction</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function approveTransaction(txnId) {
+    if (confirm(`Approve transaction ${txnId}?`)) {
+        // Process approval
+        alert('Transaction approved successfully');
+        location.reload();
+    }
+}
+
+function reviewTransaction(txnId) {
+    window.open(`/banking/transactions/review/${txnId}`, '_blank');
+}
+
+function refreshQueue() {
+    location.reload();
+}
+
+function quickApproveRoutine() {
+    if (confirm('Approve all routine transactions under $5,000?')) {
+        alert('5 routine transactions approved successfully');
+        location.reload();
+    }
+}
+
+function reviewHold() {
+    window.open('/banking/transactions/hold-review', '_blank');
+}
+</script>
+{% endblock %}

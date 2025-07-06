@@ -1,0 +1,206 @@
+2025-07-06T04:37:54.817059 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T04:37:57.396947 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T04:43:43.150807 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T04:43:53.099518 - MONETARY_POLICY_ERROR: Monetary policy error: sovereign_monetary_policy.html
+Details: {'user_id': 1}
+---
+2025-07-06T04:43:53.714836 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T04:43:58.844208 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T04:44:08.992226 - CORRESPONDENT_BANKING_ERROR: settlement/correspondent_banking.html
+Details: {'user_id': 1}
+---
+2025-07-06T04:44:09.665529 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T04:58:04.418253 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T04:58:23.718422 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T05:15:51.639908 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T05:28:51.679340 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T05:29:01.700059 - MONETARY_POLICY_ERROR: Monetary policy error: sovereign_monetary_policy.html
+Details: {'user_id': 1}
+---
+2025-07-06T05:29:02.493970 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T05:29:22.775900 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T05:40:49.656743 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T05:44:48.175032 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T05:59:45.146831 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T06:31:02.410728 - RISK_DASHBOARD_ERROR: compliance/risk_dashboard.html
+Details: {'user_id': 1}
+---
+2025-07-06T06:31:03.171242 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T06:31:45.104414 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T06:32:04.004748 - RISK_DASHBOARD_ERROR: compliance/risk_dashboard.html
+Details: {'user_id': 1}
+---
+2025-07-06T06:32:05.369699 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T06:56:45.218794 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T06:58:41.279153 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T07:11:24.825010 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T07:13:10.245844 - DASHBOARD_ERROR: shared/base.html
+Details: {'user_id': 1}
+---
+2025-07-06T07:15:43.173759 - DASHBOARD_ERROR: shared/base.html
+Details: {'user_id': 1}
+---
+2025-07-06T07:19:25.614437 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T07:39:56.502438 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T08:09:33.911157 - Transfers page error: Could not build url for endpoint 'banking.transfer_history'. Did you mean 'banking.transfers' instead?: 1
+---
+2025-07-06T08:10:53.337790 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T08:16:08.638782 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T08:17:17.442478 - DASHBOARD_ERROR: Could not build url for endpoint 'investments.settings'. Did you mean 'investments.static' instead?
+Details: {'user_id': 1}
+---
+2025-07-06T08:17:27.474319 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T08:41:48.770264 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T08:47:10.459161 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T08:48:42.570932 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T08:58:04.867985 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T08:58:38.428613 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T08:58:49.910104 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:00:16.600783 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:00:22.007211 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:01:28.960209 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:02:00.935654 - SOVEREIGN_DASHBOARD_ERROR: Sovereign dashboard error: sovereign_dashboard_main.html
+Details: {'user_id': 1}
+---
+2025-07-06T09:04:50.674493 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:05:59.760040 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:06:51.769295 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:09:35.323128 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:09:49.811366 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:10:22.310845 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:19:59.086196 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:22:10.435680 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:22:47.376229 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:25:04.605225 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:26:29.478880 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:38:27.101362 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:45:06.913170 - DASHBOARD_ERROR: 'moment' is undefined
+Details: {'user_id': 1}
+---
+2025-07-06T09:48:33.003585 - OVERVIEW_ERROR: Could not build url for endpoint 'interest_rate_management.dashboard'. Did you mean 'interest_rate_management.main_dashboard' instead?
+Details: {'user_id': 1}
+---
+2025-07-06T09:57:29.092911 - CASH_FLOW_ERROR: treasury/cash_flow.html
+Details: {'user_id': 1}
+---
+2025-07-06T10:03:27.615733 - OVERVIEW_ERROR: Could not build url for endpoint 'compliance.risk_assessment'. Did you mean 'compliance.assessment' instead?
+Details: {'user_id': 1}
+---
+2025-07-06T10:10:43.888076 - ASSESSMENT_ERROR: compliance/layout.html
+Details: {'user_id': 1}
+---
+2025-07-06T11:02:40.246139 - DASHBOARD_ERROR: Could not build url for endpoint 'dashboard.static' with values ['filename']. Did you mean 'treasury.static' instead?
+Details: {'user_id': 1}
+---
+2025-07-06T11:02:49.664198 - DASHBOARD_ERROR: Could not build url for endpoint 'dashboard.static' with values ['filename']. Did you mean 'treasury.static' instead?
+Details: {'user_id': 1}
+---
+2025-07-06T12:28:19.838401 - New transfer page error: block 'content' defined twice: 1
+---
+2025-07-06T12:38:49.169686 - DASHBOARD_ERROR: block 'content' defined twice
+Details: {'user_id': 1}
+---
+2025-07-06T12:38:53.022681 - DASHBOARD_ERROR: block 'content' defined twice
+Details: {'user_id': 1}
+---
+2025-07-06T12:51:02.414556 - New transfer page error: block 'content' defined twice: 1
+---
+2025-07-06T12:51:15.308655 - DASHBOARD_ERROR: block 'content' defined twice
+Details: {'user_id': 1}
+---
+2025-07-06T12:54:08.131343 - New transfer page error: block 'content' defined twice: 1
+---

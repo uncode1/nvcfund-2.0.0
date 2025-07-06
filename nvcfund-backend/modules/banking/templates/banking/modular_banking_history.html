@@ -1,0 +1,291 @@
+{% extends "banking/layout.html" %}
+
+{% block title %}Transaction History - NVC Banking Platform{% endblock %}
+
+{% block page_title %}Transaction History{% endblock %}
+{% block page_subtitle %}View your complete transaction history{% endblock %}
+
+{% block page_actions %}
+<div class="btn-group">
+    <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
+        <i class="fas fa-download me-1"></i>Export
+    </button>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="/banking/export/csv"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+        <li><a class="dropdown-item" href="/banking/export/pdf"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
+        <li><a class="dropdown-item" href="/banking/export/excel"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Filter Controls -->
+<div class="banking-card mb-4">
+    <div class="banking-card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-3">
+                <label for="account" class="form-label">Account</label>
+                <select class="form-control-banking form-select" name="account" id="account">
+                    <option value="">All Accounts</option>
+                    {% for account in user_accounts %}
+                    <option value="{{ account.id }}" {{ 'selected' if request.args.get('account') == account.id|string }}>
+                        {{ account.account_number }} - {{ account.account_type }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="transaction_type" class="form-label">Type</label>
+                <select class="form-control-banking form-select" name="transaction_type" id="transaction_type">
+                    <option value="">All Types</option>
+                    <option value="transfer" {{ 'selected' if request.args.get('transaction_type') == 'transfer' }}>Transfer</option>
+                    <option value="deposit" {{ 'selected' if request.args.get('transaction_type') == 'deposit' }}>Deposit</option>
+                    <option value="withdrawal" {{ 'selected' if request.args.get('transaction_type') == 'withdrawal' }}>Withdrawal</option>
+                    <option value="payment" {{ 'selected' if request.args.get('transaction_type') == 'payment' }}>Payment</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="date_from" class="form-label">From Date</label>
+                <input type="date" class="form-control-banking" name="date_from" id="date_from" value="{{ request.args.get('date_from', '') }}">
+            </div>
+            <div class="col-md-2">
+                <label for="date_to" class="form-label">To Date</label>
+                <input type="date" class="form-control-banking" name="date_to" id="date_to" value="{{ request.args.get('date_to', '') }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-banking-primary">
+                        <i class="fas fa-search me-1"></i>Filter
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Transaction History -->
+<div class="banking-card">
+    <div class="banking-card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-history me-2"></i>Recent Transactions
+        </h5>
+    </div>
+    <div class="banking-card-body p-0">
+        {% if transactions %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Account</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <strong>{{ transaction.date | default('Today') }}</strong>
+                                <small class="text-muted">{{ transaction.time | default('12:00 PM') }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    {% if transaction.type == 'transfer' %}
+                                        <i class="fas fa-exchange-alt text-primary"></i>
+                                    {% elif transaction.type == 'deposit' %}
+                                        <i class="fas fa-arrow-down text-success"></i>
+                                    {% elif transaction.type == 'withdrawal' %}
+                                        <i class="fas fa-arrow-up text-danger"></i>
+                                    {% else %}
+                                        <i class="fas fa-credit-card text-info"></i>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <div class="fw-semibold">{{ transaction.description | default('Transaction') }}</div>
+                                    {% if transaction.reference %}
+                                    <small class="text-muted">Ref: {{ transaction.reference }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="banking-badge banking-badge-{{ 'success' if transaction.type == 'deposit' else 'warning' if transaction.type == 'transfer' else 'danger' }}">
+                                {{ transaction.type | title | default('Transfer') }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <strong>{{ transaction.account_number | default('****1234') }}</strong>
+                                <small class="text-muted">{{ transaction.account_type | default('Checking') }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-bold {{ 'text-success' if transaction.amount > 0 else 'text-danger' }}">
+                                {{ '+' if transaction.amount > 0 else '' }}${{ "%.2f"|format(transaction.amount | default(0) | abs) }}
+                            </span>
+                        </td>
+                        <td>
+                            <strong>${{ "%.2f"|format(transaction.balance | default(0)) }}</strong>
+                        </td>
+                        <td>
+                            <span class="banking-badge banking-badge-{{ 'success' if transaction.status == 'completed' else 'warning' if transaction.status == 'pending' else 'danger' }}">
+                                {{ transaction.status | title | default('Completed') }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#transactionModal{{ loop.index }}" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <a href="/banking/statements/transaction/{{ transaction.id | default(1) }}" class="btn btn-outline-secondary" title="Download Receipt">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center p-3">
+            <div class="text-muted">
+                Showing {{ transactions | length }} of {{ total_transactions | default(transactions | length) }} transactions
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item {{ 'disabled' if not previous_page }}">
+                        <a class="page-link" href="{{ url_for('banking.history', page=previous_page) if previous_page }}">Previous</a>
+                    </li>
+                    {% for page_num in range(1, (total_pages | default(1)) + 1) %}
+                    <li class="page-item {{ 'active' if page_num == current_page }}">
+                        <a class="page-link" href="{{ url_for('banking.history', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                    {% endfor %}
+                    <li class="page-item {{ 'disabled' if not next_page }}">
+                        <a class="page-link" href="{{ url_for('banking.history', page=next_page) if next_page }}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-5">
+            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No transactions found</h5>
+            <p class="text-muted">Try adjusting your filters or make your first transaction.</p>
+            <a href="/banking/send-transfer" class="btn btn-banking-primary">
+                <i class="fas fa-plus me-1"></i>Make Transaction
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Transaction Detail Modals -->
+{% if transactions %}
+{% for transaction in transactions %}
+<div class="modal fade" id="transactionModal{{ loop.index }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Transaction Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Transaction ID</label>
+                        <p class="form-control-plaintext">{{ transaction.id | default('TXN-' + loop.index|string) }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Reference Number</label>
+                        <p class="form-control-plaintext">{{ transaction.reference | default('REF-' + loop.index|string) }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Date & Time</label>
+                        <p class="form-control-plaintext">{{ transaction.date | default('Today') }} {{ transaction.time | default('12:00 PM') }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Type</label>
+                        <p class="form-control-plaintext">{{ transaction.type | title | default('Transfer') }}</p>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Description</label>
+                        <p class="form-control-plaintext">{{ transaction.description | default('Transaction description') }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Amount</label>
+                        <p class="form-control-plaintext fw-bold {{ 'text-success' if transaction.amount > 0 else 'text-danger' }}">
+                            {{ '+' if transaction.amount > 0 else '' }}${{ "%.2f"|format(transaction.amount | default(0) | abs) }}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Status</label>
+                        <p class="form-control-plaintext">
+                            <span class="banking-badge banking-badge-{{ 'success' if transaction.status == 'completed' else 'warning' if transaction.status == 'pending' else 'danger' }}">
+                                {{ transaction.status | title | default('Completed') }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="/banking/statements/transaction/{{ transaction.id | default(1) }}" class="btn btn-banking-primary">
+                    <i class="fas fa-download me-1"></i>Download Receipt
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Auto-submit form when filters change
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterForm = document.querySelector('form');
+        const filterInputs = filterForm.querySelectorAll('select, input[type="date"]');
+        
+        filterInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                // Auto-submit after a short delay
+                setTimeout(() => {
+                    filterForm.submit();
+                }, 300);
+            });
+        });
+    });
+    
+    // Set default date range (last 30 days)
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateFrom = document.getElementById('date_from');
+        const dateTo = document.getElementById('date_to');
+        
+        if (!dateFrom.value) {
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            dateFrom.value = thirtyDaysAgo.toISOString().split('T')[0];
+        }
+        
+        if (!dateTo.value) {
+            const today = new Date();
+            dateTo.value = today.toISOString().split('T')[0];
+        }
+    });
+</script>
+{% endblock %}

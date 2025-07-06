@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - NVC Banking Platform{% endblock %}
+
+{% block head %}
+<style>
+    .admin-dashboard {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 20px;
+    }
+    
+    .admin-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .metric-card {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="metric-card">
+                <h3>{{ admin_data.total_users or '0' }}</h3>
+                <p>Total Users</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <h3>{{ admin_data.active_sessions or '0' }}</h3>
+                <p>Active Sessions</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <h3>{{ admin_data.system_uptime or '100%' }}</h3>
+                <p>System Uptime</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <h3>{{ admin_data.pending_approvals or '0' }}</h3>
+                <p>Pending Approvals</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="admin-card">
+                <h3>System Status</h3>
+                <p>All systems operational</p>
+                <div class="progress mt-3">
+                    <div class="progress-bar bg-success" style="width: {{ admin_data.system_health or '95' }}%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-card">
+                <h3>Recent Activity</h3>
+                <ul class="list-unstyled">
+                    {% for activity in admin_data.recent_activity or [] %}
+                    <li>{{ activity.description }} - {{ activity.time }}</li>
+                    {% else %}
+                    <li>No recent activity</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

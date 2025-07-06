@@ -1,0 +1,894 @@
+{
+  "homepage": {
+    "url": "http://localhost:5000/",
+    "title": "NVC Banking Platform - Advanced Digital Banking & Blockchain Finance",
+    "main_content": {
+      "headings": [
+        {
+          "level": "h1",
+          "text": "Next-GenerationBanking Platform"
+        },
+        {
+          "level": "h2",
+          "text": "Complete Banking Ecosystem"
+        },
+        {
+          "level": "h2",
+          "text": "Banking Innovation"
+        },
+        {
+          "level": "h2",
+          "text": "Network Status"
+        },
+        {
+          "level": "h2",
+          "text": "Quick Access"
+        },
+        {
+          "level": "h2",
+          "text": "Live Platform Data"
+        }
+      ],
+      "sections": [
+        {
+          "class": [
+            "hero-section"
+          ],
+          "text_preview": "Next-GenerationBanking PlatformExperience the future of digital banking with our advanced blockchain-integrated platform. \n                        Secure, scalable, and built for the modern financial ..."
+        },
+        {
+          "class": [
+            "hero-content"
+          ],
+          "text_preview": "Next-GenerationBanking PlatformExperience the future of digital banking with our advanced blockchain-integrated platform. \n                        Secure, scalable, and built for the modern financial ..."
+        },
+        {
+          "class": [
+            "hero-buttons"
+          ],
+          "text_preview": "Get StartedLearn More..."
+        },
+        {
+          "class": [
+            "hero-stats-grid"
+          ],
+          "text_preview": "$30TNVCT Stablecoin Supply189%Over-Collateralization24/7Global Operations99.9%Platform Uptime..."
+        },
+        {
+          "class": [
+            "features-section",
+            "py-5"
+          ],
+          "text_preview": "Banking InnovationComprehensive financial services powered by blockchain technologyBank-Grade SecurityAdvanced encryption, multi-factor authentication, and real-time threat detection protect your asse..."
+        },
+        {
+          "class": [
+            "feature-card"
+          ],
+          "text_preview": "Bank-Grade SecurityAdvanced encryption, multi-factor authentication, and real-time threat detection protect your assets.99.9% Secure..."
+        },
+        {
+          "class": [
+            "feature-icon"
+          ],
+          "text_preview": "..."
+        },
+        {
+          "class": [
+            "feature-highlight"
+          ],
+          "text_preview": "99.9% Secure..."
+        },
+        {
+          "class": [
+            "feature-card"
+          ],
+          "text_preview": "NVCT Stablecoin$30 trillion supply backed by $56.7T in documented assets with 189% over-collateralization.189% Backed..."
+        },
+        {
+          "class": [
+            "feature-icon"
+          ],
+          "text_preview": "..."
+        },
+        {
+          "class": [
+            "feature-highlight"
+          ],
+          "text_preview": "189% Backed..."
+        },
+        {
+          "class": [
+            "feature-card"
+          ],
+          "text_preview": "Multi-BlockchainIntegrated support for Ethereum, Polygon, BSC, and other major blockchain networks.5+ Networks..."
+        },
+        {
+          "class": [
+            "feature-icon"
+          ],
+          "text_preview": "..."
+        },
+        {
+          "class": [
+            "feature-highlight"
+          ],
+          "text_preview": "5+ Networks..."
+        },
+        {
+          "class": [
+            "feature-card"
+          ],
+          "text_preview": "Real-Time AnalyticsComprehensive dashboard with live market data, portfolio tracking, and performance metrics.Live Data..."
+        },
+        {
+          "class": [
+            "feature-icon"
+          ],
+          "text_preview": "..."
+        },
+        {
+          "class": [
+            "feature-highlight"
+          ],
+          "text_preview": "Live Data..."
+        },
+        {
+          "class": [
+            "feature-card"
+          ],
+          "text_preview": "Global PaymentsInstant cross-border transfers with competitive rates and transparent fee structures.Instant..."
+        },
+        {
+          "class": [
+            "feature-icon"
+          ],
+          "text_preview": "..."
+        },
+        {
+          "class": [
+            "feature-highlight"
+          ],
+          "text_preview": "Instant..."
+        },
+        {
+          "class": [
+            "feature-card"
+          ],
+          "text_preview": "AI-Powered TradingAdvanced algorithmic trading with risk management and automated portfolio optimization.AI Powered..."
+        },
+        {
+          "class": [
+            "feature-icon"
+          ],
+          "text_preview": "..."
+        },
+        {
+          "class": [
+            "feature-highlight"
+          ],
+          "text_preview": "AI Powered..."
+        },
+        {
+          "class": [
+            "header-content"
+          ],
+          "text_preview": "Market Data StreamActive..."
+        },
+        {
+          "class": [
+            "data-content"
+          ],
+          "text_preview": "NVCT Price$1.0000+0.0001%..."
+        },
+        {
+          "class": [
+            "data-content"
+          ],
+          "text_preview": "Market Cap$30.0T+0.15%..."
+        },
+        {
+          "class": [
+            "data-content"
+          ],
+          "text_preview": "24h Volume$2.4B+8.7%..."
+        },
+        {
+          "class": [
+            "header-content"
+          ],
+          "text_preview": "Transaction StreamActive..."
+        },
+        {
+          "class": [
+            "metric-content"
+          ],
+          "text_preview": "24,847Active Users..."
+        },
+        {
+          "class": [
+            "metric-content"
+          ],
+          "text_preview": "99.8%Security Score..."
+        },
+        {
+          "class": [
+            "metric-content"
+          ],
+          "text_preview": "99.99%System Uptime..."
+        },
+        {
+          "class": [
+            "modal-content",
+            "bg-dark",
+            "text-light"
+          ],
+          "text_preview": "NVC Banking Live SupportNVC SupportJust nowWelcome to NVC Banking live support! How can we assist you today?..."
+        }
+      ],
+      "key_text": []
+    },
+    "navigation": [
+      "NVC BankingDigital Banking Platform \u2192 /",
+      "About \u2192 #",
+      "About Platform \u2192 /about",
+      "Contact Us \u2192 /contact",
+      "API Documentation \u2192 /api-documentation",
+      "Login \u2192 /auth/login",
+      "Register \u2192 /auth/register"
+    ],
+    "forms": [],
+    "key_elements": {
+      "buttons": [],
+      "cards": 27,
+      "tables": 0,
+      "widgets": 36
+    }
+  },
+  "dashboard": {
+    "url": "http://localhost:5000/dashboard",
+    "title": "Dashboard - NVC Banking Platform",
+    "main_content": {
+      "headings": [
+        {
+          "level": "h2",
+          "text": "Welcome back, Demo User"
+        }
+      ],
+      "sections": [
+        {
+          "class": [
+            "alert-content"
+          ],
+          "text_preview": "Security NoticeNew login from different device detected - Please verify..."
+        },
+        {
+          "class": [
+            "alert-content"
+          ],
+          "text_preview": "Payment ProcessedYour transfer of $5,000 was completed successfully..."
+        },
+        {
+          "class": [
+            "alert-content"
+          ],
+          "text_preview": "Statement ReadyYour monthly statement is now available for download..."
+        },
+        {
+          "class": [
+            "stat-content"
+          ],
+          "text_preview": "$612,200.75Total Balance..."
+        },
+        {
+          "class": [
+            "stat-content"
+          ],
+          "text_preview": "3Active Cards..."
+        },
+        {
+          "class": [
+            "stat-content"
+          ],
+          "text_preview": "24Recent Transfers..."
+        },
+        {
+          "class": [
+            "stat-content"
+          ],
+          "text_preview": "+12.5%Monthly Growth..."
+        },
+        {
+          "class": [
+            "activity-content"
+          ],
+          "text_preview": "Salary Deposit+$3,500.002 hours ago..."
+        },
+        {
+          "class": [
+            "activity-content"
+          ],
+          "text_preview": "Transfer to Savings-$500.001 day ago..."
+        },
+        {
+          "class": [
+            "activity-content"
+          ],
+          "text_preview": "Card Payment-$127.852 days ago..."
+        },
+        {
+          "class": [
+            "activity-content"
+          ],
+          "text_preview": "Account Interest+$42.151 week ago..."
+        },
+        {
+          "class": [
+            "modal-content",
+            "bg-dark",
+            "text-light"
+          ],
+          "text_preview": "NVC Banking Live SupportNVC SupportJust nowWelcome to NVC Banking live support! How can we assist you today?..."
+        }
+      ],
+      "key_text": []
+    },
+    "navigation": [
+      "NVC BankingDigital Banking Platform \u2192 /",
+      "About \u2192 #",
+      "About Platform \u2192 /about",
+      "Contact Us \u2192 /contact",
+      "API Documentation \u2192 /api-documentation",
+      "Login \u2192 /auth/login",
+      "Register \u2192 /auth/register"
+    ],
+    "forms": [],
+    "key_elements": {
+      "buttons": [
+        "Review",
+        "View",
+        "Download"
+      ],
+      "cards": 35,
+      "tables": 1,
+      "widgets": 0
+    }
+  },
+  "login": {
+    "url": "http://localhost:5000/auth/login",
+    "title": "Secure Login - NVC Banking Platform",
+    "main_content": {
+      "headings": [
+        {
+          "level": "h3",
+          "text": "Secure Login"
+        }
+      ],
+      "sections": [
+        {
+          "class": [
+            "d-flex",
+            "justify-content-between",
+            "align-items-center",
+            "mb-3"
+          ],
+          "text_preview": "Remember me for 24 hoursForgot Password?..."
+        }
+      ],
+      "key_text": []
+    },
+    "navigation": [
+      "NVC Banking PlatformNVC \u2192 /",
+      "Home \u2192 /",
+      "About \u2192 /about",
+      "Contact \u2192 /contact",
+      "Register \u2192 /auth/register"
+    ],
+    "forms": [
+      {
+        "action": "/auth/login",
+        "method": "POST",
+        "inputs": [
+          {
+            "type": "text",
+            "name": "username",
+            "placeholder": "Enter your username"
+          },
+          {
+            "type": "password",
+            "name": "password",
+            "placeholder": "Enter your password"
+          },
+          {
+            "type": "checkbox",
+            "name": "remember_me",
+            "placeholder": ""
+          }
+        ]
+      }
+    ],
+    "key_elements": {
+      "buttons": [
+        "Sign In Securely"
+      ],
+      "cards": 1,
+      "tables": 0,
+      "widgets": 0
+    }
+  },
+  "register": {
+    "url": "http://localhost:5000/auth/register",
+    "title": "Register - NVC Banking Platform",
+    "main_content": {
+      "headings": [
+        {
+          "level": "h2",
+          "text": "Create Your Account"
+        }
+      ],
+      "sections": [
+        {
+          "class": [
+            "d-flex",
+            "justify-content-between",
+            "align-items-center"
+          ],
+          "text_preview": "Individual Account RegistrationComplete your personal banking account setupBack to Selection..."
+        },
+        {
+          "class": [
+            "d-flex",
+            "justify-content-between",
+            "align-items-center"
+          ],
+          "text_preview": "Business Account RegistrationSetup your business banking accountBack to Selection..."
+        },
+        {
+          "class": [
+            "d-flex",
+            "justify-content-between",
+            "align-items-center"
+          ],
+          "text_preview": "Partner Program RegistrationJoin our exclusive partnership programBack to Selection..."
+        }
+      ],
+      "key_text": []
+    },
+    "navigation": [
+      "NVC Banking Platform \u2192 /",
+      "Home \u2192 /",
+      "About \u2192 /about",
+      "Contact \u2192 /contact",
+      "Sign In \u2192 /auth/login",
+      "NVC Banking Platform \u2192 /",
+      "Home \u2192 /",
+      "About \u2192 /about",
+      "Contact \u2192 /contact",
+      "Sign In \u2192 /auth/login"
+    ],
+    "forms": [
+      {
+        "action": "/auth/register",
+        "method": "POST",
+        "inputs": [
+          {
+            "type": "text",
+            "name": "first_name",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "last_name",
+            "placeholder": ""
+          },
+          {
+            "type": "date",
+            "name": "date_of_birth",
+            "placeholder": ""
+          },
+          {
+            "type": "select",
+            "name": "id_type",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "id_number",
+            "placeholder": ""
+          },
+          {
+            "type": "select",
+            "name": "country_of_origin",
+            "placeholder": ""
+          },
+          {
+            "type": "email",
+            "name": "email",
+            "placeholder": ""
+          },
+          {
+            "type": "tel",
+            "name": "phone",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "address",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "username",
+            "placeholder": ""
+          },
+          {
+            "type": "password",
+            "name": "password",
+            "placeholder": ""
+          },
+          {
+            "type": "checkbox",
+            "name": "terms_accepted",
+            "placeholder": ""
+          }
+        ]
+      },
+      {
+        "action": "/auth/register",
+        "method": "POST",
+        "inputs": [
+          {
+            "type": "text",
+            "name": "company_name",
+            "placeholder": ""
+          },
+          {
+            "type": "select",
+            "name": "business_type",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "tax_id",
+            "placeholder": ""
+          },
+          {
+            "type": "select",
+            "name": "industry",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "first_name",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "last_name",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "job_title",
+            "placeholder": ""
+          },
+          {
+            "type": "email",
+            "name": "email",
+            "placeholder": ""
+          },
+          {
+            "type": "tel",
+            "name": "phone",
+            "placeholder": ""
+          },
+          {
+            "type": "url",
+            "name": "website",
+            "placeholder": "https://www.example.com"
+          },
+          {
+            "type": "text",
+            "name": "address",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "username",
+            "placeholder": ""
+          },
+          {
+            "type": "password",
+            "name": "password",
+            "placeholder": ""
+          },
+          {
+            "type": "checkbox",
+            "name": "terms_accepted",
+            "placeholder": ""
+          }
+        ]
+      },
+      {
+        "action": "/auth/register",
+        "method": "POST",
+        "inputs": [
+          {
+            "type": "text",
+            "name": "organization_name",
+            "placeholder": ""
+          },
+          {
+            "type": "select",
+            "name": "organization_type",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "license_number",
+            "placeholder": ""
+          },
+          {
+            "type": "select",
+            "name": "regulatory_body",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "first_name",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "last_name",
+            "placeholder": ""
+          },
+          {
+            "type": "select",
+            "name": "executive_title",
+            "placeholder": ""
+          },
+          {
+            "type": "email",
+            "name": "email",
+            "placeholder": ""
+          },
+          {
+            "type": "select",
+            "name": "services_interest",
+            "placeholder": ""
+          },
+          {
+            "type": "select",
+            "name": "transaction_volume",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "username",
+            "placeholder": ""
+          },
+          {
+            "type": "password",
+            "name": "password",
+            "placeholder": ""
+          },
+          {
+            "type": "checkbox",
+            "name": "terms_accepted",
+            "placeholder": ""
+          }
+        ]
+      }
+    ],
+    "key_elements": {
+      "buttons": [
+        "Select Individual",
+        "Select Business",
+        "Select Partner",
+        "Back to Selection",
+        "Create Individual Account",
+        "Back to Selection",
+        "Create Business Account",
+        "Back to Selection",
+        "Submit Partner Application"
+      ],
+      "cards": 4,
+      "tables": 0,
+      "widgets": 0
+    }
+  },
+  "contact": {
+    "url": "http://localhost:5000/contact",
+    "title": "Contact & Support",
+    "main_content": {
+      "headings": [
+        {
+          "level": "h1",
+          "text": "Contact & Support"
+        }
+      ],
+      "sections": [
+        {
+          "class": [
+            "d-flex",
+            "justify-content-between",
+            "align-items-center",
+            "mb-4"
+          ],
+          "text_preview": "Contact & SupportHomeContact..."
+        },
+        {
+          "class": [
+            "modal-content",
+            "bg-dark",
+            "text-light"
+          ],
+          "text_preview": "NVC Banking Live SupportNVC SupportJust nowWelcome to NVC Banking live support! How can we assist you today?..."
+        }
+      ],
+      "key_text": []
+    },
+    "navigation": [
+      "NVC BankingDigital Banking Platform \u2192 /",
+      "About \u2192 #",
+      "About Platform \u2192 /about",
+      "Contact Us \u2192 /contact",
+      "API Documentation \u2192 /api-documentation",
+      "Login \u2192 /auth/login",
+      "Register \u2192 /auth/register",
+      "Home \u2192 /"
+    ],
+    "forms": [
+      {
+        "action": "/contact/submit",
+        "method": "POST",
+        "inputs": [
+          {
+            "type": "text",
+            "name": "first_name",
+            "placeholder": ""
+          },
+          {
+            "type": "text",
+            "name": "last_name",
+            "placeholder": ""
+          },
+          {
+            "type": "email",
+            "name": "email",
+            "placeholder": ""
+          },
+          {
+            "type": "select",
+            "name": "subject",
+            "placeholder": ""
+          },
+          {
+            "type": "textarea",
+            "name": "message",
+            "placeholder": ""
+          }
+        ]
+      }
+    ],
+    "key_elements": {
+      "buttons": [
+        "Send Message"
+      ],
+      "cards": 6,
+      "tables": 0,
+      "widgets": 0
+    }
+  },
+  "about": {
+    "url": "http://localhost:5000/about",
+    "title": "About NVC Banking Platform",
+    "main_content": {
+      "headings": [
+        {
+          "level": "h1",
+          "text": "About NVC Banking Platform"
+        },
+        {
+          "level": "h2",
+          "text": "Enterprise Banking Excellence"
+        }
+      ],
+      "sections": [
+        {
+          "class": [
+            "modal-content",
+            "bg-dark",
+            "text-light"
+          ],
+          "text_preview": "NVC Banking Live SupportNVC SupportJust nowWelcome to NVC Banking live support! How can we assist you today?..."
+        }
+      ],
+      "key_text": []
+    },
+    "navigation": [
+      "NVC BankingDigital Banking Platform \u2192 /",
+      "About \u2192 #",
+      "About Platform \u2192 /about",
+      "Contact Us \u2192 /contact",
+      "API Documentation \u2192 /api-documentation",
+      "Login \u2192 /auth/login",
+      "Register \u2192 /auth/register"
+    ],
+    "forms": [],
+    "key_elements": {
+      "buttons": [],
+      "cards": 2,
+      "tables": 0,
+      "widgets": 0
+    }
+  },
+  "api_docs": {
+    "url": "http://localhost:5000/api-documentation",
+    "title": "Service Documentation - NVC Banking Platform",
+    "main_content": {
+      "headings": [
+        {
+          "level": "h1",
+          "text": "Service Documentation"
+        },
+        {
+          "level": "h3",
+          "text": "Service Overview"
+        },
+        {
+          "level": "h3",
+          "text": "Authentication"
+        },
+        {
+          "level": "h3",
+          "text": "Account Endpoints"
+        },
+        {
+          "level": "h3",
+          "text": "Transaction Endpoints"
+        },
+        {
+          "level": "h3",
+          "text": "NVCT Stablecoin Endpoints"
+        },
+        {
+          "level": "h3",
+          "text": "Response Formats"
+        },
+        {
+          "level": "h3",
+          "text": "Getting Started"
+        }
+      ],
+      "sections": [
+        {
+          "class": [
+            "modal-content",
+            "bg-dark",
+            "text-light"
+          ],
+          "text_preview": "NVC Banking Live SupportNVC SupportJust nowWelcome to NVC Banking live support! How can we assist you today?..."
+        }
+      ],
+      "key_text": []
+    },
+    "navigation": [
+      "NVC BankingDigital Banking Platform \u2192 /",
+      "About \u2192 #",
+      "About Platform \u2192 /about",
+      "Contact Us \u2192 /contact",
+      "API Documentation \u2192 /api-documentation",
+      "Login \u2192 /auth/login",
+      "Register \u2192 /auth/register"
+    ],
+    "forms": [],
+    "key_elements": {
+      "buttons": [],
+      "cards": 21,
+      "tables": 3,
+      "widgets": 0
+    }
+  }
+}

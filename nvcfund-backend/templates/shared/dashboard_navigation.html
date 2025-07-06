@@ -1,0 +1,121 @@
+<!-- Enhanced Dashboard Navigation Component -->
+<div class="dashboard-navigation mb-4">
+    <style>
+        .dashboard-navigation {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .nav-tab {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .nav-tab.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .quick-nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.8em;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+    </style>
+    
+    <div class="nav-tabs">
+        <a href="/admin/" class="nav-tab {{ 'active' if request.endpoint == 'admin_management.admin_dashboard' }}">
+            <i class="fas fa-tachometer-alt"></i>
+            Admin Dashboard
+        </a>
+        <a href="/system-management/dashboard" class="nav-tab {{ 'active' if request.endpoint == 'system_management.system_dashboard' }}">
+            <i class="fas fa-heartbeat"></i>
+            System Health
+        </a>
+        <a href="/security-center/" class="nav-tab {{ 'active' if request.endpoint == 'security_center.security_dashboard' }}">
+            <i class="fas fa-shield-alt"></i>
+            Security Center
+        </a>
+        <a href="/settlement/dashboard" class="nav-tab {{ 'active' if request.endpoint == 'settlement.settlement_dashboard' }}">
+            <i class="fas fa-handshake"></i>
+            Settlement Ops
+        </a>
+    </div>
+    
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="quick-nav">
+            <a href="/admin/users" class="quick-nav-btn">
+                <i class="fas fa-users"></i> Users
+            </a>
+            <a href="/admin/branches" class="quick-nav-btn">
+                <i class="fas fa-building"></i> Branches
+            </a>
+            <a href="/admin/reports" class="quick-nav-btn">
+                <i class="fas fa-chart-bar"></i> Reports
+            </a>
+            <a href="/admin/backups" class="quick-nav-btn">
+                <i class="fas fa-database"></i> Backups
+            </a>
+            <a href="/security/investigation" class="quick-nav-btn">
+                <i class="fas fa-search"></i> Investigation
+            </a>
+            <a href="/security/incident-response" class="quick-nav-btn">
+                <i class="fas fa-bell"></i> Incidents
+            </a>
+        </div>
+        <div class="text-end">
+            <small class="text-white-50">
+                <i class="fas fa-clock"></i> 
+                Last updated: <span id="last-updated">{{ moment().format('HH:mm:ss') }}</span>
+            </small>
+        </div>
+    </div>
+</div>
+
+<script>
+// Update timestamp every minute
+setInterval(function() {
+    document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+}, 60000);
+</script>

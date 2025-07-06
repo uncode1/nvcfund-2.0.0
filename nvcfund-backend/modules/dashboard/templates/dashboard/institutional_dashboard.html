@@ -1,0 +1,181 @@
+
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Institutional Banking Dashboard - NVC Banking Platform{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Institutional Banking Dashboard</h1>
+                <div class="text-muted">
+                    <i class="fas fa-user"></i> {{ username }} | 
+                    <i class="fas fa-clock"></i> Last Login: {{ last_login }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Institutional KPI Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Assets</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_assets }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-building fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Active Accounts</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ active_accounts }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Transaction Volume</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ transaction_volume }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exchange-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Correspondent Banks</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ correspondent_banks }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-network-wired fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Institutional Operations -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Institutional Activities</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Timestamp</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activity in recent_institutional_activities %}
+                                <tr>
+                                    <td>
+                                        {% if activity.type == 'correspondent' %}
+                                            <span class="badge badge-primary">Correspondent</span>
+                                        {% elif activity.type == 'settlement' %}
+                                            <span class="badge badge-success">Settlement</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ activity.type|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ activity.description }}</td>
+                                    <td>{{ activity.amount if activity.amount else '-' }}</td>
+                                    <td>{{ activity.timestamp }}</td>
+                                    <td>
+                                        {% if activity.status == 'completed' %}
+                                            <span class="badge badge-success">Completed</span>
+                                        {% elif activity.status == 'settled' %}
+                                            <span class="badge badge-primary">Settled</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">{{ activity.status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Operational Metrics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="small text-gray-500">SWIFT Messages</div>
+                        <div class="h5 mb-0">{{ swift_messages }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="small text-gray-500">Settlement Efficiency</div>
+                        <div class="h5 mb-0">{{ settlement_efficiency }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/institutional/correspondent-banking" class="btn btn-primary btn-sm">
+                            <i class="fas fa-network-wired"></i> Correspondent Banking
+                        </a>
+                        <a href="/institutional/swift-services" class="btn btn-info btn-sm">
+                            <i class="fas fa-paper-plane"></i> SWIFT Services
+                        </a>
+                        <a href="/institutional/trade-finance" class="btn btn-success btn-sm">
+                            <i class="fas fa-handshake"></i> Trade Finance
+                        </a>
+                        <a href="/institutional/reports" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-chart-bar"></i> Reports
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

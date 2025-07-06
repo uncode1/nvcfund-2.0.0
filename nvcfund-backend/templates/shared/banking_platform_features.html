@@ -1,0 +1,264 @@
+<!-- Enhanced Banking Platform Features Component -->
+<div class="banking-features-showcase mb-4">
+    <style>
+        .banking-features-showcase {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-category {
+            margin-bottom: 25px;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .category-icon {
+            font-size: 1.5em;
+            opacity: 0.8;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-description {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        
+        .feature-status {
+            font-size: 0.8em;
+            padding: 3px 8px;
+            border-radius: 8px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        
+        .status-live { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .status-active { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .status-developing { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    </style>
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3><i class="fas fa-university"></i> NVC Banking Platform Capabilities</h3>
+        <span class="badge bg-success">Enterprise Grade</span>
+    </div>
+    
+    <!-- Core Banking Features -->
+    <div class="feature-category">
+        <div class="category-header">
+            <i class="fas fa-university category-icon"></i>
+            <h5>Core Banking Operations</h5>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card" onclick="location.href='/banking/'">
+                <div class="feature-title">
+                    <i class="fas fa-piggy-bank"></i>
+                    Multi-Currency Accounts
+                </div>
+                <div class="feature-description">Checking, savings, business, and investment accounts with 50+ currencies</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/banking/transfers'">
+                <div class="feature-title">
+                    <i class="fas fa-exchange-alt"></i>
+                    Real-time Transfers
+                </div>
+                <div class="feature-description">Instant domestic and international wire transfers with SWIFT integration</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/cards-payments/'">
+                <div class="feature-title">
+                    <i class="fas fa-credit-card"></i>
+                    Card Services
+                </div>
+                <div class="feature-description">Debit, credit, and virtual cards with contactless payments</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/banking/loans'">
+                <div class="feature-title">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    Lending Services
+                </div>
+                <div class="feature-description">Personal, business, and mortgage lending with AI-driven approvals</div>
+                <span class="feature-status status-active">Active</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Treasury & Investment -->
+    <div class="feature-category">
+        <div class="category-header">
+            <i class="fas fa-chart-line category-icon"></i>
+            <h5>Treasury & Investment Services</h5>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card" onclick="location.href='/treasury/'">
+                <div class="feature-title">
+                    <i class="fas fa-coins"></i>
+                    Treasury Management
+                </div>
+                <div class="feature-description">Cash management, liquidity optimization, and risk hedging</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/trading/'">
+                <div class="feature-title">
+                    <i class="fas fa-chart-area"></i>
+                    Algorithmic Trading
+                </div>
+                <div class="feature-description">AI-powered trading algorithms and portfolio optimization</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/investments/'">
+                <div class="feature-title">
+                    <i class="fas fa-trending-up"></i>
+                    Investment Platform
+                </div>
+                <div class="feature-description">Mutual funds, ETFs, bonds, and alternative investments</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/sovereign/'">
+                <div class="feature-title">
+                    <i class="fas fa-landmark"></i>
+                    Sovereign Banking
+                </div>
+                <div class="feature-description">Central banking operations and monetary policy management</div>
+                <span class="feature-status status-active">Active</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Advanced Technology -->
+    <div class="feature-category">
+        <div class="category-header">
+            <i class="fas fa-robot category-icon"></i>
+            <h5>Advanced Technology & Innovation</h5>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card" onclick="location.href='/smart-contracts/'">
+                <div class="feature-title">
+                    <i class="fas fa-file-contract"></i>
+                    Smart Contracts
+                </div>
+                <div class="feature-description">Ethereum-based automated contract execution and escrow services</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/nvct-stablecoin/'">
+                <div class="feature-title">
+                    <i class="fab fa-bitcoin"></i>
+                    NVCT Stablecoin
+                </div>
+                <div class="feature-description">USD-pegged digital currency for cross-border payments</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/analytics/'">
+                <div class="feature-title">
+                    <i class="fas fa-brain"></i>
+                    AI Analytics
+                </div>
+                <div class="feature-description">Machine learning for fraud detection and risk assessment</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/blockchain-analytics/'">
+                <div class="feature-title">
+                    <i class="fas fa-cube"></i>
+                    Blockchain Analytics
+                </div>
+                <div class="feature-description">DeFi integration and cryptocurrency transaction monitoring</div>
+                <span class="feature-status status-active">Active</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Compliance & Security -->
+    <div class="feature-category">
+        <div class="category-header">
+            <i class="fas fa-shield-alt category-icon"></i>
+            <h5>Compliance & Security</h5>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card" onclick="location.href='/compliance/'">
+                <div class="feature-title">
+                    <i class="fas fa-gavel"></i>
+                    Regulatory Compliance
+                </div>
+                <div class="feature-description">PCI-DSS, SOX, Basel III, and GDPR compliance management</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/security/'">
+                <div class="feature-title">
+                    <i class="fas fa-lock"></i>
+                    Security Center
+                </div>
+                <div class="feature-description">AES-256 encryption, threat monitoring, and incident response</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/settlement/'">
+                <div class="feature-title">
+                    <i class="fas fa-handshake"></i>
+                    Settlement Network
+                </div>
+                <div class="feature-description">Inter-bank clearing and real-time gross settlement</div>
+                <span class="feature-status status-live">Live</span>
+            </div>
+            <div class="feature-card" onclick="location.href='/islamic-banking/'">
+                <div class="feature-title">
+                    <i class="fas fa-moon"></i>
+                    Islamic Banking
+                </div>
+                <div class="feature-description">Sharia-compliant financial products and services</div>
+                <span class="feature-status status-active">Active</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add interactive effects to feature cards
+document.querySelectorAll('.feature-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-3px) scale(1.02)';
+        this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.3)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+        this.style.boxShadow = 'none';
+    });
+});
+</script>

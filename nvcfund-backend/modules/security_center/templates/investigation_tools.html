@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Investigation Tools{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Security Investigation Tools</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-warning"><i class="fas fa-search"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Active Investigations</span>
+                                    <span class="info-box-number">{{ investigation_data.active_investigations }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-info"><i class="fas fa-hourglass-half"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Pending Cases</span>
+                                    <span class="info-box-number">{{ investigation_data.pending_cases }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-success"><i class="fas fa-check"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Completed Cases</span>
+                                    <span class="info-box-number">{{ investigation_data.completed_cases }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Investigation Tools</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Forensic Analysis</h5>
+                                            <p class="card-text">Advanced forensic tools for transaction analysis</p>
+                                            <button class="btn btn-primary">Launch Tool</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Pattern Detection</h5>
+                                            <p class="card-text">AI-powered pattern detection for fraud analysis</p>
+                                            <button class="btn btn-primary">Launch Tool</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

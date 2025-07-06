@@ -1,0 +1,118 @@
+<!-- Banking Deposit Form -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Deposit Funds</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('banking.deposit') }}">
+            {{ csrf_token() }}
+            <input type="hidden" name="form_type" value="deposit">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="account_id">Deposit To Account</label>
+                        <select class="form-control" id="account_id" name="account_id" required>
+                            <option value="">Select account</option>
+                            <option value="1">Checking - **** 1234 ($15,250.00)</option>
+                            <option value="2">Savings - **** 5678 ($75,500.00)</option>
+                            <option value="3">Business - **** 9012 ($125,750.00)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="deposit_method">Deposit Method</label>
+                        <select class="form-control" id="deposit_method" name="deposit_method" required>
+                            <option value="">Select method</option>
+                            <option value="check">Check Deposit</option>
+                            <option value="cash">Cash Deposit</option>
+                            <option value="wire">Wire Transfer</option>
+                            <option value="ach">ACH Transfer</option>
+                            <option value="mobile">Mobile Deposit</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="amount">Deposit Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="amount" name="amount" 
+                                   step="0.01" min="0.01" max="100000" required placeholder="0.00">
+                        </div>
+                        <small class="form-text text-muted">Maximum deposit: $100,000 per transaction</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="currency">Currency</label>
+                        <select class="form-control" id="currency" name="currency" required>
+                            <option value="USD" selected>USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="CAD">CAD - Canadian Dollar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="check_details" style="display: none;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="check_number">Check Number</label>
+                            <input type="text" class="form-control" id="check_number" name="check_number" placeholder="Check number">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="bank_name">Issuing Bank</label>
+                            <input type="text" class="form-control" id="bank_name" name="bank_name" placeholder="Bank name">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="description">Deposit Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" 
+                          placeholder="Optional description for this deposit" maxlength="255"></textarea>
+            </div>
+            
+            <div class="form-group mb-3">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="confirm_deposit" required>
+                    <label class="form-check-label" for="confirm_deposit">
+                        I confirm the accuracy of this deposit information
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-plus"></i> Process Deposit
+            </button>
+            <button type="button" class="btn btn-secondary ms-2">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('deposit_method').addEventListener('change', function() {
+    const checkDetails = document.getElementById('check_details');
+    if (this.value === 'check' || this.value === 'mobile') {
+        checkDetails.style.display = 'block';
+        document.getElementById('check_number').required = true;
+        document.getElementById('bank_name').required = true;
+    } else {
+        checkDetails.style.display = 'none';
+        document.getElementById('check_number').required = false;
+        document.getElementById('bank_name').required = false;
+    }
+});
+</script>

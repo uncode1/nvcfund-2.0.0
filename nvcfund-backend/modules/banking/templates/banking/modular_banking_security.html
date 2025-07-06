@@ -1,0 +1,298 @@
+{% extends "banking/layout.html" %}
+
+{% block title %}Banking Security Settings{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark border-danger">
+                <div class="card-header bg-gradient text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="mb-0">
+                                <i class="fas fa-shield-alt me-2"></i>Banking Security Settings
+                            </h3>
+                            <small class="text-light">Manage your account security and protection settings</small>
+                        </div>
+                        <span class="badge bg-success fs-6">
+                            <i class="fas fa-check-circle me-1"></i>Secure
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Status -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-dark border-success">
+                <div class="card-body text-center">
+                    <i class="fas fa-lock fa-3x text-success mb-3"></i>
+                    <h5 class="text-light">Account Locked</h5>
+                    <p class="text-muted small">Your account is secure</p>
+                    <span class="badge bg-success">Active</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark border-warning">
+                <div class="card-body text-center">
+                    <i class="fas fa-key fa-3x text-warning mb-3"></i>
+                    <h5 class="text-light">2FA Enabled</h5>
+                    <p class="text-muted small">Two-factor authentication</p>
+                    <span class="badge bg-warning">Enabled</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark border-info">
+                <div class="card-body text-center">
+                    <i class="fas fa-eye fa-3x text-info mb-3"></i>
+                    <h5 class="text-light">Monitoring</h5>
+                    <p class="text-muted small">24/7 fraud detection</p>
+                    <span class="badge bg-info">Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Settings -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card bg-dark border-primary mb-4">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-lock me-2"></i>Account Security
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="security-setting mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light fw-bold">Password</span><br>
+                                <small class="text-muted">Last changed: 30 days ago</small>
+                            </div>
+                            <button class="btn btn-outline-primary btn-sm">Change</button>
+                        </div>
+                    </div>
+                    
+                    <div class="security-setting mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light fw-bold">Two-Factor Authentication</span><br>
+                                <small class="text-success">Enabled via SMS</small>
+                            </div>
+                            <button class="btn btn-outline-warning btn-sm">Modify</button>
+                        </div>
+                    </div>
+                    
+                    <div class="security-setting mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light fw-bold">Security Questions</span><br>
+                                <small class="text-muted">3 questions configured</small>
+                            </div>
+                            <button class="btn btn-outline-info btn-sm">Update</button>
+                        </div>
+                    </div>
+                    
+                    <div class="security-setting">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light fw-bold">Biometric Login</span><br>
+                                <small class="text-muted">Fingerprint & Face ID</small>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="biometric" checked>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card bg-dark border-warning mb-4">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bell me-2"></i>Security Alerts
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert-setting mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light">Login Notifications</span><br>
+                                <small class="text-muted">Email & SMS alerts for new logins</small>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="loginAlerts" checked>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert-setting mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light">Transaction Alerts</span><br>
+                                <small class="text-muted">Notify for transactions > $500</small>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="transactionAlerts" checked>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert-setting mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light">Suspicious Activity</span><br>
+                                <small class="text-muted">Immediate alerts for fraud detection</small>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="fraudAlerts" checked>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert-setting">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light">Account Changes</span><br>
+                                <small class="text-muted">Profile or contact info updates</small>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="changeAlerts" checked>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Limits -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark border-success">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-hand-paper me-2"></i>Transaction Limits & Controls
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="limit-setting text-center">
+                                <i class="fas fa-credit-card fa-2x text-primary mb-2"></i>
+                                <h6 class="text-light">Daily ATM Limit</h6>
+                                <p class="text-success fs-5">$1,000</p>
+                                <button class="btn btn-outline-primary btn-sm">Modify</button>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="limit-setting text-center">
+                                <i class="fas fa-shopping-cart fa-2x text-warning mb-2"></i>
+                                <h6 class="text-light">Purchase Limit</h6>
+                                <p class="text-success fs-5">$5,000</p>
+                                <button class="btn btn-outline-warning btn-sm">Modify</button>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="limit-setting text-center">
+                                <i class="fas fa-exchange-alt fa-2x text-info mb-2"></i>
+                                <h6 class="text-light">Transfer Limit</h6>
+                                <p class="text-success fs-5">$10,000</p>
+                                <button class="btn btn-outline-info btn-sm">Modify</button>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="limit-setting text-center">
+                                <i class="fas fa-globe fa-2x text-danger mb-2"></i>
+                                <h6 class="text-light">International</h6>
+                                <p class="text-danger fs-5">Disabled</p>
+                                <button class="btn btn-outline-danger btn-sm">Enable</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security History -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>Recent Security Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Event</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2025-07-02 14:30</td>
+                                    <td>
+                                        <i class="fas fa-sign-in-alt text-success me-2"></i>
+                                        Successful Login
+                                    </td>
+                                    <td>New York, NY</td>
+                                    <td><span class="badge bg-success">Approved</span></td>
+                                    <td>
+                                        <button class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2025-07-01 09:15</td>
+                                    <td>
+                                        <i class="fas fa-key text-warning me-2"></i>
+                                        2FA Code Generated
+                                    </td>
+                                    <td>New York, NY</td>
+                                    <td><span class="badge bg-success">Verified</span></td>
+                                    <td>
+                                        <button class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2025-06-30 16:45</td>
+                                    <td>
+                                        <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                                        Suspicious Login Attempt
+                                    </td>
+                                    <td>Unknown Location</td>
+                                    <td><span class="badge bg-danger">Blocked</span></td>
+                                    <td>
+                                        <button class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,787 @@
+
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Admin Dashboard - System Control{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <!-- Admin Header -->
+    <div class="admin-header">
+        <div class="admin-welcome">
+            <h1><i class="fas fa-crown"></i> Admin Control Center</h1>
+            <p>Welcome back, {{ username }} • {{ 'Super Administrator' if is_superadmin else 'Limited Administrator' }}</p>
+        </div>
+        <div class="system-status">
+            <div class="status-indicator {{ system_health.lower() }}">
+                <i class="fas fa-circle"></i>
+                <span>{{ system_health }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Overview Grid -->
+    <div class="system-overview">
+        <div class="metric-card users">
+            <div class="metric-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="metric-data">
+                <h3>{{ total_users or '1,247' }}</h3>
+                <p>Total Users</p>
+                <span class="change positive">+23 today</span>
+            </div>
+        </div>
+
+        <div class="metric-card sessions">
+            <div class="metric-icon">
+                <i class="fas fa-desktop"></i>
+            </div>
+            <div class="metric-data">
+                <h3>{{ active_sessions or '89' }}</h3>
+                <p>Active Sessions</p>
+                <span class="change neutral">Live now</span>
+            </div>
+        </div>
+
+        <div class="metric-card transactions">
+            <div class="metric-icon">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            <div class="metric-data">
+                <h3>$2.1M</h3>
+                <p>Daily Volume</p>
+                <span class="change positive">+8.2%</span>
+            </div>
+        </div>
+
+        <div class="metric-card alerts">
+            <div class="metric-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="metric-data">
+                <h3>{{ security_alerts or '2' }}</h3>
+                <p>Security Alerts</p>
+                <span class="change {% if security_alerts and security_alerts > 0 %}warning{% else %}positive{% endif %}">{% if security_alerts and security_alerts > 0 %}Review needed{% else %}All clear{% endif %}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Admin Grid -->
+    <div class="admin-grid">
+        <!-- System Health Monitor -->
+        <div class="admin-card system-health">
+            <div class="card-header">
+                <h3><i class="fas fa-heartbeat"></i> System Health</h3>
+                <div class="health-status operational">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Operational</span>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="health-metrics">
+                    <div class="health-item">
+                        <span class="label">Database</span>
+                        <div class="status-bar">
+                            <div class="status-fill" style="width: 98%"></div>
+                        </div>
+                        <span class="value">{{ database_status or 'Connected' }}</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="label">Service Services</span>
+                        <div class="status-bar">
+                            <div class="status-fill" style="width: 99%"></div>
+                        </div>
+                        <span class="value">99.9% Uptime</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="label">Security Engine</span>
+                        <div class="status-bar">
+                            <div class="status-fill" style="width: 100%"></div>
+                        </div>
+                        <span class="value">Active</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="label">Blockchain Network</span>
+                        <div class="status-bar">
+                            <div class="status-fill" style="width: 97%"></div>
+                        </div>
+                        <span class="value">Synchronized</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Admin Actions -->
+        <div class="admin-card quick-actions">
+            <div class="card-header">
+                <h3><i class="fas fa-lightning-bolt"></i> Quick Actions</h3>
+            </div>
+            <div class="card-content">
+                <div class="admin-actions-grid">
+                    {% if is_superadmin %}
+                    <a href="/admin/system/management" class="admin-action critical">
+                        <i class="fas fa-cogs"></i>
+                        <span>System Management</span>
+                    </a>
+                    <a href="/admin/security/management" class="admin-action high">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security Center</span>
+                    </a>
+                    {% endif %}
+                    
+                    <a href="/admin/dashboard/overview" class="admin-action medium">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analytics</span>
+                    </a>
+                    <a href="/admin/tools/dashboard" class="admin-action medium">
+                        <i class="fas fa-users-cog"></i>
+                        <span>User Management</span>
+                    </a>
+                    <a href="/admin/compliance/dashboard" class="admin-action medium">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Compliance</span>
+                    </a>
+                    <a href="/admin/system/log_management" class="admin-action low">
+                        <i class="fas fa-file-alt"></i>
+                        <span>System Logs</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="admin-card recent-activity">
+            <div class="card-header">
+                <h3><i class="fas fa-history"></i> Recent Admin Activity</h3>
+                <a href="/admin/system/monitoring" class="view-all">View All</a>
+            </div>
+            <div class="card-content">
+                <div class="activity-list">
+                    {% for activity in recent_admin_activities %}
+                    <div class="activity-item {{ activity.type }}">
+                        <div class="activity-icon">
+                            <i class="fas fa-{% if activity.type == 'system' %}cog{% elif activity.type == 'security' %}shield-alt{% elif activity.type == 'user' %}user{% else %}info{% endif %}"></i>
+                        </div>
+                        <div class="activity-details">
+                            <strong>{{ activity.description }}</strong>
+                            <span>{{ activity.timestamp }}</span>
+                        </div>
+                        <div class="activity-status {{ activity.status }}">
+                            <i class="fas fa-{% if activity.status == 'completed' %}check{% elif activity.status == 'pending' %}clock{% else %}exclamation{% endif %}"></i>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="no-activity">
+                        <i class="fas fa-inbox"></i>
+                        <p>No recent admin activities</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Dashboard -->
+        <div class="admin-card security-overview">
+            <div class="card-header">
+                <h3><i class="fas fa-shield-alt"></i> Security Overview</h3>
+                <a href="/security/monitoring" class="view-all">Details</a>
+            </div>
+            <div class="card-content">
+                <div class="security-metrics">
+                    <div class="security-item">
+                        <div class="security-label">
+                            <i class="fas fa-lock"></i>
+                            <span>Authentication</span>
+                        </div>
+                        <div class="security-status secure">
+                            <i class="fas fa-check"></i>
+                            <span>Secure</span>
+                        </div>
+                    </div>
+                    <div class="security-item">
+                        <div class="security-label">
+                            <i class="fas fa-eye"></i>
+                            <span>Threat Detection</span>
+                        </div>
+                        <div class="security-status active">
+                            <i class="fas fa-radar"></i>
+                            <span>Active</span>
+                        </div>
+                    </div>
+                    <div class="security-item">
+                        <div class="security-label">
+                            <i class="fas fa-firewall"></i>
+                            <span>Firewall</span>
+                        </div>
+                        <div class="security-status secure">
+                            <i class="fas fa-check"></i>
+                            <span>Protected</span>
+                        </div>
+                    </div>
+                    <div class="security-item">
+                        <div class="security-label">
+                            <i class="fas fa-database"></i>
+                            <span>Data Encryption</span>
+                        </div>
+                        <div class="security-status secure">
+                            <i class="fas fa-check"></i>
+                            <span>Encrypted</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform Revenue -->
+        {% if is_superadmin %}
+        <div class="admin-card revenue-overview">
+            <div class="card-header">
+                <h3><i class="fas fa-chart-pie"></i> Platform Revenue</h3>
+                <select class="period-selector">
+                    <option>Today</option>
+                    <option>This Week</option>
+                    <option>This Month</option>
+                </select>
+            </div>
+            <div class="card-content">
+                <div class="revenue-display">
+                    <h2>{{ platform_revenue or '$2.1M' }}</h2>
+                    <p class="revenue-change positive">+12.3% from last period</p>
+                </div>
+                <div class="revenue-breakdown">
+                    <div class="revenue-item">
+                        <span class="source">Banking Services</span>
+                        <span class="amount">$1.2M</span>
+                    </div>
+                    <div class="revenue-item">
+                        <span class="source">Treasury Operations</span>
+                        <span class="amount">$560K</span>
+                    </div>
+                    <div class="revenue-item">
+                        <span class="source">NVCT Trading</span>
+                        <span class="amount">$340K</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- System Notifications -->
+        <div class="admin-card system-notifications">
+            <div class="card-header">
+                <h3><i class="fas fa-bell"></i> System Notifications</h3>
+                <span class="notification-count">3</span>
+            </div>
+            <div class="card-content">
+                <div class="notification-list">
+                    <div class="notification-item warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="notification-content">
+                            <strong>Database backup overdue</strong>
+                            <span>Last backup: 25 hours ago</span>
+                        </div>
+                        <button class="notification-action">Backup Now</button>
+                    </div>
+                    <div class="notification-item info">
+                        <i class="fas fa-info-circle"></i>
+                        <div class="notification-content">
+                            <strong>System update available</strong>
+                            <span>Security patch v2.4.1</span>
+                        </div>
+                        <button class="notification-action">Update</button>
+                    </div>
+                    <div class="notification-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="notification-content">
+                            <strong>NVCT deployment successful</strong>
+                            <span>30T tokens now available</span>
+                        </div>
+                        <button class="notification-action">View</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if not is_superadmin %}
+    <div class="limited-access-notice">
+        <i class="fas fa-info-circle"></i>
+        <span>{{ limited_admin_notice or 'You have limited admin access. Contact superadmin for elevated privileges.' }}</span>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.admin-dashboard {
+    padding: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 25px;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 12px;
+    color: white;
+}
+
+.admin-welcome h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.admin-welcome p {
+    margin: 8px 0 0 0;
+    opacity: 0.9;
+}
+
+.system-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.status-indicator.operational {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+.status-indicator i {
+    margin-right: 8px;
+}
+
+.system-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.metric-card {
+    display: flex;
+    align-items: center;
+    padding: 25px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-left: 4px solid;
+}
+
+.metric-card.users { border-left-color: #2196F3; }
+.metric-card.sessions { border-left-color: #4CAF50; }
+.metric-card.transactions { border-left-color: #FF9800; }
+.metric-card.alerts { border-left-color: #f44336; }
+
+.metric-icon {
+    margin-right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+}
+
+.users .metric-icon { background: #2196F3; }
+.sessions .metric-icon { background: #4CAF50; }
+.transactions .metric-icon { background: #FF9800; }
+.alerts .metric-icon { background: #f44336; }
+
+.metric-data h3 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.metric-data p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.change {
+    font-size: 0.85rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.change.positive { background: #e8f5e8; color: #4CAF50; }
+.change.warning { background: #fff3cd; color: #856404; }
+.change.neutral { background: #f8f9fa; color: #6c757d; }
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 25px;
+}
+
+.admin-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid #eee;
+    background: #f8f9fa;
+}
+
+.card-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.health-status, .notification-count {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.health-status.operational {
+    color: #4CAF50;
+}
+
+.notification-count {
+    background: #f44336;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.card-content {
+    padding: 25px;
+}
+
+.health-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.health-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.health-item .label {
+    flex: 1;
+    font-weight: 500;
+    color: #333;
+}
+
+.status-bar {
+    flex: 2;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.status-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #45a049);
+    border-radius: 4px;
+}
+
+.health-item .value {
+    flex: 1;
+    text-align: right;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.admin-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.admin-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.admin-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    text-decoration: none;
+    color: white;
+}
+
+.admin-action.critical { background: #f44336; }
+.admin-action.high { background: #FF9800; }
+.admin-action.medium { background: #2196F3; }
+.admin-action.low { background: #4CAF50; }
+
+.admin-action i {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+.activity-icon {
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.activity-item.system .activity-icon { background: #2196F3; }
+.activity-item.security .activity-icon { background: #f44336; }
+.activity-item.user .activity-icon { background: #4CAF50; }
+
+.activity-details {
+    flex: 1;
+}
+
+.activity-details strong {
+    display: block;
+    color: #333;
+    margin-bottom: 3px;
+}
+
+.activity-details span {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.activity-status {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.activity-status.completed { background: #e8f5e8; color: #4CAF50; }
+.activity-status.pending { background: #fff3cd; color: #856404; }
+
+.security-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.security-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+.security-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #333;
+    font-weight: 500;
+}
+
+.security-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.security-status.secure { color: #4CAF50; }
+.security-status.active { color: #2196F3; }
+
+.revenue-display {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.revenue-display h2 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.revenue-change {
+    margin: 8px 0 0 0;
+    font-weight: 500;
+}
+
+.revenue-change.positive { color: #4CAF50; }
+
+.revenue-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.revenue-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.notification-item.warning { 
+    background: #fff3cd;
+    border-left-color: #ffc107;
+}
+
+.notification-item.info { 
+    background: #d1ecf1;
+    border-left-color: #17a2b8;
+}
+
+.notification-item.success { 
+    background: #d4edda;
+    border-left-color: #28a745;
+}
+
+.notification-item i {
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-content strong {
+    display: block;
+    margin-bottom: 3px;
+}
+
+.notification-content span {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.notification-action {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background: #007bff;
+    color: white;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.notification-action:hover {
+    background: #0056b3;
+}
+
+.limited-access-notice {
+    margin-top: 30px;
+    padding: 15px;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    color: #856404;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.no-activity {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.no-activity i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+    .admin-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .system-overview {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-actions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

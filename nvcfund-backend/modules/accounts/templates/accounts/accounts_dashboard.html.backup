@@ -1,0 +1,1984 @@
+{%% extends "layout.html" %%}
+
+{%% block title %%}Real-Time Accounts Management Dashboard{%% endblock %%}
+
+{%% block extra_css %%}
+<style>
+    .real-time-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #28a745;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+        margin-right: 8px;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .drill-down-cell {
+        cursor: pointer;
+        transition: background-color 0.2s;
+        position: relative;
+    }
+    
+    .drill-down-cell:hover {
+        background-color: rgba(108, 117, 125, 0.3);
+    }
+    
+    .drill-down-cell::after {
+        content: '🔍';
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    
+    .drill-down-cell:hover::after {
+        opacity: 1;
+    }
+    
+    .metric-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        border-left: 4px solid #007bff;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,123,255,0.4);
+        border-left-color: #66ccff;
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 350px;
+        background: #0a2447;
+        border: 1px solid #66ccff;
+        border-radius: 8px;
+        padding: 15px;
+    }
+    
+    .real-time-status {
+        font-size: 0.8em;
+        color: #28a745;
+        font-weight: bold;
+    }
+    
+    .streaming-badge {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75em;
+        animation: glow 2s infinite;
+    }
+    
+    @keyframes glow {
+        0%, 100% { box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); }
+        50% { box-shadow: 0 0 15px rgba(40, 167, 69, 0.8); }
+    }
+    
+    .connection-status {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        padding: 8px 15px;
+        border-radius: 20px;
+        color: white;
+        font-weight: bold;
+        font-size: 0.8em;
+    }
+    
+    .connection-status.connected {
+        background: linear-gradient(45deg, #28a745, #20c997);
+    }
+    
+    .connection-status.disconnected {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+    }
+    
+    .drill-down-modal .modal-content {
+        background: #0a2447;
+        border: 1px solid #66ccff;
+        color: white;
+    }
+    
+    .data-grid {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .highlight-row {
+        background-color: rgba(102, 204, 255, 0.2);
+        animation: highlight 1s ease-in-out;
+    }
+    
+    @keyframes highlight {
+        0% { background-color: rgba(102, 204, 255, 0.8); }
+        100% { background-color: rgba(102, 204, 255, 0.2); }
+    }
+    
+    .account-alert {
+        border-left: 4px solid #ffc107;
+        background: rgba(255, 193, 7, 0.1);
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 4px;
+    }
+    
+    .transaction-flow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: 6px;
+        margin: 2px 0;
+    }
+    
+    .transaction-flow.incoming {
+        background: rgba(40, 167, 69, 0.2);
+        border-left: 3px solid #28a745;
+    }
+    
+    .transaction-flow.outgoing {
+        background: rgba(220, 53, 69, 0.2);
+        border-left: 3px solid #dc3545;
+    }
+    
+    .live-chart {
+        background: #0a2447;
+        border: 1px solid #66ccff;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+    }
+</style>
+{%% endblock %%}
+
+{%% block content %%}
+<!-- Connection Status Indicator -->
+<div id="connection-status" class="connection-status disconnected">
+    <i class="fas fa-circle me-1"></i>Connecting...
+</div>
+
+<div class="container-fluid mt-4">
+    <!-- Header with Real-time Status -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark border-primary">
+                <div class="card-header bg-gradient text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="mb-0">
+                                <i class="fas fa-tachometer-alt me-2"></i>Real-Time Accounts Management
+                                <span class="real-time-indicator"></span>
+                                <span class="streaming-badge">LIVE</span>
+                            </h3>
+                            <small class="text-light">Enterprise banking operations with real-time data streaming</small>
+                            <div class="real-time-status">
+                                <i class="fas fa-wifi me-1"></i>WebSocket Stream Active
+                                <span class="ms-3">Last updated: <span id="last-update-time">--</span></span>
+                                <span class="ms-3">Updates: <span id="update-counter">0</span></span>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <a href="{{ url_for('accounts.overview') }}" class="btn btn-outline-info">
+                                <i class="fas fa-chart-bar me-2"></i>Overview
+                            </a>
+                            <a href="{{ url_for('accounts.settings') }}" class="btn btn-outline-warning">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a>
+                            <button class="btn btn-outline-success" onclick="refreshRealTimeData()">
+                                <i class="fas fa-sync-alt me-2"></i>Refresh
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="exportDashboardData()">
+                                <i class="fas fa-download me-2"></i>Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time Key Metrics with Drill-down -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-dark border-success metric-card" onclick="drillDownMetric('active_accounts')">
+                <div class="card-body text-center">
+                    <i class="fas fa-university fa-3x text-success mb-3"></i>
+                    <h5 class="text-success">Active Accounts</h5>
+                    <h2 class="text-white" id="active-accounts-count">15,247</h2>
+                    <small class="text-muted">
+                        <i class="fas fa-arrow-up text-success"></i>
+                        <span id="accounts-change">+23</span> today
+                    </small>
+                    <div class="mt-2">
+                        <i class="fas fa-chart-line text-success"></i>
+                        <small class="text-success">Click for breakdown</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-dark border-warning metric-card" onclick="drillDownMetric('pending_operations')">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-3x text-warning mb-3"></i>
+                    <h5 class="text-warning">Pending Operations</h5>
+                    <h2 class="text-white" id="pending-operations-count">89</h2>
+                    <small class="text-muted">
+                        Avg: <span id="avg-processing-time">3.2</span> min
+                    </small>
+                    <div class="mt-2">
+                        <i class="fas fa-hourglass-half text-warning"></i>
+                        <small class="text-warning">Click for queue details</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-dark border-info metric-card" onclick="drillDownMetric('transaction_volume')">
+                <div class="card-body text-center">
+                    <i class="fas fa-dollar-sign fa-3x text-info mb-3"></i>
+                    <h5 class="text-info">Transaction Volume</h5>
+                    <h2 class="text-white" id="transaction-volume">$45.67M</h2>
+                    <small class="text-muted">
+                        <i class="fas fa-arrow-up text-success"></i>
+                        <span id="volume-change">+12.5%</span> vs yesterday
+                    </small>
+                    <div class="mt-2">
+                        <i class="fas fa-exchange-alt text-info"></i>
+                        <small class="text-info">Click for breakdown</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-dark border-danger metric-card" onclick="drillDownMetric('security_score')">
+                <div class="card-body text-center">
+                    <i class="fas fa-shield-alt fa-3x text-danger mb-3"></i>
+                    <h5 class="text-danger">Security Score</h5>
+                    <h2 class="text-white" id="security-score">98.5%</h2>
+                    <small class="text-muted">
+                        <span id="threats-blocked">156</span> threats blocked today
+                    </small>
+                    <div class="mt-2">
+                        <i class="fas fa-eye text-danger"></i>
+                        <small class="text-danger">Click for security analysis</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time Charts -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card bg-dark border-primary">
+                <div class="card-header bg-gradient">
+                    <h5 class="text-white mb-0">
+                        <i class="fas fa-chart-area me-2"></i>Account Growth Trend
+                        <span class="real-time-indicator"></span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="growth-chart"></canvas>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <small class="text-muted">Live updates every 30s</small>
+                        <div>
+                            <button class="btn btn-sm btn-outline-info" onclick="toggleChartPeriod('24h')">24H</button>
+                            <button class="btn btn-sm btn-outline-info" onclick="toggleChartPeriod('7d')">7D</button>
+                            <button class="btn btn-sm btn-outline-info" onclick="toggleChartPeriod('30d')">30D</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card bg-dark border-warning">
+                <div class="card-header bg-gradient">
+                    <h5 class="text-white mb-0">
+                        <i class="fas fa-bell me-2"></i>Live Alerts
+                        <span class="real-time-indicator"></span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="type-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time Activity Stream with Drill-down -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark border-primary">
+                <div class="card-header bg-gradient">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-white mb-0">
+                            <i class="fas fa-stream me-2"></i>Live Activity Stream
+                            <span class="real-time-indicator"></span>
+                        </h5>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-info" onclick="filterActivities('all')">All</button>
+                            <button class="btn btn-sm btn-outline-success" onclick="filterActivities('success')">Success</button>
+                            <button class="btn btn-sm btn-outline-warning" onclick="filterActivities('pending')">Pending</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="filterActivities('failed')">Failed</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Operation</th>
+                                    <th>Account ID</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>User</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-stream">
+                                <!-- Activities will be populated by WebSocket -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button class="btn btn-outline-primary" onclick="loadMoreActivities()">
+                            <i class="fas fa-plus me-2"></i>Load More Activities
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Drill-down Modal -->
+<div class="modal fade" id="drillDownModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-white">
+                    <i class="fas fa-search-plus me-2"></i>
+                    <span id="drill-down-title">Detailed Analysis</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="drill-down-content">
+                <!-- Drill-down content populated dynamically -->
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-primary" onclick="exportDrillDownData()">
+                    <i class="fas fa-download me-2"></i>Export Data
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Activity Details Modal -->
+<div class="modal fade" id="activityModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-white">
+                    <i class="fas fa-info-circle me-2"></i>Activity Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="activity-details-content">
+                <!-- Activity details populated dynamically -->
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+                    <h5 class="text-light">Active Accounts</h5>
+                    <h3 class="text-success" id="active-accounts-count">--</h3>
+                    <small class="text-muted">
+                        <span id="active-accounts-change">--</span> from yesterday
+                    </small>
+                    <div class="mt-2">
+                        <small class="text-info">Click for details</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-dark border-warning metric-card" onclick="drillDownMetric('pending_operations')">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-3x text-warning mb-3"></i>
+                    <h5 class="text-light">Pending Operations</h5>
+                    <h3 class="text-warning" id="pending-operations-count">--</h3>
+                    <small class="text-muted">
+                        Avg processing: <span id="avg-processing-time">--</span>
+                    </small>
+                    <div class="mt-2">
+                        <small class="text-info">Click for details</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-dark border-info metric-card" onclick="drillDownMetric('transaction_volume')">
+                <div class="card-body text-center">
+                    <i class="fas fa-dollar-sign fa-3x text-info mb-3"></i>
+                    <h5 class="text-light">Transaction Volume</h5>
+                    <h3 class="text-info" id="transaction-volume">--</h3>
+                    <small class="text-muted">
+                        Last 24h: <span id="volume-change">--</span>
+                    </small>
+                    <div class="mt-2">
+                        <small class="text-info">Click for details</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-dark border-danger metric-card" onclick="drillDownMetric('security_score')">
+                <div class="card-body text-center">
+                    <i class="fas fa-shield-alt fa-3x text-danger mb-3"></i>
+                    <h5 class="text-light">Security Score</h5>
+                    <h3 class="text-success" id="security-score">--</h3>
+                    <small class="text-muted">
+                        Threats blocked: <span id="threats-blocked">--</span>
+                    </small>
+                    <div class="mt-2">
+                        <small class="text-info">Click for details</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time Analytics Charts -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>Account Growth Trend
+                        <span class="real-time-indicator"></span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="accountGrowthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Account Type Distribution
+                        <span class="real-time-indicator"></span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="accountTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time Activity Stream with Drill-down -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-gradient text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-stream me-2"></i>Live Activity Stream
+                        <span class="real-time-indicator"></span>
+                    </h5>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-info" onclick="filterActivity('all')">All</button>
+                        <button class="btn btn-outline-success" onclick="filterActivity('success')">Success</button>
+                        <button class="btn btn-outline-warning" onclick="filterActivity('pending')">Pending</button>
+                        <button class="btn btn-outline-danger" onclick="filterActivity('failed')">Failed</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Account ID</th>
+                                    <th>Operation</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>User</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-stream">
+                                <!-- Real-time data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button class="btn btn-outline-primary" onclick="loadMoreActivity()">
+                            <i class="fas fa-plus me-2"></i>Load More
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Details Modal for Drill-down -->
+    <div class="modal fade" id="drillDownModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title text-white" id="drillDownModalTitle">Account Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="drillDownModalBody">
+                    <!-- Drill-down content will be loaded here -->
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="exportDrillDownData()">Export Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%% endblock %%}
+
+{%% block extra_js %%}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    // WebSocket Connection and Real-time Data Management
+    let socket;
+    let updateCounter = 0;
+    let charts = {};
+    let isPaused = false;
+    
+    // Initialize dashboard when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeWebSocket();
+        initializeCharts();
+        updateTimestamp();
+        setInterval(updateTimestamp, 1000);
+        
+        // Add sample data for initial display
+        populateInitialData();
+    });
+    
+    // WebSocket initialization and event handlers
+    function initializeWebSocket() {
+        try {
+            socket = io('/accounts', {
+                transports: ['websocket', 'polling'],
+                reconnection: true,
+                reconnectionAttempts: 5,
+                reconnectionDelay: 1000
+            });
+            
+            socket.on('connect', function() {
+                console.log('✅ WebSocket connected to Accounts module');
+                updateConnectionStatus(true);
+                socket.emit('join_room', 'accounts_dashboard');
+            });
+            
+            socket.on('disconnect', function() {
+                console.log('❌ WebSocket disconnected');
+                updateConnectionStatus(false);
+            });
+            
+            // Real-time data handlers
+            socket.on('account_update', handleAccountUpdate);
+            socket.on('transaction_update', handleTransactionUpdate);
+            socket.on('security_alert', handleSecurityAlert);
+            socket.on('activity_update', handleActivityUpdate);
+            socket.on('metrics_update', handleMetricsUpdate);
+            
+        } catch (error) {
+            console.error('WebSocket initialization failed:', error);
+            updateConnectionStatus(false);
+        }
+    }
+    
+    // Real-time data handlers
+    function handleAccountUpdate(data) {
+        if (isPaused) return;
+        
+        updateCounter++;
+        document.getElementById('update-counter').textContent = updateCounter;
+        
+        // Update account metrics
+        if (data.active_accounts) {
+            document.getElementById('active-accounts-count').textContent = data.active_accounts.toLocaleString();
+        }
+        
+        // Highlight updated row
+        const row = document.querySelector(`[data-account-id="${data.account_id}"]`);
+        if (row) {
+            row.classList.add('highlight-row');
+            setTimeout(() => row.classList.remove('highlight-row'), 1000);
+        }
+    }
+    
+    function handleTransactionUpdate(data) {
+        if (isPaused) return;
+        
+        const streamContainer = document.getElementById('transaction-stream');
+        const transactionDiv = createTransactionElement(data);
+        
+        // Add to top of stream
+        streamContainer.insertBefore(transactionDiv, streamContainer.firstChild);
+        
+        // Keep only last 10 transactions visible
+        while (streamContainer.children.length > 10) {
+            streamContainer.removeChild(streamContainer.lastChild);
+        }
+        
+        // Update volume metrics
+        updateTransactionVolume(data.amount);
+    }
+    
+    function handleSecurityAlert(data) {
+        const alertsContainer = document.getElementById('live-alerts');
+        const alertDiv = createAlertElement(data);
+        
+        alertsContainer.insertBefore(alertDiv, alertsContainer.firstChild);
+        
+        // Keep only last 5 alerts
+        while (alertsContainer.children.length > 5) {
+            alertsContainer.removeChild(alertsContainer.lastChild);
+        }
+        
+        // Update security score
+        if (data.security_score) {
+            document.getElementById('security-score').textContent = data.security_score + '%';
+        }
+    }
+    
+    function handleActivityUpdate(data) {
+        const activityTable = document.getElementById('activity-monitor');
+        const newRow = createActivityRow(data);
+        
+        activityTable.insertBefore(newRow, activityTable.firstChild);
+        
+        // Keep only last 4 activities
+        while (activityTable.children.length > 4) {
+            activityTable.removeChild(activityTable.lastChild);
+        }
+    }
+    
+    function handleMetricsUpdate(data) {
+        // Update all dashboard metrics
+        if (data.pending_operations) {
+            document.getElementById('pending-operations-count').textContent = data.pending_operations;
+        }
+        
+        if (data.threats_blocked) {
+            document.getElementById('threats-blocked').textContent = data.threats_blocked;
+        }
+        
+        // Update charts with new data
+        updateCharts(data);
+    }
+    
+    // UI Creation Functions
+    function createTransactionElement(data) {
+        const div = document.createElement('div');
+        const isIncoming = data.type === 'incoming';
+        
+        div.className = `transaction-flow ${isIncoming ? 'incoming' : 'outgoing'}`;
+        div.innerHTML = `
+            <div class="flex-grow-1">
+                <strong>${data.description}</strong>
+                <div class="drill-down-cell" onclick="drillDownTransaction('${data.id}')" style="display: inline;">
+                    <span class="${isIncoming ? 'text-success' : 'text-danger'}">
+                        ${isIncoming ? '+' : '-'}$${data.amount.toLocaleString()}
+                    </span>
+                </div>
+                <br>
+                <small class="text-muted">${data.details}</small>
+                <div class="text-muted mt-1">
+                    <small>Just now</small>
+                    <span class="badge bg-${data.status === 'completed' ? 'success' : 'warning'} ms-2">
+                        ${data.status.toUpperCase()}
+                    </span>
+                </div>
+            </div>
+        `;
+        
+        return div;
+    }
+    
+    function createAlertElement(data) {
+        const div = document.createElement('div');
+        div.className = 'account-alert';
+        div.innerHTML = `
+            <strong>${data.title}</strong><br>
+            <small>${data.message}</small>
+            <div class="text-muted mt-1">
+                <small>Just now</small>
+                <button class="btn btn-xs btn-outline-${data.severity}" onclick="investigateAlert('${data.id}')">
+                    ${data.action || 'Investigate'}
+                </button>
+            </div>
+        `;
+        
+        return div;
+    }
+    
+    function createActivityRow(data) {
+        const row = document.createElement('tr');
+        row.className = 'drill-down-cell';
+        row.onclick = () => drillDownActivity(data.id);
+        row.innerHTML = `
+            <td>****${data.account_id.slice(-4)}</td>
+            <td>${data.activity}</td>
+            <td><span class="badge bg-${data.status_color}">${data.status}</span></td>
+            <td><i class="fas fa-eye text-info"></i></td>
+        `;
+        
+        return row;
+    }
+    
+    // Chart Management
+    function initializeCharts() {
+        // Account Growth Chart
+        const growthCtx = document.getElementById('growth-chart').getContext('2d');
+        charts.growth = new Chart(growthCtx, {
+            type: 'line',
+            data: {
+                labels: ['6h ago', '5h ago', '4h ago', '3h ago', '2h ago', '1h ago', 'Now'],
+                datasets: [{
+                    label: 'Account Growth',
+                    data: [15220, 15224, 15231, 15238, 15242, 15245, 15247],
+                    borderColor: '#66ccff',
+                    backgroundColor: 'rgba(102, 204, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#ffffff' } }
+                },
+                scales: {
+                    x: { ticks: { color: '#ffffff' } },
+                    y: { ticks: { color: '#ffffff' } }
+                }
+            }
+        });
+        
+        // Account Types Chart
+        const typeCtx = document.getElementById('type-chart').getContext('2d');
+        charts.types = new Chart(typeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Individual', 'Business', 'Corporate', 'Premium'],
+                datasets: [{
+                    data: [12450, 1890, 756, 151],
+                    backgroundColor: ['#28a745', '#ffc107', '#17a2b8', '#dc3545']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#ffffff' } }
+                }
+            }
+        });
+    }
+    
+    function updateCharts(data) {
+        if (data.growth_data && charts.growth) {
+            charts.growth.data.datasets[0].data.push(data.growth_data);
+            charts.growth.data.datasets[0].data.shift();
+            charts.growth.update('none');
+        }
+        
+        if (data.type_distribution && charts.types) {
+            charts.types.data.datasets[0].data = data.type_distribution;
+            charts.types.update('none');
+        }
+    }
+    
+    // Utility Functions
+    function updateConnectionStatus(connected) {
+        const statusEl = document.getElementById('connection-status');
+        statusEl.className = `connection-status ${connected ? 'connected' : 'disconnected'}`;
+        statusEl.innerHTML = `<i class="fas fa-circle me-1"></i>${connected ? 'Connected' : 'Disconnected'}`;
+    }
+    
+    function updateTimestamp() {
+        document.getElementById('last-update-time').textContent = 
+            new Date().toLocaleTimeString();
+    }
+    
+    function updateTransactionVolume(amount) {
+        const currentVolume = document.getElementById('transaction-volume').textContent;
+        const currentValue = parseFloat(currentVolume.replace(/[$M,]/g, ''));
+        const newValue = currentValue + (amount / 1000000);
+        document.getElementById('transaction-volume').textContent = `$${newValue.toFixed(2)}M`;
+    }
+    
+    // Drill-down Functions
+    function drillDownMetric(metricType) {
+        showDrillDownModal(`${metricType}_details`, `${metricType.replace('_', ' ').toUpperCase()} Analysis`);
+        
+        // Fetch detailed data via AJAX
+        fetch(`/accounts/api/drill-down/${metricType}`)
+            .then(response => response.json())
+            .then(data => populateDrillDownContent(data))
+            .catch(error => console.error('Drill-down fetch failed:', error));
+    }
+    
+    function drillDownTransaction(txId) {
+        showDrillDownModal('transaction_details', 'Transaction Details');
+        
+        fetch(`/accounts/api/transaction/${txId}`)
+            .then(response => response.json())
+            .then(data => populateTransactionDetails(data))
+            .catch(error => console.error('Transaction details fetch failed:', error));
+    }
+    
+    function drillDownActivity(activityId) {
+        showDrillDownModal('activity_details', 'Activity Analysis');
+        
+        fetch(`/accounts/api/activity/${activityId}`)
+            .then(response => response.json())
+            .then(data => populateActivityDetails(data))
+            .catch(error => console.error('Activity details fetch failed:', error));
+    }
+    
+    function showDrillDownModal(contentType, title) {
+        document.getElementById('drill-down-title').textContent = title;
+        document.getElementById('drill-down-content').innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+        
+        const modal = new bootstrap.Modal(document.getElementById('drillDownModal'));
+        modal.show();
+    }
+    
+    function populateDrillDownContent(data) {
+        const content = document.getElementById('drill-down-content');
+        content.innerHTML = `
+            <div class="row">
+                <div class="col-md-8">
+                    <h6 class="text-primary">Detailed Analysis</h6>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                    <th>Change</th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.metrics ? data.metrics.map(metric => `
+                                    <tr>
+                                        <td>${metric.name}</td>
+                                        <td>${metric.value}</td>
+                                        <td class="${metric.change > 0 ? 'text-success' : 'text-danger'}">
+                                            ${metric.change > 0 ? '+' : ''}${metric.change}%
+                                        </td>
+                                        <td><i class="fas fa-chart-line text-info"></i></td>
+                                    </tr>
+                                `).join('') : '<tr><td colspan="4">No data available</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-info">Quick Stats</h6>
+                    <div class="bg-secondary p-3 rounded">
+                        <small class="text-muted d-block">Last Updated: ${new Date().toLocaleString()}</small>
+                        <small class="text-muted d-block">Data Source: Real-time WebSocket</small>
+                        <small class="text-muted d-block">Refresh Rate: Every 30s</small>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Control Functions
+    function refreshRealTimeData() {
+        if (socket && socket.connected) {
+            socket.emit('refresh_data');
+            updateCounter = 0;
+            document.getElementById('update-counter').textContent = '0';
+        }
+    }
+    
+    function pauseTransactionStream() {
+        isPaused = !isPaused;
+        const btn = event.target;
+        btn.innerHTML = isPaused ? '<i class="fas fa-play"></i> Resume Stream' : '<i class="fas fa-pause"></i> Pause Stream';
+        btn.className = isPaused ? 'btn btn-sm btn-outline-warning' : 'btn btn-sm btn-outline-success';
+    }
+    
+    function exportDashboardData() {
+        // Collect all dashboard data
+        const dashboardData = {
+            metrics: {
+                active_accounts: document.getElementById('active-accounts-count').textContent,
+                pending_operations: document.getElementById('pending-operations-count').textContent,
+                transaction_volume: document.getElementById('transaction-volume').textContent,
+                security_score: document.getElementById('security-score').textContent
+            },
+            timestamp: new Date().toISOString(),
+            update_count: updateCounter
+        };
+        
+        // Create and download JSON file
+        const blob = new Blob([JSON.stringify(dashboardData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `accounts_dashboard_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+    
+    // Sample data for demonstration
+    function populateInitialData() {
+        // Add sample alert
+        setTimeout(() => {
+            handleSecurityAlert({
+                id: 'alert_001',
+                title: 'High Volume Transaction Detected',
+                message: 'Account #****2847 - $125,000 wire transfer',
+                severity: 'warning',
+                action: 'Investigate'
+            });
+        }, 2000);
+        
+        // Add sample transaction
+        setTimeout(() => {
+            handleTransactionUpdate({
+                id: 'tx_live_001',
+                type: 'incoming',
+                description: 'Wire Transfer Received',
+                amount: 45750,
+                details: 'From: Corporate Account ****1234 → Account ****5678',
+                status: 'completed'
+            });
+        }, 4000);
+        
+        // Add sample activity
+        setTimeout(() => {
+            handleActivityUpdate({
+                id: 'activity_live_001',
+                account_id: '12847',
+                activity: 'Login',
+                status: 'ACTIVE',
+                status_color: 'success'
+            });
+        }, 6000);
+    }
+    
+    // Chart period toggle
+    function toggleChartPeriod(period) {
+        // Update chart data based on selected period
+        console.log(`Switching chart to ${period} view`);
+        // Implementation would fetch new data and update charts
+    }
+    
+    // Filter functions
+    function filterActivities(status) {
+        console.log(`Filtering activities by ${status}`);
+        // Implementation would filter the activity table
+    }
+    
+    function loadMoreActivities() {
+        console.log('Loading more activities...');
+        // Implementation would fetch and append more activities
+    }
+    
+    function loadMoreActivity() {
+        console.log('Loading more activity...');
+        // Implementation would fetch and append more activity data
+    }
+    
+    // Investigation functions
+    function investigateAlert(alertId) {
+        console.log(`Investigating alert: ${alertId}`);
+        drillDownMetric('security_analysis');
+    }
+    
+    function viewKYCDetails(kycId) {
+        console.log(`Viewing KYC details: ${kycId}`);
+        drillDownMetric('kyc_analysis');
+    }
+    
+    function exportDrillDownData() {
+        console.log('Exporting drill-down data...');
+        // Implementation would export the current drill-down data
+    }
+</script>
+{%% endblock %%}
+
+{%% block extra_js %%}
+<!-- Include SocketIO -->
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+let socket;
+let growthChart;
+let typeChart;
+let currentFilter = 'all';
+let currentDrillDownMetric = null;
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSocket();
+    initializeCharts();
+    loadInitialData();
+});
+
+// Initialize WebSocket connection
+function initializeSocket() {
+    socket = io();
+    
+    // Join accounts stream
+    socket.emit('join_accounts_stream');
+    
+    // Listen for real-time metrics updates
+    socket.on('accounts_metrics_update', function(data) {
+        updateMetrics(data);
+        updateLastUpdateTime();
+    });
+    
+    // Listen for activity updates
+    socket.on('accounts_activity_update', function(activity) {
+        addActivityToStream(activity);
+    });
+    
+    // Listen for chart updates
+    socket.on('accounts_chart_update', function(data) {
+        updateCharts(data);
+    });
+    
+    // Handle connection events
+    socket.on('connect', function() {
+        console.log('Connected to accounts real-time stream');
+        showNotification('Connected to real-time data stream', 'success');
+    });
+    
+    socket.on('disconnect', function() {
+        console.log('Disconnected from accounts stream');
+        showNotification('Real-time connection lost', 'warning');
+    });
+}
+
+// Initialize Charts
+function initializeCharts() {
+    // Growth Chart
+    const growthCtx = document.getElementById('growth-chart').getContext('2d');
+    growthChart = new Chart(growthCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Active Accounts',
+                data: [],
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#fff' }
+                }
+            },
+            scales: {
+                x: { 
+                    ticks: { color: '#fff' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                y: { 
+                    ticks: { color: '#fff' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    });
+    
+    // Type Distribution Chart
+    const typeCtx = document.getElementById('type-chart').getContext('2d');
+    typeChart = new Chart(typeCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Checking', 'Savings', 'Business', 'Investment'],
+            datasets: [{
+                data: [8547, 4321, 1789, 590],
+                backgroundColor: [
+                    '#28a745',
+                    '#007bff', 
+                    '#ffc107',
+                    '#dc3545'
+                ],
+                borderWidth: 2,
+                borderColor: '#343a40'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#fff' }
+                }
+            }
+        }
+    });
+}
+
+// Load initial data
+function loadInitialData() {
+    socket.emit('request_accounts_data');
+}
+
+// Update metrics display
+function updateMetrics(data) {
+    document.getElementById('active-accounts-count').textContent = data.active_accounts.toLocaleString();
+    document.getElementById('accounts-change').textContent = '+' + data.accounts_change;
+    document.getElementById('pending-operations-count').textContent = data.pending_operations;
+    document.getElementById('avg-processing-time').textContent = data.avg_processing_time;
+    document.getElementById('transaction-volume').textContent = '$' + (data.transaction_volume / 1000000).toFixed(2) + 'M';
+    document.getElementById('volume-change').textContent = '+' + data.volume_change + '%';
+    document.getElementById('security-score').textContent = data.security_score + '%';
+    document.getElementById('threats-blocked').textContent = data.threats_blocked;
+}
+
+// Update charts with new data
+function updateCharts(data) {
+    if (data.growth_data) {
+        growthChart.data.labels = data.growth_data.labels;
+        growthChart.data.datasets[0].data = data.growth_data.values;
+        growthChart.update('none'); // No animation for real-time updates
+    }
+    
+    if (data.type_distribution) {
+        typeChart.data.datasets[0].data = data.type_distribution;
+        typeChart.update('none');
+    }
+}
+
+// Add activity to stream
+function addActivityToStream(activity) {
+    const tbody = document.getElementById('activity-stream');
+    const row = createActivityRow(activity);
+    
+    // Add to top of table
+    tbody.insertAdjacentHTML('afterbegin', row);
+    
+    // Keep only last 50 activities
+    while (tbody.children.length > 50) {
+        tbody.removeChild(tbody.lastChild);
+    }
+    
+    // Highlight new row briefly
+    const newRow = tbody.firstElementChild;
+    newRow.classList.add('table-success');
+    setTimeout(() => {
+        newRow.classList.remove('table-success');
+    }, 2000);
+}
+
+// Create activity row HTML
+function createActivityRow(activity) {
+    const timestamp = new Date(activity.timestamp).toLocaleTimeString();
+    const amount = activity.amount ? '$' + activity.amount.toLocaleString() : '-';
+    const statusClass = activity.status === 'Success' ? 'success' : 
+                       activity.status === 'Pending' ? 'warning' : 'danger';
+    
+    return `
+        <tr>
+            <td>${timestamp}</td>
+            <td>${activity.operation}</td>
+            <td><code>${activity.account_id}</code></td>
+            <td>${amount}</td>
+            <td><span class="badge bg-${statusClass}">${activity.status}</span></td>
+            <td><code>${activity.user}</code></td>
+            <td>
+                <button class="btn btn-sm btn-outline-info" onclick="viewActivityDetails('${activity.id}')">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </td>
+        </tr>
+    `;
+}
+
+// Drill down into metric details
+function drillDownMetric(metric) {
+    currentDrillDownMetric = metric;
+    
+    fetch(`/accounts/api/drill-down/${metric}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayDrillDownData(metric, data.data);
+            } else {
+                showNotification('Failed to load drill-down data', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Drill-down error:', error);
+            showNotification('Error loading drill-down data', 'error');
+        });
+}
+
+// Display drill-down data in modal
+function displayDrillDownData(metric, data) {
+    const title = document.getElementById('drill-down-title');
+    const content = document.getElementById('drill-down-content');
+    
+    let titleText = '';
+    let contentHtml = '';
+    
+    switch(metric) {
+        case 'active_accounts':
+            titleText = 'Active Accounts Analysis';
+            contentHtml = generateAccountsAnalysis(data);
+            break;
+        case 'pending_operations':
+            titleText = 'Pending Operations Analysis';
+            contentHtml = generateOperationsAnalysis(data);
+            break;
+        case 'transaction_volume':
+            titleText = 'Transaction Volume Analysis';
+            contentHtml = generateVolumeAnalysis(data);
+            break;
+        case 'security_score':
+            titleText = 'Security Score Analysis';
+            contentHtml = generateSecurityAnalysis(data);
+            break;
+    }
+    
+    title.textContent = titleText;
+    content.innerHTML = contentHtml;
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('drillDownModal'));
+    modal.show();
+}
+
+// Generate accounts analysis HTML
+function generateAccountsAnalysis(data) {
+    return `
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-chart-pie me-2"></i>By Account Type</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Checking: <strong>${data.by_type.checking.toLocaleString()}</strong></div>
+                        <div class="mb-2">Savings: <strong>${data.by_type.savings.toLocaleString()}</strong></div>
+                        <div class="mb-2">Business: <strong>${data.by_type.business.toLocaleString()}</strong></div>
+                        <div class="mb-2">Investment: <strong>${data.by_type.investment.toLocaleString()}</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>By Status</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Active: <strong class="text-success">${data.by_status.active.toLocaleString()}</strong></div>
+                        <div class="mb-2">Dormant: <strong class="text-warning">${data.by_status.dormant.toLocaleString()}</strong></div>
+                        <div class="mb-2">Suspended: <strong class="text-danger">${data.by_status.suspended.toLocaleString()}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-arrow-up me-2"></i>Growth Metrics</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">New Today: <strong class="text-success">${data.growth_metrics.new_today}</strong></div>
+                        <div class="mb-2">New This Week: <strong>${data.growth_metrics.new_this_week}</strong></div>
+                        <div class="mb-2">New This Month: <strong>${data.growth_metrics.new_this_month}</strong></div>
+                        <div class="mb-2">Growth Rate: <strong class="text-info">${data.growth_metrics.growth_rate}</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-dollar-sign me-2"></i>Balance Metrics</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Total Deposits: <strong class="text-success">${data.account_balances.total_deposits}</strong></div>
+                        <div class="mb-2">Average Balance: <strong>${data.account_balances.average_balance}</strong></div>
+                        <div class="mb-2">Median Balance: <strong>${data.account_balances.median_balance}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Generate operations analysis HTML
+function generateOperationsAnalysis(data) {
+    return `
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-tasks me-2"></i>By Operation Type</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Account Opening: <strong>${data.by_operation_type.account_opening}</strong></div>
+                        <div class="mb-2">Balance Transfer: <strong>${data.by_operation_type.balance_transfer}</strong></div>
+                        <div class="mb-2">Wire Transfer: <strong>${data.by_operation_type.wire_transfer}</strong></div>
+                        <div class="mb-2">Loan Processing: <strong>${data.by_operation_type.loan_processing}</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>By Priority</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">High: <strong class="text-danger">${data.by_priority.high}</strong></div>
+                        <div class="mb-2">Medium: <strong class="text-warning">${data.by_priority.medium}</strong></div>
+                        <div class="mb-2">Low: <strong class="text-success">${data.by_priority.low}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-clock me-2"></i>Processing Times</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Average: <strong>${data.processing_times.avg_processing_time}</strong></div>
+                        <div class="mb-2">Fastest: <strong class="text-success">${data.processing_times.fastest}</strong></div>
+                        <div class="mb-2">Slowest: <strong class="text-warning">${data.processing_times.slowest}</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-list me-2"></i>Queue Status</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">In Review: <strong>${data.queue_status.in_review}</strong></div>
+                        <div class="mb-2">Awaiting Approval: <strong>${data.queue_status.awaiting_approval}</strong></div>
+                        <div class="mb-2">Processing: <strong>${data.queue_status.processing}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Generate volume analysis HTML
+function generateVolumeAnalysis(data) {
+    return `
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Volume Breakdown</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Deposits: <strong class="text-success">${data.volume_breakdown.deposits}</strong></div>
+                        <div class="mb-2">Withdrawals: <strong class="text-warning">${data.volume_breakdown.withdrawals}</strong></div>
+                        <div class="mb-2">Transfers: <strong class="text-info">${data.volume_breakdown.transfers}</strong></div>
+                        <div class="mb-2">Other: <strong>${data.volume_breakdown.other}</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-mobile-alt me-2"></i>By Channel</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Online Banking: <strong>${data.volume_by_channel.online_banking}</strong></div>
+                        <div class="mb-2">Mobile App: <strong>${data.volume_by_channel.mobile_app}</strong></div>
+                        <div class="mb-2">ATM: <strong>${data.volume_by_channel.atm}</strong></div>
+                        <div class="mb-2">Branch: <strong>${data.volume_by_channel.branch}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-calculator me-2"></i>Transaction Counts</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Total Transactions: <strong>${data.transaction_counts.total_transactions.toLocaleString()}</strong></div>
+                        <div class="mb-2">Average Transaction: <strong>${data.transaction_counts.average_transaction}</strong></div>
+                        <div class="mb-2">Largest Transaction: <strong class="text-warning">${data.transaction_counts.largest_transaction}</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-clock me-2"></i>Hourly Distribution</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Peak Hour: <strong>${data.hourly_distribution.peak_hour}</strong></div>
+                        <div class="mb-2">Peak Volume: <strong class="text-success">${data.hourly_distribution.peak_volume}</strong></div>
+                        <div class="mb-2">Current Hour: <strong>${data.hourly_distribution.current_hour_volume}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Generate security analysis HTML
+function generateSecurityAnalysis(data) {
+    return `
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Security Metrics</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Auth Success Rate: <strong class="text-success">${data.security_metrics.authentication_success_rate}</strong></div>
+                        <div class="mb-2">Fraud Detection: <strong class="text-success">${data.security_metrics.fraud_detection_accuracy}</strong></div>
+                        <div class="mb-2">System Uptime: <strong class="text-success">${data.security_metrics.system_uptime}</strong></div>
+                        <div class="mb-2">Compliance Score: <strong class="text-success">${data.security_metrics.compliance_score}</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-bug me-2"></i>Threat Analysis</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">Phishing Attempts: <strong class="text-danger">${data.threat_analysis.attack_types.phishing_attempts}</strong></div>
+                        <div class="mb-2">Brute Force: <strong class="text-warning">${data.threat_analysis.attack_types.brute_force}</strong></div>
+                        <div class="mb-2">Suspicious Logins: <strong class="text-warning">${data.threat_analysis.attack_types.suspicious_logins}</strong></div>
+                        <div class="mb-2">Malware Detected: <strong class="text-danger">${data.threat_analysis.attack_types.malware_detected}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-search me-2"></i>Security Events</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">False Positives: <strong class="text-info">${data.security_events.false_positives}</strong></div>
+                        <div class="mb-2">Confirmed Threats: <strong class="text-danger">${data.security_events.confirmed_threats}</strong></div>
+                        <div class="mb-2">Manual Reviews: <strong class="text-warning">${data.security_events.manual_reviews}</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>Compliance Status</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">PCI DSS: <strong class="text-success">${data.compliance_status.pci_dss}</strong></div>
+                        <div class="mb-2">SOX: <strong class="text-success">${data.compliance_status.sox}</strong></div>
+                        <div class="mb-2">GDPR: <strong class="text-success">${data.compliance_status.gdpr}</strong></div>
+                        <div class="mb-2">Last Audit: <strong>${data.compliance_status.last_audit}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// View activity details
+function viewActivityDetails(activityId) {
+    fetch(`/accounts/api/activity/${activityId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayActivityDetails(data.activity);
+            } else {
+                showNotification('Failed to load activity details', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Activity details error:', error);
+            showNotification('Error loading activity details', 'error');
+        });
+}
+
+// Display activity details in modal
+function displayActivityDetails(activity) {
+    const content = document.getElementById('activity-details-content');
+    
+    const contentHtml = `
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-info me-2"></i>Basic Information</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2"><strong>Activity ID:</strong> ${activity.id}</div>
+                        <div class="mb-2"><strong>Account ID:</strong> <code>${activity.account_id}</code></div>
+                        <div class="mb-2"><strong>Operation:</strong> ${activity.operation}</div>
+                        <div class="mb-2"><strong>Amount:</strong> $${activity.amount.toLocaleString()}</div>
+                        <div class="mb-2"><strong>Status:</strong> <span class="badge bg-${activity.status === 'Success' ? 'success' : activity.status === 'Pending' ? 'warning' : 'danger'}">${activity.status}</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-clock me-2"></i>Processing Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2"><strong>Timestamp:</strong> ${new Date(activity.timestamp).toLocaleString()}</div>
+                        <div class="mb-2"><strong>Processing Time:</strong> ${activity.processing_time}</div>
+                        <div class="mb-2"><strong>Transaction Fee:</strong> $${activity.transaction_fee.toFixed(2)}</div>
+                        <div class="mb-2"><strong>Auth Code:</strong> <code>${activity.authorization_code}</code></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-user me-2"></i>User & Device</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2"><strong>User:</strong> <code>${activity.user}</code></div>
+                        <div class="mb-2"><strong>IP Address:</strong> <code>${activity.ip_address}</code></div>
+                        <div class="mb-2"><strong>Device Type:</strong> ${activity.device_type}</div>
+                        <div class="mb-2"><strong>Location:</strong> ${activity.location}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Security Checks</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2"><strong>Fraud Score:</strong> ${activity.security_checks.fraud_score.toFixed(2)}</div>
+                        <div class="mb-2"><strong>Risk Level:</strong> <span class="badge bg-success">${activity.security_checks.risk_level}</span></div>
+                        <div class="mb-2"><strong>Verification:</strong> <span class="badge bg-success">${activity.security_checks.verification_status}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    content.innerHTML = contentHtml;
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('activityModal'));
+    modal.show();
+}
+
+// Filter activities
+function filterActivities(filter) {
+    currentFilter = filter;
+    socket.emit('request_filtered_activities', { filter: filter });
+    
+    // Clear current activities
+    document.getElementById('activity-stream').innerHTML = '';
+    
+    // Update button states
+    document.querySelectorAll('.btn-group button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+}
+
+// Load more activities
+function loadMoreActivities() {
+    socket.emit('request_more_activities', { count: 25 });
+}
+
+// Export dashboard data
+function exportDashboardData() {
+    window.open('/accounts/api/export/dashboard-data', '_blank');
+    showNotification('Dashboard data export started', 'success');
+}
+
+// Export drill-down data
+function exportDrillDownData() {
+    if (currentDrillDownMetric) {
+        // This would need a separate export endpoint for drill-down data
+        showNotification('Drill-down data export not yet implemented', 'info');
+    }
+}
+
+// Update last update time
+function updateLastUpdateTime() {
+    document.getElementById('last-update-time').textContent = new Date().toLocaleTimeString();
+}
+
+// Show notification
+function showNotification(message, type) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info'} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    if (socket) {
+        socket.emit('leave_accounts_stream');
+        socket.disconnect();
+    }
+});
+</script>
+{%% endblock %%}
+
+{%% block extra_js %%}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+// Socket.IO connection for real-time data
+const socket = io();
+let accountGrowthChart, accountTypeChart;
+let activityFilter = 'all';
+
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    connectSocketEvents();
+    loadInitialData();
+    updateTimestamp();
+    setInterval(updateTimestamp, 1000);
+});
+
+// Initialize Chart.js charts
+function initializeCharts() {
+    // Account Growth Chart
+    const growthCtx = document.getElementById('accountGrowthChart').getContext('2d');
+    accountGrowthChart = new Chart(growthCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Account Registrations',
+                data: [],
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#fff' }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: '#fff' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                y: {
+                    ticks: { color: '#fff' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    });
+
+    // Account Type Chart
+    const typeCtx = document.getElementById('accountTypeChart').getContext('2d');
+    accountTypeChart = new Chart(typeCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Checking', 'Savings', 'Business', 'Investment'],
+            datasets: [{
+                data: [],
+                backgroundColor: ['#28a745', '#ffc107', '#dc3545', '#17a2b8'],
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#fff' }
+                }
+            }
+        }
+    });
+}
+
+// Socket event handlers
+function connectSocketEvents() {
+    socket.on('connect', function() {
+        console.log('Connected to accounts real-time stream');
+        socket.emit('join_accounts_stream');
+    });
+
+    socket.on('accounts_metrics_update', function(data) {
+        updateMetrics(data);
+    });
+
+    socket.on('accounts_activity_update', function(data) {
+        addActivityRow(data);
+    });
+
+    socket.on('accounts_chart_update', function(data) {
+        updateCharts(data);
+    });
+}
+
+// Update real-time metrics
+function updateMetrics(data) {
+    document.getElementById('active-accounts-count').textContent = data.active_accounts.toLocaleString();
+    document.getElementById('active-accounts-change').textContent = `+${data.accounts_change}`;
+    
+    document.getElementById('pending-operations-count').textContent = data.pending_operations.toLocaleString();
+    document.getElementById('avg-processing-time').textContent = `${data.avg_processing_time}min`;
+    
+    document.getElementById('transaction-volume').textContent = `$${(data.transaction_volume / 1000000).toFixed(1)}M`;
+    document.getElementById('volume-change').textContent = `${data.volume_change >= 0 ? '+' : ''}${data.volume_change}%`;
+    
+    document.getElementById('security-score').textContent = `${data.security_score}%`;
+    document.getElementById('threats-blocked').textContent = data.threats_blocked.toLocaleString();
+}
+
+// Add new activity row
+function addActivityRow(activity) {
+    if (activityFilter !== 'all' && activity.status.toLowerCase() !== activityFilter) {
+        return;
+    }
+    
+    const tbody = document.getElementById('activity-stream');
+    const row = document.createElement('tr');
+    row.className = 'drill-down-cell';
+    row.onclick = () => drillDownActivity(activity.id);
+    
+    row.innerHTML = `
+        <td>${new Date(activity.timestamp).toLocaleTimeString()}</td>
+        <td>${activity.account_id}</td>
+        <td>${activity.operation}</td>
+        <td>${activity.amount ? '$' + activity.amount.toLocaleString() : '-'}</td>
+        <td><span class="badge bg-${getStatusColor(activity.status)}">${activity.status}</span></td>
+        <td>${activity.user}</td>
+        <td>
+            <button class="btn btn-sm btn-outline-info" onclick="event.stopPropagation(); drillDownActivity('${activity.id}')">
+                <i class="fas fa-eye"></i>
+            </button>
+        </td>
+    `;
+    
+    tbody.insertBefore(row, tbody.firstChild);
+    
+    // Keep only last 50 rows
+    while (tbody.children.length > 50) {
+        tbody.removeChild(tbody.lastChild);
+    }
+}
+
+// Update charts with real-time data
+function updateCharts(data) {
+    // Update growth chart
+    if (data.growth_data) {
+        accountGrowthChart.data.labels = data.growth_data.labels;
+        accountGrowthChart.data.datasets[0].data = data.growth_data.values;
+        accountGrowthChart.update('none');
+    }
+    
+    // Update type distribution chart
+    if (data.type_distribution) {
+        accountTypeChart.data.datasets[0].data = data.type_distribution;
+        accountTypeChart.update('none');
+    }
+}
+
+// Drill-down functionality
+function drillDownMetric(metric) {
+    const modal = new bootstrap.Modal(document.getElementById('drillDownModal'));
+    document.getElementById('drillDownModalTitle').textContent = `${metric.replace('_', ' ').toUpperCase()} Details`;
+    
+    // Load detailed data
+    fetch(`/accounts/api/drill-down/${metric}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('drillDownModalBody').innerHTML = generateDrillDownContent(data);
+            modal.show();
+        })
+        .catch(error => {
+            console.error('Error loading drill-down data:', error);
+        });
+}
+
+function drillDownActivity(activityId) {
+    const modal = new bootstrap.Modal(document.getElementById('drillDownModal'));
+    document.getElementById('drillDownModalTitle').textContent = `Activity Details - ${activityId}`;
+    
+    // Load activity details
+    fetch(`/accounts/api/activity/${activityId}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('drillDownModalBody').innerHTML = generateActivityDetails(data);
+            modal.show();
+        })
+        .catch(error => {
+            console.error('Error loading activity details:', error);
+        });
+}
+
+// Generate drill-down content
+function generateDrillDownContent(data) {
+    let content = '<div class="row">';
+    
+    for (const [key, value] of Object.entries(data)) {
+        content += `
+            <div class="col-md-6 mb-3">
+                <div class="card bg-secondary">
+                    <div class="card-body">
+                        <h6 class="card-title text-white">${key.replace('_', ' ').toUpperCase()}</h6>
+                        <p class="card-text text-light">${typeof value === 'object' ? JSON.stringify(value, null, 2) : value}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    content += '</div>';
+    return content;
+}
+
+// Generate activity details
+function generateActivityDetails(data) {
+    return `
+        <div class="row">
+            <div class="col-12">
+                <h6 class="text-white">Transaction Details</h6>
+                <table class="table table-dark">
+                    <tr><td>Activity ID</td><td>${data.id}</td></tr>
+                    <tr><td>Account ID</td><td>${data.account_id}</td></tr>
+                    <tr><td>Operation Type</td><td>${data.operation}</td></tr>
+                    <tr><td>Amount</td><td>$${data.amount ? data.amount.toLocaleString() : 'N/A'}</td></tr>
+                    <tr><td>Status</td><td><span class="badge bg-${getStatusColor(data.status)}">${data.status}</span></td></tr>
+                    <tr><td>Initiated By</td><td>${data.user}</td></tr>
+                    <tr><td>Timestamp</td><td>${new Date(data.timestamp).toLocaleString()}</td></tr>
+                    <tr><td>Processing Time</td><td>${data.processing_time || 'N/A'}</td></tr>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+// Utility functions
+function getStatusColor(status) {
+    switch (status.toLowerCase()) {
+        case 'success': return 'success';
+        case 'pending': return 'warning';
+        case 'failed': return 'danger';
+        default: return 'secondary';
+    }
+}
+
+function filterActivity(filter) {
+    activityFilter = filter;
+    // Clear current activities and reload
+    document.getElementById('activity-stream').innerHTML = '';
+    socket.emit('request_filtered_activities', { filter: filter });
+}
+
+function updateTimestamp() {
+    document.getElementById('last-update-time').textContent = new Date().toLocaleTimeString();
+}
+
+function loadInitialData() {
+    // Request initial data load
+    socket.emit('request_accounts_data');
+}
+
+function loadMoreActivity() {
+    socket.emit('request_more_activities', { count: 25 });
+}
+
+function exportDashboardData() {
+    window.open('/accounts/api/export/dashboard-data', '_blank');
+}
+
+function exportDrillDownData() {
+    // Implementation for exporting drill-down data
+    alert('Export functionality will be implemented');
+}
+</script>
+{%% endblock %%}

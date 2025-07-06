@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVC Banking Platform</title>
+    <meta name="description" content="Advanced Digital Banking Platform with Comprehensive Financial Services">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Pass server-side user data to frontend -->
+    <script>
+        window.NVC_USER_DATA = {
+            user_id: "{{ user.id }}",
+            username: "{{ user.username }}",
+            email: "{{ user.email }}",
+            role: "{{ user.role }}",
+            first_name: "{{ user.first_name or '' }}",
+            last_name: "{{ user.last_name or '' }}",
+            is_authenticated: true
+        };
+        
+        // API Configuration for React frontend
+        window.NVC_CONFIG = {
+            api_base_url: window.location.origin,
+            backend_auth: true,
+            csrf_token: "{{ csrf_token() if csrf_token else '' }}"
+        };
+    </script>
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border-left-color: #ffffff;
+            animation: spin 1s ease infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            margin-left: 20px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        /* Security header */
+        .security-header {
+            background: #0d47a1;
+            color: white;
+            padding: 8px 0;
+            text-align: center;
+            font-size: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        /* Main app container */
+        #root {
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <!-- Security Header -->
+    <div class="security-header">
+        <div class="container-fluid">
+            <i class="fas fa-shield-alt me-2"></i>
+            <strong>Secure Banking Session</strong> - Welcome {{ user.first_name or user.username }}
+            <span class="float-end">
+                <i class="fas fa-user me-1"></i>{{ user.role.value if user.role.value else user.role }}
+                <a href="/auth/logout" class="text-white ms-3 text-decoration-none">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </a>
+            </span>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading NVC Banking Platform...</div>
+    </div>
+
+    <!-- React App Mount Point -->
+    <div id="root"></div>
+
+    <!-- React Development Scripts -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-router-dom@6/dist/umd/react-router-dom.development.js"></script>
+    
+    <!-- Babel for JSX transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Load React Frontend -->
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { BrowserRouter: Router, Routes, Route, Link, Navigate, useLocation } = ReactRouterDOM;
+        
+        // API Service with authentication
+        const api = {
+            baseURL: window.NVC_CONFIG.api_base_url,
+            
+            async request(endpoint, options = {}) {
+                const url = `${this.baseURL}${endpoint}`;
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': window.NVC_CONFIG.csrf_token,
+                        ...options.headers
+                    },
+                    credentials: 'include',
+                    ...options
+                };
+                
+                try {
+                    const response = await fetch(url, config);
+                    if (response.status === 401) {
+                        window.location.href = '/auth/login';
+                        return null;
+                    }
+                    return response;
+                } catch (error) {
+                    console.error('API Request failed:', error);
+                    return null;
+                }
+            },
+            
+            async get(endpoint) {
+                return this.request(endpoint);
+            },
+            
+            async post(endpoint, data) {
+                return this.request(endpoint, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+            }
+        };
+        
+        // Navigation Component
+        function Navigation() {
+            const location = useLocation();
+            
+            const navItems = [
+                { path: '/', label: 'Dashboard', icon: 'fas fa-tachometer-alt' },
+                { path: '/banking', label: 'Banking', icon: 'fas fa-university' },
+                { path: '/treasury', label: 'Treasury', icon: 'fas fa-coins' },
+                { path: '/compliance', label: 'Compliance', icon: 'fas fa-shield-alt' },
+                { path: '/investments', label: 'Investments', icon: 'fas fa-chart-line' },
+                { path: '/insurance', label: 'Insurance', icon: 'fas fa-umbrella' },
+                { path: '/smart-contracts', label: 'Smart Contracts', icon: 'fas fa-code' },
+                { path: '/nvct-stablecoin', label: 'NVCT Stablecoin', icon: 'fas fa-coins' },
+                { path: '/sovereign-banking', label: 'Sovereign Banking', icon: 'fas fa-crown' },
+                { path: '/islamic-banking', label: 'Islamic Banking', icon: 'fas fa-mosque' }
+            ];
+            
+            return (
+                <nav className="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+                    <div className="container-fluid">
+                        <Link className="navbar-brand fw-bold" to="/">
+                            <i className="fas fa-landmark me-2"></i>
+                            NVC Banking
+                        </Link>
+                        
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        
+                        <div className="collapse navbar-collapse" id="navbarNav">
+                            <ul className="navbar-nav me-auto">
+                                {navItems.map(item => (
+                                    <li key={item.path} className="nav-item">
+                                        <Link 
+                                            className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                                            to={item.path}
+                                        >
+                                            <i className={`${item.icon} me-1`}></i>
+                                            {item.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            );
+        }
+        
+        // Dashboard Page
+        function Dashboard() {
+            return (
+                <div className="container mt-4">
+                    <div className="row">
+                        <div className="col-12">
+                            <h1 className="h2 text-primary mb-4">
+                                <i className="fas fa-tachometer-alt me-2"></i>
+                                Banking Dashboard
+                            </h1>
+                            <div className="alert alert-success">
+                                <strong>Welcome back, {window.NVC_USER_DATA.first_name || window.NVC_USER_DATA.username}!</strong>
+                                <p className="mb-0">You're successfully authenticated with server-side session management.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="row">
+                        <div className="col-md-4 mb-4">
+                            <div className="card">
+                                <div className="card-body">
+                                    <h5 className="card-title">
+                                        <i className="fas fa-university me-2"></i>Account Balance
+                                    </h5>
+                                    <h3 className="text-success">$10,000.00</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4 mb-4">
+                            <div className="card">
+                                <div className="card-body">
+                                    <h5 className="card-title">
+                                        <i className="fas fa-exchange-alt me-2"></i>Recent Transactions
+                                    </h5>
+                                    <h3 className="text-info">5</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4 mb-4">
+                            <div className="card">
+                                <div className="card-body">
+                                    <h5 className="card-title">
+                                        <i className="fas fa-credit-card me-2"></i>Active Cards
+                                    </h5>
+                                    <h3 className="text-primary">2</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Generic module page component
+        function ModulePage({ title, icon, endpoint }) {
+            return (
+                <div className="container mt-4">
+                    <h1 className="h2 text-primary mb-4">
+                        <i className={`${icon} me-2`}></i>
+                        {title}
+                    </h1>
+                    <div className="alert alert-info">
+                        <p><strong>Connected to:</strong> <code>{endpoint}</code></p>
+                        <p className="mb-0">Server-side authenticated module ready for development.</p>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Main App Component
+        function App() {
+            useEffect(() => {
+                // Hide loading screen once React app is mounted
+                document.getElementById('loading').style.display = 'none';
+            }, []);
+            
+            return (
+                <Router>
+                    <Navigation />
+                    <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/banking" element={<ModulePage title="Banking Services" icon="fas fa-university" endpoint="/api/v1/banking/accounts" />} />
+                        <Route path="/treasury" element={<ModulePage title="Treasury Management" icon="fas fa-coins" endpoint="/api/v1/treasury/dashboard" />} />
+                        <Route path="/compliance" element={<ModulePage title="Compliance Center" icon="fas fa-shield-alt" endpoint="/api/v1/compliance/status" />} />
+                        <Route path="/investments" element={<ModulePage title="Investment Services" icon="fas fa-chart-line" endpoint="/api/v1/investments/portfolio" />} />
+                        <Route path="/insurance" element={<ModulePage title="Insurance Services" icon="fas fa-umbrella" endpoint="/api/v1/insurance/policies" />} />
+                        <Route path="/smart-contracts" element={<ModulePage title="Smart Contracts" icon="fas fa-code" endpoint="/api/v1/smart-contracts/list" />} />
+                        <Route path="/nvct-stablecoin" element={<ModulePage title="NVCT Stablecoin" icon="fas fa-coins" endpoint="/api/v1/nvct-stablecoin/balance" />} />
+                        <Route path="/sovereign-banking" element={<ModulePage title="Sovereign Banking" icon="fas fa-crown" endpoint="/api/v1/sovereign/accounts" />} />
+                        <Route path="/islamic-banking" element={<ModulePage title="Islamic Banking" icon="fas fa-mosque" endpoint="/api/v1/islamic-banking/products" />} />
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                </Router>
+            );
+        }
+        
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

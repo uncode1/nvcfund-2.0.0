@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Branch Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Branch Management</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-primary"><i class="fas fa-building"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total Branches</span>
+                                    <span class="info-box-number">{{ branch_data.total_branches }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-success"><i class="fas fa-check-circle"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Active Branches</span>
+                                    <span class="info-box-number">{{ branch_data.active_branches }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Branch List</h4>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for branch in branch_data.branches %}
+                                    <tr>
+                                        <td>{{ branch.id }}</td>
+                                        <td>{{ branch.name }}</td>
+                                        <td>{{ branch.location }}</td>
+                                        <td><span class="badge badge-success">{{ branch.status }}</span></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,698 @@
+<!-- Enhanced UX Banking Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark enhanced-navbar" id="mainNavbar">
+    <div class="container-fluid px-4">
+        <!-- Modern Clean Brand -->
+        <a class="navbar-brand enhanced-brand" href="/">
+            <div class="brand-icon">
+                <i class="fas fa-university"></i>
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">NVC Banking</span>
+                <small class="brand-tagline">Digital Banking Platform</small>
+            </div>
+        </a>
+        
+
+        
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <!-- Public Navigation -->
+                {% if not current_user.is_authenticated %}
+                <li class="nav-item dropdown enhanced-dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                    <div class="dropdown-menu enhanced-dropdown-menu">
+                        <a class="dropdown-item" href="/about">
+                            <i class="fas fa-university"></i>About Platform
+                        </a>
+                        <a class="dropdown-item" href="/contact">
+                            <i class="fas fa-envelope"></i>Contact Us
+                        </a>
+                        <a class="dropdown-item" href="/api-documentation">
+                            <i class="fas fa-book"></i>API Documentation
+                        </a>
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Main Navigation -->
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link enhanced-nav-link" href="/dashboard/">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- Banking Services -->
+                <li class="nav-item dropdown enhanced-dropdown">
+                    <a class="nav-link dropdown-toggle enhanced-nav-link" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-university"></i>
+                        <span>Banking</span>
+                    </a>
+                    <div class="dropdown-menu enhanced-dropdown-menu">
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Accounts</h6>
+                            <a class="dropdown-item" href="/accounts/">
+                                <i class="fas fa-eye"></i>View Accounts
+                            </a>
+                            <a class="dropdown-item" href="/banking/accounts/create">
+                                <i class="fas fa-plus-circle"></i>Create Account
+                            </a>
+                        </div>
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Transfers</h6>
+                            <a class="dropdown-item" href="/banking/send-transfer">
+                                <i class="fas fa-paper-plane"></i>Send Transfer
+                            </a>
+                            <a class="dropdown-item" href="/banking/transfers">
+                                <i class="fas fa-exchange-alt"></i>Transfer History
+                            </a>
+                        </div>
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Payments</h6>
+                            <a class="dropdown-item" href="/banking/bill-payment">
+                                <i class="fas fa-receipt"></i>Bill Payments
+                            </a>
+                            <a class="dropdown-item" href="/cards_payments/">
+                                <i class="fas fa-credit-card"></i>Manage Cards
+                            </a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Markets (Role-based) -->
+                {% if current_user.role.value in ['treasury_officer', 'trading_officer', 'institutional_banker', 'super_admin'] %}
+                <li class="nav-item dropdown enhanced-dropdown">
+                    <a class="nav-link dropdown-toggle enhanced-nav-link" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Markets</span>
+                    </a>
+                    <div class="dropdown-menu enhanced-dropdown-menu">
+                        {% if current_user.role.value in ['treasury_officer', 'super_admin'] %}
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Treasury</h6>
+                            <a class="dropdown-item" href="/treasury/">
+                                <i class="fas fa-coins"></i>Treasury Dashboard
+                            </a>
+                            <a class="dropdown-item" href="/nvct_stablecoin/">
+                                <i class="fas fa-medal"></i>NVCT Operations
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if current_user.role.value in ['trading_officer', 'super_admin'] %}
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Trading</h6>
+                            <a class="dropdown-item" href="/trading/">
+                                <i class="fas fa-chart-candlestick"></i>Trading Dashboard
+                            </a>
+                            <a class="dropdown-item" href="/exchange/">
+                                <i class="fas fa-exchange-alt"></i>Exchange Platform
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if current_user.role.value in ['institutional_banker', 'super_admin'] %}
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Institutional</h6>
+                            <a class="dropdown-item" href="/institutional/">
+                                <i class="fas fa-landmark"></i>Institutional Dashboard
+                            </a>
+                            <a class="dropdown-item" href="/investments/">
+                                <i class="fas fa-chart-pie"></i>Investment Services
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if current_user.role.value in ['trading_officer', 'super_admin'] %}
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Digital Assets</h6>
+                            <a class="dropdown-item" href="/binance_integration/">
+                                <i class="fab fa-bitcoin"></i>Crypto Trading
+                            </a>
+                            <a class="dropdown-item" href="/blockchain_analytics/">
+                                <i class="fas fa-cubes"></i>Blockchain Analytics
+                            </a>
+                            <a class="dropdown-item" href="/nvct_stablecoin/">
+                                <i class="fas fa-dollar-sign"></i>NVCT Stablecoin
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if current_user.role.value in ['trading_officer', 'super_admin'] %}
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Global Markets</h6>
+                            <a class="dropdown-item" href="/trading/forex">
+                                <i class="fas fa-globe-americas"></i>Forex Trading
+                            </a>
+                            <a class="dropdown-item" href="/trading/commodities">
+                                <i class="fas fa-oil-can"></i>Commodities Trading
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Admin (Role-based) -->
+                {% if current_user.role.value in ['super_admin', 'admin', 'branch_manager', 'operations_manager'] %}
+                <li class="nav-item dropdown enhanced-dropdown">
+                    <a class="nav-link dropdown-toggle enhanced-nav-link" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Admin</span>
+                    </a>
+                    <div class="dropdown-menu enhanced-dropdown-menu">
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Users</h6>
+                            <a class="dropdown-item" href="/admin_management/">
+                                <i class="fas fa-tachometer-alt"></i>Admin Dashboard
+                            </a>
+                            <a class="dropdown-item" href="/admin/users">
+                                <i class="fas fa-users"></i>User Management
+                            </a>
+                        </div>
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">System</h6>
+                            <a class="dropdown-item" href="/system_management/">
+                                <i class="fas fa-heartbeat"></i>System Health
+                            </a>
+                            <a class="dropdown-item" href="/security_center/">
+                                <i class="fas fa-shield-alt"></i>Security Center
+                            </a>
+                        </div>
+                        {% if current_user.role.value == 'super_admin' %}
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Compliance</h6>
+                            <a class="dropdown-item" href="/compliance/">
+                                <i class="fas fa-gavel"></i>Compliance Dashboard
+                            </a>
+                            <a class="dropdown-item" href="/compliance/risk">
+                                <i class="fas fa-exclamation-triangle"></i>Risk Management
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Operations (Role-based Access) -->
+                {% if current_user.role.value in ['super_admin', 'admin', 'operations_officer'] %}
+                <li class="nav-item dropdown enhanced-dropdown">
+                    <a class="nav-link dropdown-toggle enhanced-nav-link" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-cogs"></i>
+                        <span>Operations</span>
+                    </a>
+                    <div class="dropdown-menu enhanced-dropdown-menu">
+                        <!-- Branch & Operations - Operations Officers and Admins -->
+                        {% if current_user.role.value in ['super_admin', 'admin', 'operations_officer'] %}
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Branch & Operations</h6>
+                            <a class="dropdown-item" href="/admin/branches">
+                                <i class="fas fa-building"></i>Branch Management
+                            </a>
+                            <a class="dropdown-item" href="/admin/teller-operations">
+                                <i class="fas fa-cash-register"></i>Teller Operations
+                            </a>
+                            <a class="dropdown-item" href="/admin/branch-reports">
+                                <i class="fas fa-chart-bar"></i>Branch Reports
+                            </a>
+                            <a class="dropdown-item" href="/settlement/dashboard">
+                                <i class="fas fa-handshake"></i>Settlement Operations
+                            </a>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- System Operations - Super Admin Only -->
+                        {% if current_user.role.value == 'super_admin' %}
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">System Operations</h6>
+                            <a class="dropdown-item" href="/admin/">
+                                <i class="fas fa-user-shield"></i>Admin Dashboard
+                            </a>
+                            <a class="dropdown-item" href="/system/dashboard">
+                                <i class="fas fa-heartbeat"></i>System Health
+                            </a>
+                            <a class="dropdown-item" href="/admin/maintenance">
+                                <i class="fas fa-wrench"></i>Maintenance Mode
+                            </a>
+                            <a class="dropdown-item" href="/admin/backups">
+                                <i class="fas fa-database"></i>Database Backups
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endif %}
+                
+                <!-- Security Operations - Security Officers Only -->
+                {% if current_user.role.value in ['super_admin', 'security_officer'] %}
+                <li class="nav-item dropdown enhanced-dropdown">
+                    <a class="nav-link dropdown-toggle enhanced-nav-link" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security</span>
+                    </a>
+                    <div class="dropdown-menu enhanced-dropdown-menu">
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Security Operations</h6>
+                            <a class="dropdown-item" href="/security/">
+                                <i class="fas fa-shield-alt"></i>Security Dashboard
+                            </a>
+                            <a class="dropdown-item" href="/security/investigation">
+                                <i class="fas fa-search"></i>Investigation Tools
+                            </a>
+                            <a class="dropdown-item" href="/security/threat-monitoring">
+                                <i class="fas fa-eye"></i>Threat Monitoring
+                            </a>
+                            <a class="dropdown-item" href="/security/incident-response">
+                                <i class="fas fa-bell"></i>Incident Response
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+                {% endif %}
+            </ul>
+
+            <!-- Right side navigation -->
+            <ul class="navbar-nav">
+                {% if current_user.is_authenticated %}
+                <!-- Quick Actions -->
+                <li class="nav-item">
+                    <button class="nav-link quick-action-btn" data-bs-toggle="tooltip" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link quick-action-btn" data-bs-toggle="tooltip" title="Help">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </li>
+                
+                <!-- User Account Menu -->
+                <li class="nav-item dropdown user-menu">
+                    <a class="nav-link dropdown-toggle enhanced-nav-link" href="#" data-bs-toggle="dropdown">
+                        <div class="user-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <span class="user-name">{{ current_user.username }}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end enhanced-dropdown-menu">
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">{{ current_user.username }}</h6>
+                            <a class="dropdown-item" href="/dashboard/profile">
+                                <i class="fas fa-user"></i>Profile Settings
+                            </a>
+                            <a class="dropdown-item" href="/dashboard/security">
+                                <i class="fas fa-lock"></i>Security Settings
+                            </a>
+                            <a class="dropdown-item" href="/dashboard/preferences">
+                                <i class="fas fa-cog"></i>Preferences
+                            </a>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item logout-item" href="/auth/logout">
+                            <i class="fas fa-sign-out-alt"></i>Logout
+                        </a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link enhanced-nav-link login-btn" href="/auth/login">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link enhanced-nav-link register-btn" href="/auth/register">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Enhanced CSS Styles -->
+<style>
+    /* Enhanced Navbar Styles */
+    .enhanced-navbar {
+        background: linear-gradient(135deg, #1a237e 0%, #303f9f 50%, #3f51b5 100%);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+        border-bottom: 2px solid #3f51b5;
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+        padding: 0.75rem 0;
+        transition: all 0.3s ease;
+    }
+
+    .enhanced-navbar:hover {
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Brand Styling */
+    .enhanced-brand {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: white !important;
+        transition: all 0.3s ease;
+    }
+
+    .enhanced-brand:hover {
+        transform: translateY(-1px);
+        color: #e3f2fd !important;
+    }
+
+    .brand-icon {
+        background: linear-gradient(45deg, #42a5f5, #66bb6a);
+        padding: 12px;
+        border-radius: 12px;
+        margin-right: 12px;
+        box-shadow: 0 4px 12px rgba(66, 165, 245, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .brand-icon:hover {
+        transform: rotate(5deg) scale(1.05);
+        box-shadow: 0 6px 16px rgba(66, 165, 245, 0.4);
+    }
+
+    .brand-icon i {
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .brand-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        display: block;
+    }
+
+    .brand-tagline {
+        font-size: 0.75rem;
+        color: #bbdefb;
+        font-weight: 400;
+        display: block;
+        margin-top: -2px;
+    }
+
+    /* Navbar Utilities */
+    .navbar-utilities {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-right: 2rem;
+    }
+
+    .user-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        backdrop-filter: blur(5px);
+    }
+
+    .status-indicator {
+        width: 8px;
+        height: 8px;
+        background: #4caf50;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+        animation: pulse 2s infinite;
+    }
+
+    .user-role {
+        color: #e3f2fd;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .quick-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .quick-action-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .quick-action-btn:hover {
+        color: #66ccff;
+        background: rgba(102, 204, 255, 0.15);
+        transform: translateY(-1px);
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ff4757;
+        color: white;
+        font-size: 0.65rem;
+        padding: 0.15rem 0.3rem;
+        border-radius: 50%;
+        min-width: 1.2rem;
+        text-align: center;
+        font-weight: 600;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    /* Enhanced Navigation Links */
+    .enhanced-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem !important;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-weight: 500;
+        margin: 0 2px;
+    }
+
+    .enhanced-nav-link:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: white !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    }
+
+    .enhanced-nav-link.active {
+        background: rgba(255, 255, 255, 0.2);
+        color: white !important;
+    }
+
+    .enhanced-nav-link i {
+        font-size: 1rem;
+        width: 16px;
+        text-align: center;
+    }
+
+    /* Enhanced Dropdowns */
+    .enhanced-dropdown-menu {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        padding: 1rem;
+        min-width: 280px;
+        margin-top: 0.5rem;
+    }
+
+    .dropdown-section {
+        margin-bottom: 1rem;
+    }
+
+    .dropdown-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .dropdown-header {
+        color: #90caf9;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.9) !important;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-bottom: 2px;
+    }
+
+    .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: white !important;
+        transform: translateX(4px);
+    }
+
+    .dropdown-item i {
+        color: #90caf9;
+        width: 16px;
+        text-align: center;
+    }
+
+    /* User Menu */
+    .user-menu .enhanced-nav-link {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .user-avatar i {
+        font-size: 1.5rem;
+    }
+
+    .user-name {
+        font-weight: 500;
+    }
+
+    .logout-item {
+        color: #ffcdd2 !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+    }
+
+    .logout-item:hover {
+        background: rgba(244, 67, 54, 0.2);
+        color: #ffcdd2 !important;
+    }
+
+    /* Login/Register Buttons */
+    .login-btn {
+        background: rgba(76, 175, 80, 0.2);
+        border: 1px solid #4caf50;
+    }
+
+    .login-btn:hover {
+        background: #4caf50;
+        color: white !important;
+    }
+
+    .register-btn {
+        background: rgba(33, 150, 243, 0.2);
+        border: 1px solid #2196f3;
+    }
+
+    .register-btn:hover {
+        background: #2196f3;
+        color: white !important;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 991.98px) {
+        .navbar-utilities {
+            display: none;
+        }
+
+        .brand-tagline {
+            display: none;
+        }
+
+        .enhanced-dropdown-menu {
+            min-width: 100%;
+            margin-top: 0;
+            border-radius: 8px;
+        }
+
+        .enhanced-nav-link span {
+            display: inline;
+        }
+    }
+
+    /* Animations */
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+        }
+    }
+
+    /* Smooth transitions for all interactive elements */
+    * {
+        transition: all 0.3s ease;
+    }
+</style>
+
+<!-- Enhanced JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Active link highlighting
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.enhanced-nav-link');
+    
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && currentPath.startsWith(href) && href !== '/') {
+            link.classList.add('active');
+            // Also activate parent dropdown if exists
+            const parentDropdown = link.closest('.dropdown');
+            if (parentDropdown) {
+                parentDropdown.querySelector('.dropdown-toggle').classList.add('active');
+            }
+        }
+    });
+
+    // Professional Header Navigation - Replaces Enterprise Sidebar
+    // Navigation initialized
+    
+    class ProfessionalHeaderNavigation {
+        constructor() {
+            this.init();
+        }
+        
+        init() {
+            // System ready
+        }
+    }
+    
+    // Initialize professional header navigation
+    window.professionalHeaderNav = new ProfessionalHeaderNavigation();
+});
+</script>

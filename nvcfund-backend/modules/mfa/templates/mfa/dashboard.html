@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Factor Authentication - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0a2447;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+        }
+        .main-content {
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .card {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border: 1px solid #66ccff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(102, 204, 255, 0.3);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #0a2447 0%, #1e3c72 100%);
+            border-bottom: 1px solid #66ccff;
+            color: #66ccff;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #66ccff 0%, #4da6d9 100%);
+            border: none;
+            color: #0a2447;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4da6d9 0%, #66ccff 100%);
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: none;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+        }
+        .status-enabled {
+            color: #28a745;
+        }
+        .status-disabled {
+            color: #dc3545;
+        }
+        .qr-code-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .backup-codes {
+            background: #1e3c72;
+            border: 1px solid #66ccff;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .security-level {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .security-level i {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1><i class="fas fa-shield-alt"></i> Multi-Factor Authentication</h1>
+                            <p class="mb-0">Secure your account with additional authentication layers</p>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('dashboard.dashboard_home') }}" class="btn btn-outline-light">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MFA Status Overview -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-info-circle"></i> Current MFA Status</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="security-level">
+                                {% if mfa_status.totp_enabled %}
+                                    <i class="fas fa-check-circle status-enabled"></i>
+                                    <span class="status-enabled">Multi-Factor Authentication is <strong>ENABLED</strong></span>
+                                {% else %}
+                                    <i class="fas fa-exclamation-triangle status-disabled"></i>
+                                    <span class="status-disabled">Multi-Factor Authentication is <strong>DISABLED</strong></span>
+                                {% endif %}
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {% if mfa_status.totp_enabled %}
+                                            <i class="fas fa-mobile-alt fa-2x status-enabled"></i>
+                                        {% else %}
+                                            <i class="fas fa-mobile-alt fa-2x text-muted"></i>
+                                        {% endif %}
+                                        <p class="mt-2 mb-0">TOTP App</p>
+                                        <small>{{ 'Configured' if mfa_status.totp_enabled else 'Not Setup' }}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {% if mfa_status.backup_codes_count > 0 %}
+                                            <i class="fas fa-key fa-2x status-enabled"></i>
+                                        {% else %}
+                                            <i class="fas fa-key fa-2x text-muted"></i>
+                                        {% endif %}
+                                        <p class="mt-2 mb-0">Backup Codes</p>
+                                        <small>{{ mfa_status.backup_codes_count }} available</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {% if mfa_status.last_used %}
+                                            <i class="fas fa-clock fa-2x status-enabled"></i>
+                                        {% else %}
+                                            <i class="fas fa-clock fa-2x text-muted"></i>
+                                        {% endif %}
+                                        <p class="mt-2 mb-0">Last Used</p>
+                                        <small>{{ mfa_status.last_used.strftime('%Y-%m-%d %H:%M') if mfa_status.last_used else 'Never' }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Security Recommendations</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if not mfa_status.totp_enabled %}
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <strong>Action Required:</strong> Enable MFA to secure your account
+                                </div>
+                            {% endif %}
+                            
+                            {% if mfa_status.backup_codes_count < 3 %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-key"></i>
+                                    <strong>Low Backup Codes:</strong> Generate more backup codes
+                                </div>
+                            {% endif %}
+                            
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Use authenticator apps like Google Authenticator</li>
+                                <li><i class="fas fa-check text-success"></i> Keep backup codes in a secure location</li>
+                                <li><i class="fas fa-check text-success"></i> Don't share your MFA codes with anyone</li>
+                                <li><i class="fas fa-check text-success"></i> Update your authenticator app regularly</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MFA Actions -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-mobile-alt"></i> Authenticator App</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            {% if mfa_status.totp_enabled %}
+                                <p>Your authenticator app is configured and ready to use.</p>
+                                <a href="{{ url_for('mfa.disable_totp') }}" class="btn btn-danger">
+                                    <i class="fas fa-times"></i> Disable TOTP
+                                </a>
+                            {% else %}
+                                <p>Set up an authenticator app for secure login codes.</p>
+                                <a href="{{ url_for('mfa.setup_totp') }}" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Setup TOTP
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-key"></i> Backup Codes</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>{{ mfa_status.backup_codes_count }} backup codes available</p>
+                            <p class="small text-muted">Use these codes when your phone isn't available</p>
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('mfa.view_backup_codes') }}" class="btn btn-outline-light">
+                                    <i class="fas fa-eye"></i> View Codes
+                                </a>
+                                <a href="{{ url_for('mfa.generate_backup_codes') }}" class="btn btn-success">
+                                    <i class="fas fa-refresh"></i> Generate New
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-cog"></i> Settings</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <p>Manage your MFA preferences and security settings.</p>
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('mfa.settings') }}" class="btn btn-outline-light">
+                                    <i class="fas fa-cog"></i> MFA Settings
+                                </a>
+                                <a href="{{ url_for('mfa.activity_log') }}" class="btn btn-outline-light">
+                                    <i class="fas fa-history"></i> Activity Log
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            {% if mfa_status.recent_activity %}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-history"></i> Recent MFA Activity</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-dark table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                            <th>IP Address</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for activity in mfa_status.recent_activity %}
+                                        <tr>
+                                            <td>{{ activity.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                            <td>{{ activity.action }}</td>
+                                            <td>{{ activity.ip_address }}</td>
+                                            <td>
+                                                {% if activity.success %}
+                                                    <span class="badge bg-success">Success</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Failed</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Settlement Dashboard - NVC Banking Platform{% endblock %}
+
+{% block head %}
+<style>
+    .settlement-dashboard {
+        background: linear-gradient(135deg, #7c2d12 0%, #dc2626 100%);
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 20px;
+    }
+    
+    .settlement-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="settlement-dashboard">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-exchange-alt"></i> Settlement Dashboard</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="settlement-card">
+                <h3>{{ settlement_data.pending_settlements or '0' }}</h3>
+                <p>Pending Settlements</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="settlement-card">
+                <h3>{{ settlement_data.completed_today or '0' }}</h3>
+                <p>Completed Today</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="settlement-card">
+                <h3>${{ settlement_data.total_volume or '0' }}</h3>
+                <p>Total Volume</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="settlement-card">
+                <h3>{{ settlement_data.avg_time or '0' }}m</h3>
+                <p>Avg Settlement Time</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <h2>Recent Settlements</h2>
+            {% for settlement in settlement_data.recent_settlements or [] %}
+            <div class="settlement-card">
+                <h5>{{ settlement.id }}</h5>
+                <p>Amount: ${{ settlement.amount }}</p>
+                <p>Status: {{ settlement.status }}</p>
+                <small>{{ settlement.timestamp }}</small>
+            </div>
+            {% else %}
+            <div class="settlement-card">
+                <h5>No Recent Settlements</h5>
+                <p>Settlement activity will appear here when available.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

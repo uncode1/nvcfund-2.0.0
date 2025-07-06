@@ -1,0 +1,1 @@
+{"timestamp": "2025-07-05T20:07:21.304571Z", "level": "INFO", "logger": "banking", "logger_module": "test_logging", "function": "test_logging", "line": 42, "message": "Test log message from banking logger at 2025-07-05 20:07:21.303974", "thread": "MainThread", "process": 13591}

@@ -1,0 +1,716 @@
+
+{% extends "dashboard/layout.html" %}
+
+{% block title %}{{ username }} - Banking Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="user-welcome">
+            <h1>Welcome back, {{ username }}</h1>
+            <p class="welcome-subtitle">{{ last_login }} • {{ user_role.replace('_', ' ').title() }}</p>
+        </div>
+        <div class="dashboard-actions">
+            <button class="btn btn-primary" onclick="location.href='/banking/accounts'">
+                <i class="fas fa-plus"></i> New Account
+            </button>
+            <button class="btn btn-success" onclick="location.href='/banking/transfers'">
+                <i class="fas fa-exchange-alt"></i> Transfer
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="quick-stats-grid">
+        <div class="stat-card balance-card">
+            <div class="stat-icon">
+                <i class="fas fa-wallet"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ account_balance or '$0.00' }}</h3>
+                <p>Total Balance</p>
+                <span class="trend positive">+2.4%</span>
+            </div>
+        </div>
+        
+        <div class="stat-card accounts-card">
+            <div class="stat-icon">
+                <i class="fas fa-university"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ total_accounts or '0' }}</h3>
+                <p>Active Accounts</p>
+                <span class="trend neutral">3 Types</span>
+            </div>
+        </div>
+
+        <div class="stat-card transactions-card">
+            <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ recent_transactions|length or '0' }}</h3>
+                <p>This Month</p>
+                <span class="trend positive">+12</span>
+            </div>
+        </div>
+
+        <div class="stat-card alerts-card">
+            <div class="stat-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ alerts|length or '0' }}</h3>
+                <p>Alerts</p>
+                <span class="trend neutral">All Clear</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-grid">
+        <!-- Quick Actions Panel -->
+        <div class="dashboard-card quick-actions">
+            <div class="card-header">
+                <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+            </div>
+            <div class="card-content">
+                <div class="action-grid">
+                    <a href="/banking/transfers" class="action-item transfer">
+                        <div class="action-icon">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <div class="action-text">
+                            <strong>Send Money</strong>
+                            <span>Transfer to accounts</span>
+                        </div>
+                    </a>
+
+                    <a href="/payments/pos" class="action-item payment">
+                        <div class="action-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="action-text">
+                            <strong>Pay Bills</strong>
+                            <span>Utilities & services</span>
+                        </div>
+                    </a>
+
+                    <a href="/banking/accounts" class="action-item accounts">
+                        <div class="action-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="action-text">
+                            <strong>Open Account</strong>
+                            <span>Savings, checking, investment</span>
+                        </div>
+                    </a>
+
+                    <a href="/blockchain/token_exchange" class="action-item crypto">
+                        <div class="action-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="action-text">
+                            <strong>Crypto Exchange</strong>
+                            <span>NVCT & digital assets</span>
+                        </div>
+                    </a>
+
+                    <a href="/banking/loans/apply" class="action-item loans">
+                        <div class="action-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="action-text">
+                            <strong>Apply for Loan</strong>
+                            <span>Personal & business loans</span>
+                        </div>
+                    </a>
+
+                    <a href="/institutional/correspondent_banking" class="action-item international">
+                        <div class="action-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="action-text">
+                            <strong>International</strong>
+                            <span>Cross-border transfers</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Overview -->
+        <div class="dashboard-card account-overview">
+            <div class="card-header">
+                <h3><i class="fas fa-university"></i> Account Overview</h3>
+                <a href="/banking/accounts" class="view-all">View All</a>
+            </div>
+            <div class="card-content">
+                <div class="account-list">
+                    <div class="account-item">
+                        <div class="account-info">
+                            <div class="account-icon checking">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="account-details">
+                                <strong>Primary Checking</strong>
+                                <span>***4521</span>
+                            </div>
+                        </div>
+                        <div class="account-balance">
+                            <strong>$5,432.10</strong>
+                            <span>Available</span>
+                        </div>
+                    </div>
+
+                    <div class="account-item">
+                        <div class="account-info">
+                            <div class="account-icon savings">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                            <div class="account-details">
+                                <strong>High-Yield Savings</strong>
+                                <span>***7893</span>
+                            </div>
+                        </div>
+                        <div class="account-balance">
+                            <strong>$12,890.50</strong>
+                            <span>+2.4% APY</span>
+                        </div>
+                    </div>
+
+                    <div class="account-item">
+                        <div class="account-info">
+                            <div class="account-icon investment">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <div class="account-details">
+                                <strong>Investment Portfolio</strong>
+                                <span>***2156</span>
+                            </div>
+                        </div>
+                        <div class="account-balance">
+                            <strong>$45,200.00</strong>
+                            <span class="trend positive">+8.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="dashboard-card recent-transactions">
+            <div class="card-header">
+                <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                <a href="/banking/transactions" class="view-all">View All</a>
+            </div>
+            <div class="card-content">
+                <div class="transaction-list">
+                    {% for transaction in recent_transactions[:5] %}
+                    <div class="transaction-item">
+                        <div class="transaction-icon {{ transaction.type }}">
+                            <i class="fas fa-{% if transaction.type == 'transfer' %}exchange-alt{% elif transaction.type == 'deposit' %}arrow-down{% elif transaction.type == 'payment' %}credit-card{% else %}circle{% endif %}"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <strong>{{ transaction.description }}</strong>
+                            <span>{{ transaction.timestamp }}</span>
+                        </div>
+                        <div class="transaction-amount {{ 'positive' if transaction.get('amount', '').startswith('+') else 'negative' }}">
+                            {{ transaction.get('amount', transaction.description.split()[-1] if transaction.description.split()[-1].startswith('$') else '$0.00') }}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="no-transactions">
+                        <i class="fas fa-inbox"></i>
+                        <p>No recent transactions</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Banking Services -->
+        <div class="dashboard-card banking-services">
+            <div class="card-header">
+                <h3><i class="fas fa-concierge-bell"></i> Banking Services</h3>
+            </div>
+            <div class="card-content">
+                <div class="service-grid">
+                    <a href="/banking/cards" class="service-item">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Cards</span>
+                    </a>
+                    <a href="/treasury/liquidity" class="service-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Investments</span>
+                    </a>
+                    <a href="/banking/loans" class="service-item">
+                        <i class="fas fa-percentage"></i>
+                        <span>Loans</span>
+                    </a>
+                    <a href="/specialized/currency_exchange" class="service-item">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Exchange</span>
+                    </a>
+                    <a href="/institutional/swift" class="service-item">
+                        <i class="fas fa-globe"></i>
+                        <span>SWIFT</span>
+                    </a>
+                    <a href="/blockchain/nvct" class="service-item">
+                        <i class="fas fa-coins"></i>
+                        <span>NVCT</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security & Alerts -->
+        <div class="dashboard-card security-alerts">
+            <div class="card-header">
+                <h3><i class="fas fa-shield-alt"></i> Security & Alerts</h3>
+            </div>
+            <div class="card-content">
+                <div class="security-status">
+                    <div class="security-item secure">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Account Security: Excellent</span>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>2FA Enabled</span>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-key"></i>
+                        <span>Last Password Change: 30 days ago</span>
+                    </div>
+                </div>
+                
+                {% if alerts %}
+                <div class="alerts-list">
+                    {% for alert in alerts %}
+                    <div class="alert-item {{ alert.type }}">
+                        <i class="fas fa-bell"></i>
+                        <span>{{ alert.message }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="no-alerts">
+                    <i class="fas fa-check"></i>
+                    <span>No alerts at this time</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Financial Insights -->
+        <div class="dashboard-card financial-insights">
+            <div class="card-header">
+                <h3><i class="fas fa-chart-bar"></i> Financial Insights</h3>
+            </div>
+            <div class="card-content">
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-trending-up"></i>
+                    </div>
+                    <div class="insight-text">
+                        <strong>Spending Analysis</strong>
+                        <p>You're saving 15% more than last month</p>
+                    </div>
+                </div>
+                
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-piggy-bank"></i>
+                    </div>
+                    <div class="insight-text">
+                        <strong>Savings Goal</strong>
+                        <p>On track to reach your goal by December</p>
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="insight-text">
+                        <strong>NVCT Portfolio</strong>
+                        <p>Your crypto portfolio is up 12.3%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    color: white;
+}
+
+.user-welcome h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.welcome-subtitle {
+    margin: 5px 0 0 0;
+    opacity: 0.9;
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.quick-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-left: 4px solid;
+}
+
+.balance-card { border-left-color: #4CAF50; }
+.accounts-card { border-left-color: #2196F3; }
+.transactions-card { border-left-color: #FF9800; }
+.alerts-card { border-left-color: #9C27B0; }
+
+.stat-icon {
+    margin-right: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.balance-card .stat-icon { background: #4CAF50; }
+.accounts-card .stat-icon { background: #2196F3; }
+.transactions-card .stat-icon { background: #FF9800; }
+.alerts-card .stat-icon { background: #9C27B0; }
+
+.stat-content h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.stat-content p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.trend {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.trend.positive { background: #e8f5e8; color: #4CAF50; }
+.trend.negative { background: #ffeaa7; color: #e17055; }
+.trend.neutral { background: #f8f9fa; color: #6c757d; }
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    background: #f8f9fa;
+}
+
+.card-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.view-all {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.action-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    text-decoration: none;
+}
+
+.action-icon {
+    margin-right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.transfer .action-icon { background: #4CAF50; }
+.payment .action-icon { background: #FF9800; }
+.accounts .action-icon { background: #2196F3; }
+.crypto .action-icon { background: #9C27B0; }
+.loans .action-icon { background: #607D8B; }
+.international .action-icon { background: #795548; }
+
+.action-text strong {
+    display: block;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.action-text span {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.account-list, .transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.account-item, .transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+.account-info, .transaction-details {
+    display: flex;
+    align-items: center;
+}
+
+.account-icon, .transaction-icon {
+    margin-right: 12px;
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.checking { background: #4CAF50; }
+.savings { background: #FF9800; }
+.investment { background: #9C27B0; }
+.transfer { background: #2196F3; }
+.deposit { background: #4CAF50; }
+.payment { background: #FF5722; }
+
+.account-details strong, .transaction-details strong {
+    display: block;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.account-details span, .transaction-details span {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.account-balance, .transaction-amount {
+    text-align: right;
+}
+
+.account-balance strong, .transaction-amount {
+    display: block;
+    font-weight: 600;
+    color: #333;
+}
+
+.transaction-amount.positive { color: #4CAF50; }
+.transaction-amount.negative { color: #f44336; }
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.service-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.service-item:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.service-item i {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.security-status, .alerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.security-item, .alert-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+.security-item.secure {
+    background: #e8f5e8;
+    color: #4CAF50;
+}
+
+.security-item i, .alert-item i {
+    margin-right: 10px;
+}
+
+.insight-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.insight-icon {
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #667eea;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.insight-text strong {
+    display: block;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.insight-text p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.no-transactions, .no-alerts {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+}
+
+.no-transactions i, .no-alerts i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .quick-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+{% endblock %}

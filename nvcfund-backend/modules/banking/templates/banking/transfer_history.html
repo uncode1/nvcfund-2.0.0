@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+
+{% block title %}Transfer History - NVC Banking Platform{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Transfer History Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-primary">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="h2 text-white mb-2">
+                                <i class="fas fa-history me-2"></i>Transfer History
+                            </h1>
+                            <p class="text-light mb-0">View all your money transfers and transaction details</p>
+                        </div>
+                        <div class="col-auto">
+                            <div class="btn-group">
+                                <button class="btn btn-light btn-sm" onclick="exportTransfers()">
+                                    <i class="fas fa-download me-1"></i>Export
+                                </button>
+                                <a href="{{ url_for('banking.transfers') }}" class="btn btn-outline-light btn-sm">
+                                    <i class="fas fa-plus me-1"></i>New Transfer
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Filter Controls -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-filter me-2"></i>Filter Transfers</h5>
+                </div>
+                <div class="card-body">
+                    <form id="filterForm">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">Date Range</label>
+                                <select class="form-select" id="dateRange">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">This Week</option>
+                                    <option value="month">This Month</option>
+                                    <option value="quarter">This Quarter</option>
+                                    <option value="year">This Year</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Transfer Type</label>
+                                <select class="form-select" id="transferType">
+                                    <option value="all">All Types</option>
+                                    <option value="Transfer">Outgoing Transfer</option>
+                                    <option value="Deposit">Incoming Deposit</option>
+                                    <option value="Internal">Internal Transfer</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="status">
+                                    <option value="all">All Status</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Failed">Failed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transfer History Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-list me-2"></i>Transfer History</h5>
+                    <span class="badge bg-primary">{{ transfers|length }} transfers found</span>
+                </div>
+                <div class="card-body">
+                    {% if transfers %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Transfer ID</th>
+                                        <th>Type</th>
+                                        <th>From Account</th>
+                                        <th>To Account</th>
+                                        <th>Description</th>
+                                        <th class="text-end">Amount</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transfer in transfers %}
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <strong>{{ transfer.created_at.strftime('%Y-%m-%d') if transfer.created_at else 'N/A' }}</strong>
+                                                <br>
+                                                <small class="text-muted">{{ transfer.created_at.strftime('%H:%M:%S') if transfer.created_at else 'N/A' }}</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <code class="text-primary">{{ transfer.transfer_id }}</code>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ 'info' if transfer.type == 'Transfer' else 'success' if transfer.type == 'Deposit' else 'secondary' }}">
+                                                {{ transfer.type }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="small">
+                                                <strong>{{ transfer.from_account }}</strong>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="small">
+                                                <strong>{{ transfer.to_account }}</strong>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted">{{ transfer.description or 'No description' }}</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong class="text-{{ 'success' if transfer.type == 'Deposit' else 'primary' }}">
+                                                {{ '+' if transfer.type == 'Deposit' else '' }}${{ "%.2f"|format(transfer.amount) }}
+                                            </strong>
+                                            <br>
+                                            <small class="text-muted">{{ transfer.currency }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if transfer.status == 'Completed' else 'warning' if transfer.status == 'Pending' else 'danger' }}">
+                                                {{ transfer.status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <button class="btn btn-outline-primary" title="View Details" onclick="viewTransferDetails('{{ transfer.transfer_id }}')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-outline-secondary" title="Download Receipt" onclick="downloadReceipt('{{ transfer.transfer_id }}')">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                                {% if transfer.status == 'Pending' %}
+                                                <button class="btn btn-outline-danger" title="Cancel Transfer" onclick="cancelTransfer('{{ transfer.transfer_id }}')">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Transfer history pagination" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-exchange-alt fa-4x text-muted mb-4"></i>
+                            <h4 class="text-muted">No Transfer History</h4>
+                            <p class="text-muted">You haven't made any transfers yet.</p>
+                            <a href="{{ url_for('banking.transfers') }}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Make Your First Transfer
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transfer Summary Statistics -->
+    {% if transfers %}
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-arrow-up fa-2x mb-2"></i>
+                    <h5>Total Sent</h5>
+                    <h3>${{ "%.2f"|format(transfers|selectattr('type', 'equalto', 'Transfer')|map(attribute='amount')|sum) }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-arrow-down fa-2x mb-2"></i>
+                    <h5>Total Received</h5>
+                    <h3>${{ "%.2f"|format(transfers|selectattr('type', 'equalto', 'Deposit')|map(attribute='amount')|sum) }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-2x mb-2"></i>
+                    <h5>Completed</h5>
+                    <h3>{{ transfers|selectattr('status', 'equalto', 'Completed')|list|length }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-2x mb-2"></i>
+                    <h5>Pending</h5>
+                    <h3>{{ transfers|selectattr('status', 'equalto', 'Pending')|list|length }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Transfer Details Modal -->
+<div class="modal fade" id="transferDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Transfer Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="transferDetailsContent">
+                <!-- Transfer details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="printTransferDetails()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewTransferDetails(transferId) {
+    // In production, this would fetch transfer details via AJAX
+    const modal = new bootstrap.Modal(document.getElementById('transferDetailsModal'));
+    document.getElementById('transferDetailsContent').innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Transfer Information</h6>
+                <p><strong>Transfer ID:</strong> ${transferId}</p>
+                <p><strong>Date:</strong> {{ transfers[0].created_at.strftime('%Y-%m-%d %H:%M:%S') if transfers else 'N/A' }}</p>
+                <p><strong>Status:</strong> <span class="badge bg-success">Completed</span></p>
+            </div>
+            <div class="col-md-6">
+                <h6>Amount Details</h6>
+                <p><strong>Transfer Amount:</strong> $500.00</p>
+                <p><strong>Transfer Fee:</strong> $2.50</p>
+                <p><strong>Total Charged:</strong> $502.50</p>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <h6>From Account</h6>
+                <p>Checking Account<br>****-****-1234</p>
+            </div>
+            <div class="col-md-6">
+                <h6>To Account</h6>
+                <p>External Account<br>recipient@email.com</p>
+            </div>
+        </div>
+    `;
+    modal.show();
+}
+
+function downloadReceipt(transferId) {
+    alert('Receipt download for transfer ' + transferId + ' will be available soon.');
+}
+
+function cancelTransfer(transferId) {
+    if (confirm('Are you sure you want to cancel this transfer?')) {
+        alert('Transfer ' + transferId + ' has been cancelled.');
+        location.reload();
+    }
+}
+
+function exportTransfers() {
+    alert('Transfer history export will be available soon.');
+}
+
+function printTransferDetails() {
+    window.print();
+}
+
+document.getElementById('filterForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // In production, this would apply filters and reload the data
+    alert('Filters applied successfully!');
+});
+</script>
+{% endblock %}

@@ -1,0 +1,1143 @@
+<!-- Enhanced UX Banking Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark enhanced-navbar" id="mainNavbar">
+    <div class="container-fluid px-4">
+        <!-- Modern Clean Brand -->
+        <a class="navbar-brand enhanced-brand" href="/">
+            <div class="brand-icon">
+                <i class="fas fa-university"></i>
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">NVC Banking</span>
+                <small class="brand-tagline">Digital Banking Platform</small>
+            </div>
+        </a>
+        
+        <!-- User Status & Quick Actions -->
+        {% if current_user.is_authenticated %}
+        <div class="navbar-utilities">
+            <div class="user-status">
+                <span class="status-indicator"></span>
+                <span class="user-role">{{ current_user.role | title }}</span>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-action-btn" data-bs-toggle="tooltip" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <button class="quick-action-btn" data-bs-toggle="tooltip" title="Help">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <!-- Public Navigation -->
+                {% if not current_user.is_authenticated %}
+                <li class="nav-item dropdown enhanced-dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                    <div class="dropdown-menu enhanced-dropdown-menu">
+                        <a class="dropdown-item" href="/about">
+                            <i class="fas fa-university"></i>About Platform
+                        </a>
+                        <a class="dropdown-item" href="/contact">
+                            <i class="fas fa-envelope"></i>Contact Us
+                        </a>
+                        <a class="dropdown-item" href="/api-documentation">
+                            <i class="fas fa-book"></i>API Documentation
+                        </a>
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Main Navigation -->
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link enhanced-nav-link" href="/dashboard/">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                <!-- Banking Services -->
+                {% if current_user.is_authenticated %}
+                <li class="nav-item dropdown enhanced-dropdown">
+                    <a class="nav-link dropdown-toggle enhanced-nav-link" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-university"></i>
+                        <span>Banking</span>
+                    </a>
+                    <div class="dropdown-menu enhanced-dropdown-menu">
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Accounts</h6>
+                            <a class="dropdown-item" href="/accounts/">
+                                <i class="fas fa-eye"></i>View Accounts
+                            </a>
+                            <a class="dropdown-item" href="/banking/accounts/create">
+                                <i class="fas fa-plus-circle"></i>Create Account
+                            </a>
+                            <a class="dropdown-item" href="/cards_payments/">
+                                <i class="fas fa-credit-card"></i>Manage Cards
+                            </a>
+                        </div>
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Transfers</h6>
+                            <a class="dropdown-item" href="/banking/send-transfer">
+                                <i class="fas fa-paper-plane"></i>Send Transfer
+                            </a>
+                            <a class="dropdown-item" href="/banking/transfers">
+                                <i class="fas fa-exchange-alt"></i>Transfer History
+                            </a>
+                            <a class="dropdown-item" href="/banking/international-transfers">
+                                <i class="fas fa-globe"></i>International
+                            </a>
+                        </div>
+                        <div class="dropdown-section">
+                            <h6 class="dropdown-header">Payments</h6>
+                            <a class="dropdown-item" href="/banking/bill-payment">
+                                <i class="fas fa-receipt"></i>Bill Payments
+                            </a>
+                            <a class="dropdown-item" href="/banking/payment-history">
+                                <i class="fas fa-history"></i>Payment History
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Financial Services -->
+                {% if current_user.is_authenticated and (current_user.role.value in ['treasury_officer', 'trading_officer', 'institutional_banker', 'super_admin']) %}
+                <li class="nav-item dropdown enhanced-dropdown">
+                    <a class="nav-link dropdown-toggle enhanced-nav-link" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Markets</span>
+                    </a>
+                    <div class="dropdown-menu border-0 shadow w-100 p-4" style="background-color: #0a2447; border: 1px solid #66ccff; min-width: 800px; max-width: 1000px;">
+                        <div class="container-fluid">
+                            <div class="row g-4">
+                                <!-- Treasury Operations -->
+                                {% if current_user.role.value in ['treasury_officer', 'super_admin'] %}
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Treasury Operations</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/treasury/">
+                                            <i class="fas fa-coins fa-fw me-2 text-info"></i>Treasury Dashboard
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/nvct_stablecoin/">
+                                            <i class="fas fa-medal fa-fw me-2 text-info"></i>NVCT Operations
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/treasury/">
+                                            <i class="fas fa-water fa-fw me-2 text-info"></i>Liquidity Management
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/treasury/">
+                                            <i class="fas fa-vault fa-fw me-2 text-info"></i>Reserve Management
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Trading & Markets -->
+                                {% if current_user.role.value in ['trading_officer', 'super_admin'] %}
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Trading & Markets</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/trading/">
+                                            <i class="fas fa-chart-candlestick fa-fw me-2 text-info"></i>Trading Dashboard
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/trading/">
+                                            <i class="fas fa-briefcase fa-fw me-2 text-info"></i>Portfolio Management
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/trading/">
+                                            <i class="fas fa-chart-area fa-fw me-2 text-info"></i>Market Data
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/exchange/">
+                                            <i class="fas fa-exchange-alt fa-fw me-2 text-info"></i>Exchange Platform
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Institutional Banking -->
+                                {% if current_user.role.value in ['institutional_banker', 'super_admin'] %}
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Institutional Banking</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/institutional/">
+                                            <i class="fas fa-landmark fa-fw me-2 text-info"></i>Institutional Dashboard
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/institutional/">
+                                            <i class="fas fa-users fa-fw me-2 text-info"></i>Client Management
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/institutional/">
+                                            <i class="fas fa-lock fa-fw me-2 text-info"></i>Custody Services
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/investments/">
+                                            <i class="fas fa-chart-pie fa-fw me-2 text-info"></i>Investment Services
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Sovereign & Specialized -->
+                                {% if current_user.role.value in ['central_bank_governor', 'sovereign_banker', 'super_admin'] %}
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Sovereign & Specialized</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/sovereign/">
+                                            <i class="fas fa-flag fa-fw me-2 text-info"></i>Sovereign Banking
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/sovereign/">
+                                            <i class="fas fa-university fa-fw me-2 text-info"></i>CBDC Operations
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/islamic_banking/">
+                                            <i class="fas fa-mosque fa-fw me-2 text-info"></i>Islamic Banking
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/insurance/">
+                                            <i class="fas fa-shield fa-fw me-2 text-info"></i>Insurance Services
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Administration & System -->
+                {% if current_user.is_authenticated and (current_user.role.value in ['super_admin', 'admin', 'branch_manager', 'operations_manager']) %}
+                <li class="nav-item dropdown mega-menu position-static">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-shield me-1"></i> Administration
+                    </a>
+                    <div class="dropdown-menu border-0 shadow w-100 p-4" style="background-color: #0a2447; border: 1px solid #66ccff; min-width: 800px; max-width: 1000px;">
+                        <div class="container-fluid">
+                            <div class="row g-4">
+                                <!-- User Management -->
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">User Management</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/users">
+                                            <i class="fas fa-users fa-fw me-2 text-info"></i>All Users
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/roles">
+                                            <i class="fas fa-user-tag fa-fw me-2 text-info"></i>Roles & Permissions
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/user-activity">
+                                            <i class="fas fa-history fa-fw me-2 text-info"></i>User Activity
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/sessions">
+                                            <i class="fas fa-clock fa-fw me-2 text-info"></i>Active Sessions
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- System Operations -->
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">System Operations</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/">
+                                            <i class="fas fa-tachometer-alt fa-fw me-2 text-info"></i>Admin Dashboard
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/system/dashboard">
+                                            <i class="fas fa-heartbeat fa-fw me-2 text-info"></i>System Health
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/maintenance">
+                                            <i class="fas fa-tools fa-fw me-2 text-info"></i>Maintenance Mode
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/backups">
+                                            <i class="fas fa-database fa-fw me-2 text-info"></i>Database Backups
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Platform & APIs -->
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Platform & APIs</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/api-documentation">
+                                            <i class="fas fa-book fa-fw me-2 text-info"></i>API Documentation
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/logs">
+                                            <i class="fas fa-file-alt fa-fw me-2 text-info"></i>System Logs
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/binance/">
+                                            <i class="fas fa-plug fa-fw me-2 text-info"></i>External Integrations
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/webhooks">
+                                            <i class="fas fa-link fa-fw me-2 text-info"></i>Webhooks
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Branch & Operations -->
+                                {% if current_user.role.value in ['branch_manager', 'operations_manager', 'super_admin'] %}
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Branch & Operations</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/branches">
+                                            <i class="fas fa-building fa-fw me-2 text-info"></i>Branch Management
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/teller-operations">
+                                            <i class="fas fa-cash-register fa-fw me-2 text-info"></i>Teller Operations
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/branch-reports">
+                                            <i class="fas fa-chart-pie fa-fw me-2 text-info"></i>Branch Reports
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/settlement/dashboard">
+                                            <i class="fas fa-handshake fa-fw me-2 text-info"></i>Settlement Operations
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Security & Compliance -->
+                {% if current_user.is_authenticated and (current_user.role.value in ['security_officer', 'compliance_officer', 'risk_manager', 'super_admin']) %}
+                <li class="nav-item dropdown mega-menu position-static">
+                    <a class="nav-link dropdown-toggle" href="#" id="securityDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-shield-alt me-1"></i> Security & Compliance
+                    </a>
+                    <div class="dropdown-menu border-0 shadow w-100 p-4" style="background-color: #0a2447; border: 1px solid #66ccff; min-width: 800px; max-width: 1000px;">
+                        <div class="container-fluid">
+                            <div class="row g-4">
+                                <!-- Security Operations -->
+                                {% if current_user.role.value in ['security_officer', 'super_admin'] %}
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Security Operations</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/security/">
+                                            <i class="fas fa-shield-alt fa-fw me-2 text-info"></i>Security Dashboard
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/security/investigation">
+                                            <i class="fas fa-search fa-fw me-2 text-info"></i>Investigation Tools
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/security/threat-monitoring">
+                                            <i class="fas fa-eye fa-fw me-2 text-info"></i>Threat Monitoring
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/security/incident-response">
+                                            <i class="fas fa-bell fa-fw me-2 text-info"></i>Incident Response
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Compliance Management -->
+                                {% if current_user.role.value in ['compliance_officer', 'super_admin'] %}
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Compliance Management</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/dashboard">
+                                            <i class="fas fa-balance-scale fa-fw me-2 text-info"></i>Compliance Dashboard
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/kyc">
+                                            <i class="fas fa-id-card fa-fw me-2 text-info"></i>KYC Management
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/aml">
+                                            <i class="fas fa-money-check-alt fa-fw me-2 text-info"></i>AML Monitoring
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/sanctions">
+                                            <i class="fas fa-ban fa-fw me-2 text-info"></i>Sanctions Screening
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Risk Management -->
+                                {% if current_user.role.value in ['risk_manager', 'super_admin'] %}
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Risk Management</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/risk-management">
+                                            <i class="fas fa-exclamation-triangle fa-fw me-2 text-info"></i>Risk Assessment
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/risk-reports">
+                                            <i class="fas fa-chart-line fa-fw me-2 text-info"></i>Risk Reports
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/risk-monitoring">
+                                            <i class="fas fa-radar fa-fw me-2 text-info"></i>Risk Monitoring
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/interest_rate_management/dashboard">
+                                            <i class="fas fa-percent fa-fw me-2 text-info"></i>Interest Rate Risk
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Audit & Regulatory -->
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Audit & Regulatory</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/audit-trails">
+                                            <i class="fas fa-clipboard-list fa-fw me-2 text-info"></i>Audit Trails
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/regulatory-reports">
+                                            <i class="fas fa-file-contract fa-fw me-2 text-info"></i>Regulatory Reports
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/incident-response">
+                                            <i class="fas fa-exclamation-circle fa-fw me-2 text-info"></i>Incident Response
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/compliance/regulatory-filings">
+                                            <i class="fas fa-file-upload fa-fw me-2 text-info"></i>Regulatory Filings
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Analytics & Reporting -->
+                {% if current_user.is_authenticated and (current_user.role.value in ['analytics_officer', 'management', 'super_admin']) %}
+                <li class="nav-item dropdown mega-menu position-static">
+                    <a class="nav-link dropdown-toggle" href="#" id="analyticsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-chart-bar me-1"></i> Analytics
+                    </a>
+                    <div class="dropdown-menu border-0 shadow w-100 p-4" style="background-color: #0a2447; border: 1px solid #66ccff; min-width: 600px; max-width: 800px;">
+                        <div class="container-fluid">
+                            <div class="row g-4">
+                                <!-- Business Intelligence -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Business Intelligence</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/analytics/">
+                                            <i class="fas fa-chart-area fa-fw me-2 text-info"></i>Analytics Dashboard
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/analytics/">
+                                            <i class="fas fa-file-chart fa-fw me-2 text-info"></i>Custom Reports
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/analytics/">
+                                            <i class="fas fa-tachometer-alt fa-fw me-2 text-info"></i>Performance Metrics
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Blockchain Analytics -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Blockchain Analytics</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/blockchain_analytics/">
+                                            <i class="fas fa-cubes fa-fw me-2 text-info"></i>Blockchain Analytics
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/smart_contracts/">
+                                            <i class="fas fa-code fa-fw me-2 text-info"></i>Smart Contracts
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/nvct_stablecoin/">
+                                            <i class="fas fa-coins fa-fw me-2 text-info"></i>NVCT Analytics
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Financial Analytics -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Financial Analytics</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/accounts/analytics">
+                                            <i class="fas fa-chart-pie fa-fw me-2 text-info"></i>Account Analytics
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/cards_payments/analytics">
+                                            <i class="fas fa-credit-card fa-fw me-2 text-info"></i>Payment Analytics
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/analytics/financial-reports">
+                                            <i class="fas fa-file-invoice-dollar fa-fw me-2 text-info"></i>Financial Reports
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Developer & Integration -->
+                {% if current_user.is_authenticated and (current_user.role.value in ['super_admin', 'admin']) %}
+                <li class="nav-item dropdown mega-menu position-static">
+                    <a class="nav-link dropdown-toggle" href="#" id="developerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-code me-1"></i> Developer
+                    </a>
+                    <div class="dropdown-menu border-0 shadow w-100 p-4" style="background-color: #0a2447; border: 1px solid #66ccff; min-width: 600px; max-width: 800px;">
+                        <div class="container-fluid">
+                            <div class="row g-4">
+                                <!-- API Management -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">API Management</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/api-documentation">
+                                            <i class="fas fa-book fa-fw me-2 text-info"></i>API Documentation
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/api-sandbox">
+                                            <i class="fas fa-flask fa-fw me-2 text-info"></i>API Sandbox
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/api/health">
+                                            <i class="fas fa-heartbeat fa-fw me-2 text-info"></i>API Health
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Integration Tools -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Integration Tools</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/webhooks">
+                                            <i class="fas fa-link fa-fw me-2 text-info"></i>Webhooks
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/binance/">
+                                            <i class="fas fa-exchange-alt fa-fw me-2 text-info"></i>Binance Integration
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/external-apis">
+                                            <i class="fas fa-plug fa-fw me-2 text-info"></i>External APIs
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Development Tools -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="list-group list-group-flush">
+                                        <h6 class="dropdown-header text-info fw-bold text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Development Tools</h6>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/database-tools">
+                                            <i class="fas fa-database fa-fw me-2 text-info"></i>Database Tools
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/testing-tools">
+                                            <i class="fas fa-vial fa-fw me-2 text-info"></i>Testing Tools
+                                        </a>
+                                        <a class="list-group-item list-group-item-action border-0 py-2 px-0 text-light bg-transparent" href="/admin/deployment">
+                                            <i class="fas fa-rocket fa-fw me-2 text-info"></i>Deployment
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
+
+            <!-- Professional User Account Section -->
+            <ul class="navbar-nav ms-auto d-flex align-items-center">
+                {% if current_user.is_authenticated %}
+                <!-- Notification Center -->
+                <li class="nav-item me-3">
+                    <a class="nav-link position-relative" href="/banking/notifications" style="color: #66ccff;" title="Notifications">
+                        <i class="fas fa-bell" style="font-size: 1.2rem;"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
+                            3
+                        </span>
+                    </a>
+                </li>
+                
+                <!-- Quick Access Panel -->
+                <li class="nav-item dropdown me-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="quickAccessDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #66ccff;">
+                        <i class="fas fa-bolt me-1"></i> Quick Access
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" style="background-color: #0a2447; border: 2px solid #66ccff; min-width: 280px;">
+                        <li class="dropdown-header text-info fw-bold text-uppercase" style="font-size: 0.8rem;">Quick Actions</li>
+                        <li><a class="dropdown-item text-light py-2" href="/banking/accounts/create">
+                            <i class="fas fa-plus-circle me-2 text-info"></i>Create New Account
+                        </a></li>
+                        <li><a class="dropdown-item text-light py-2" href="/banking/send-transfer">
+                            <i class="fas fa-paper-plane me-2 text-info"></i>Send Transfer
+                        </a></li>
+                        <li><a class="dropdown-item text-light py-2" href="/banking/bill-payment">
+                            <i class="fas fa-receipt me-2 text-info"></i>Pay Bills
+                        </a></li>
+                        <li><hr class="dropdown-divider" style="border-color: #66ccff;"></li>
+                        {% if current_user.role and current_user.role.value in ['admin', 'super_admin'] %}
+                        <li class="dropdown-header text-info fw-bold text-uppercase" style="font-size: 0.8rem;">Admin Tools</li>
+                        <li><a class="dropdown-item text-light py-2" href="/admin_management/users">
+                            <i class="fas fa-users me-2 text-warning"></i>User Management
+                        </a></li>
+                        <li><a class="dropdown-item text-light py-2" href="/system_management/dashboard">
+                            <i class="fas fa-server me-2 text-warning"></i>System Status
+                        </a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+
+                <!-- Enhanced User Account Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #ffffff;">
+                        <div class="rounded-circle bg-info me-2 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                            <i class="fas fa-user text-dark"></i>
+                        </div>
+                        <div class="d-none d-lg-flex flex-column text-start">
+                            <span class="fw-semibold" style="font-size: 0.9rem;">{{ current_user.username if current_user.username else 'User' }}</span>
+                            <small class="text-info" style="font-size: 0.75rem;">{{ current_user.role.value | title if current_user.role else 'User' }}</small>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" style="background-color: #0a2447; border: 2px solid #66ccff; min-width: 280px;">
+                        <li class="dropdown-header text-center border-bottom pb-2 mb-2" style="border-color: #66ccff !important;">
+                            <div class="rounded-circle bg-info mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                <i class="fas fa-user text-dark" style="font-size: 1.2rem;"></i>
+                            </div>
+                            <strong class="text-light">{{ current_user.username if current_user.username else 'User' }}</strong><br>
+                            <small class="text-info">
+                                <i class="fas fa-crown me-1"></i>{{ current_user.role.value | title if current_user.role else 'User' }}
+                            </small>
+                        </li>
+                        <li><a class="dropdown-item text-light py-2" href="/dashboard/">
+                            <i class="fas fa-tachometer-alt me-2 text-info"></i>My Dashboard
+                        </a></li>
+                        <li><a class="dropdown-item text-light py-2" href="/auth/profile">
+                            <i class="fas fa-user me-2 text-info"></i>Profile Settings
+                        </a></li>
+                        <li><a class="dropdown-item text-light py-2" href="/banking/preferences">
+                            <i class="fas fa-cog me-2 text-info"></i>Account Preferences
+                        </a></li>
+                        <li><a class="dropdown-item text-light py-2" href="/mfa/">
+                            <i class="fas fa-shield-alt me-2 text-info"></i>Security & MFA
+                        </a></li>
+                        <li><a class="dropdown-item text-light py-2" href="/banking/notifications">
+                            <i class="fas fa-bell me-2 text-info"></i>Notification Settings
+                        </a></li>
+                        {% if current_user.role and current_user.role.value in ['admin', 'super_admin'] %}
+                        <li><hr class="dropdown-divider" style="border-color: #66ccff;"></li>
+                        <li class="dropdown-header text-warning fw-bold text-uppercase" style="font-size: 0.8rem;">
+                            <i class="fas fa-tools me-1"></i>Admin Panel
+                        </li>
+                        <li><a class="dropdown-item text-light py-2" href="/admin_management/">
+                            <i class="fas fa-users-cog me-2 text-warning"></i>Administration
+                        </a></li>
+                        <li><a class="dropdown-item text-light py-2" href="/system_management/">
+                            <i class="fas fa-server me-2 text-warning"></i>System Management
+                        </a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider" style="border-color: #66ccff;"></li>
+                        <li><a class="dropdown-item text-light py-2" href="/auth/logout">
+                            <i class="fas fa-sign-out-alt me-2 text-danger"></i>Sign Out
+                        </a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <!-- Enhanced Authentication Links -->
+                <li class="nav-item me-2">
+                    <a class="nav-link btn btn-outline-light px-3 rounded-pill" href="/auth/login" style="border: 2px solid #66ccff; transition: all 0.3s ease;">
+                        <i class="fas fa-sign-in-alt me-1"></i> Sign In
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-info px-3 rounded-pill text-dark fw-semibold" href="/auth/register" style="transition: all 0.3s ease;">
+                        <i class="fas fa-user-plus me-1"></i> Register
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Professional Enterprise Banking Navbar Styles -->
+<style>
+/* Professional Header Navbar Enhancements */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Enhanced Navigation Links */
+.navbar-nav .nav-link:hover {
+    background: rgba(102, 204, 255, 0.2) !important;
+    border-color: #66ccff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 204, 255, 0.3);
+}
+
+.navbar-toggler:hover {
+    background: rgba(102, 204, 255, 0.2) !important;
+    transform: scale(1.05);
+}
+
+/* Professional Mega Menu Styles */
+.mega-menu.position-static .dropdown-menu {
+    position: absolute !important;
+    display: none;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+    animation: slideDown 0.4s ease;
+    border: 1px solid rgba(102, 204, 255, 0.3);
+}
+
+/* Enhanced Dropdown Items */
+.dropdown-item:hover {
+    background: rgba(102, 204, 255, 0.15) !important;
+    border-left: 3px solid #66ccff !important;
+    transform: translateX(5px);
+    color: #ffffff !important;
+}
+
+.list-group-item:hover {
+    background: rgba(102, 204, 255, 0.15) !important;
+    border-left: 3px solid #66ccff !important;
+    transform: translateX(5px);
+    color: #ffffff !important;
+}
+
+/* Professional Brand Hover Effect */
+.navbar-brand:hover {
+    transform: scale(1.02);
+    text-shadow: 0 0 15px rgba(102, 204, 255, 0.5);
+}
+
+.navbar-brand:hover .fas {
+    animation: pulse 1s ease-in-out;
+}
+
+/* Enhanced Authentication Buttons */
+.btn-outline-light:hover {
+    background: #66ccff !important;
+    border-color: #66ccff !important;
+    color: #0a2447 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 204, 255, 0.4);
+}
+
+.btn-info:hover {
+    background: #4fa8d8 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(79, 168, 216, 0.4);
+}
+
+/* Professional Status Indicator Animation */
+.badge {
+    animation: slideInLeft 0.6s ease;
+}
+
+/* Enhanced Layout Constraints */
+* {
+    box-sizing: border-box;
+}
+
+.navbar {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+.navbar .container-fluid {
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.mega-menu .dropdown-menu {
+    max-width: calc(100vw - 30px);
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+/* Responsive Design Enhancements */
+@media (max-width: 991px) {
+    .mega-menu .dropdown-menu {
+        position: relative !important;
+        left: 0 !important;
+        transform: none !important;
+        width: calc(100vw - 30px) !important;
+        max-width: 100% !important;
+        margin-top: 10px;
+        border-radius: 8px;
+    }
+    
+    .navbar-brand span {
+        font-size: 1.1rem !important;
+    }
+    
+    .navbar-nav .nav-link {
+        margin-bottom: 5px;
+        border-radius: 6px;
+    }
+    
+    .navbar-collapse {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+}
+
+/* Enhanced Visual Depth */
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #1e4f72;
+}
+
+/* Professional Loading States */
+.nav-link {
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #66ccff, transparent);
+    transition: left 0.5s ease;
+}
+
+.nav-link:hover::after {
+    left: 100%;
+}
+
+.mega-menu.show .dropdown-menu {
+    display: block;
+}
+
+.mega-menu .dropdown-header {
+    font-size: 0.85rem !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #66ccff;
+    color: #66ccff !important;
+    position: relative;
+}
+
+.mega-menu .dropdown-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(90deg, #66ccff, transparent);
+}
+
+.mega-menu .list-group-item {
+    padding: 10px 0 !important;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    background: transparent !important;
+    border: none !important;
+}
+
+.mega-menu .list-group-item:hover {
+    background-color: rgba(102, 204, 255, 0.1) !important;
+    color: #66ccff !important;
+    transform: translateX(8px);
+    padding-left: 12px !important;
+}
+
+.mega-menu .list-group-item i {
+    width: 18px;
+    text-align: center;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.mega-menu .list-group-item:hover i {
+    opacity: 1;
+    color: #66ccff;
+    transform: scale(1.1);
+}
+
+/* Enhanced Grid Spacing */
+.mega-menu .row.g-4 {
+    gap: 2rem;
+}
+
+.mega-menu .col-lg-3 {
+    min-height: 200px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mega-menu-content {
+        min-width: 100% !important;
+    }
+    
+    .mega-menu-content .container {
+        padding: 0;
+    }
+    
+    .mega-menu-content .row {
+        flex-direction: column;
+    }
+    
+    .mega-menu-content .col-md-3 {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+/* Enhanced Dropdown Styles */
+.dropdown-menu {
+    animation: slideDown 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Navigation Active States */
+.navbar-nav .nav-link.active {
+    color: #66ccff !important;
+    background-color: rgba(102, 204, 255, 0.1);
+    border-radius: 6px;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #66ccff !important;
+    background-color: rgba(102, 204, 255, 0.1);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+/* Improved Icon Styling */
+.navbar-nav .nav-link i {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.navbar-nav .nav-link:hover i {
+    opacity: 1;
+}
+
+/* User Dropdown Styling */
+#userDropdown {
+    background-color: rgba(102, 204, 255, 0.1);
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+#userDropdown:hover {
+    background-color: rgba(102, 204, 255, 0.2);
+}
+
+/* Mobile Navigation Improvements */
+@media (max-width: 992px) {
+    .navbar-collapse {
+        background-color: rgba(10, 36, 71, 0.95);
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 10px 15px;
+        margin: 2px 0;
+        border-radius: 6px;
+    }
+    
+    .dropdown-menu {
+        position: static !important;
+        display: block;
+        float: none;
+        width: 100%;
+        margin-top: 0;
+        background-color: rgba(30, 79, 114, 0.9) !important;
+        border: none;
+        box-shadow: none;
+    }
+    
+    .mega-menu-content {
+        padding: 0 !important;
+    }
+}
+
+/* Search Bar Styling (for future implementation) */
+.navbar-search {
+    position: relative;
+    margin: 0 20px;
+}
+
+.navbar-search input {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(102, 204, 255, 0.3);
+    border-radius: 20px;
+    padding: 6px 15px;
+    color: #fff;
+    width: 200px;
+    transition: all 0.3s ease;
+}
+
+.navbar-search input:focus {
+    outline: none;
+    border-color: #66ccff;
+    background-color: rgba(255, 255, 255, 0.15);
+    width: 250px;
+}
+
+.navbar-search input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Professional Color Scheme */
+:root {
+    --nvc-primary: #0a2447;
+    --nvc-secondary: #1e4f72;
+    --nvc-accent: #66ccff;
+    --nvc-light: #ffffff;
+    --nvc-text: #f8f9fa;
+}
+
+/* Accessibility Improvements */
+.dropdown-item:focus {
+    outline: 2px solid #66ccff;
+    outline-offset: 2px;
+}
+
+.nav-link:focus {
+    outline: 2px solid #66ccff;
+    outline-offset: 2px;
+}
+
+/* Professional Badge Styling */
+.nav-item .badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
+}
+
+.nav-item .badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.nav-item .badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
+
+.nav-item .badge.bg-success {
+    background-color: #28a745 !important;
+}
+</style>
+
+<!-- JavaScript for Enhanced Mega Menu Functionality -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mega menu hover functionality
+    const megaMenus = document.querySelectorAll('.mega-menu');
+    
+    megaMenus.forEach(menu => {
+        const dropdown = menu.querySelector('.dropdown-menu');
+        let hoverTimeout;
+        
+        menu.addEventListener('mouseenter', function() {
+            clearTimeout(hoverTimeout);
+            menu.classList.add('show');
+            dropdown.classList.add('show');
+        });
+        
+        menu.addEventListener('mouseleave', function() {
+            hoverTimeout = setTimeout(() => {
+                menu.classList.remove('show');
+                dropdown.classList.remove('show');
+            }, 300);
+        });
+        
+        // Keep dropdown open when hovering over it
+        dropdown.addEventListener('mouseenter', function() {
+            clearTimeout(hoverTimeout);
+        });
+        
+        dropdown.addEventListener('mouseleave', function() {
+            hoverTimeout = setTimeout(() => {
+                menu.classList.remove('show');
+                dropdown.classList.remove('show');
+            }, 300);
+        });
+    });
+    
+    // Close mega menus when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.mega-menu')) {
+            megaMenus.forEach(menu => {
+                menu.classList.remove('show');
+                menu.querySelector('.dropdown-menu').classList.remove('show');
+            });
+        }
+    });
+    
+    // Keyboard navigation support
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            megaMenus.forEach(menu => {
+                menu.classList.remove('show');
+                menu.querySelector('.dropdown-menu').classList.remove('show');
+            });
+        }
+    });
+    
+    // Active page highlighting
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.nav-link, .dropdown-item');
+    
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+            link.classList.add('active');
+            
+            // If it's a dropdown item, also highlight the parent
+            const parentDropdown = link.closest('.dropdown');
+            if (parentDropdown) {
+                parentDropdown.querySelector('.dropdown-toggle').classList.add('active');
+            }
+        }
+    });
+    
+    // Professional Header Navigation - Replaces Enterprise Sidebar
+    // Navigation initialized
+    
+    class ProfessionalHeaderNavigation {
+        constructor() {
+            this.init();
+        }
+        
+        init() {
+            // System ready
+        }
+    }
+    
+    // Initialize professional header navigation
+    window.professionalHeaderNav = new ProfessionalHeaderNavigation();
+});
+</script>

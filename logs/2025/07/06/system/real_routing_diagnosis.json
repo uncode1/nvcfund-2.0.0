@@ -1,0 +1,87 @@
+{
+  "timestamp": "2025-07-06T05:57:05.090593",
+  "diagnosis_summary": {
+    "total_tested": 12,
+    "working_count": 12,
+    "homepage_redirects_count": 0,
+    "broken_count": 0,
+    "false_positives_count": 0
+  },
+  "homepage_redirects": [],
+  "actual_broken_links": [],
+  "working_links": [
+    {
+      "name": "Branch Management",
+      "endpoint": "/admin/branches",
+      "final_url": "http://localhost:5000/admin/branches",
+      "status": 200
+    },
+    {
+      "name": "Teller Operations",
+      "endpoint": "/admin/teller-operations",
+      "final_url": "http://localhost:5000/admin/teller-operations",
+      "status": 200
+    },
+    {
+      "name": "Branch Reports",
+      "endpoint": "/admin/branch-reports",
+      "final_url": "http://localhost:5000/admin/branch-reports",
+      "status": 200
+    },
+    {
+      "name": "Settlement Operations",
+      "endpoint": "/settlement/dashboard",
+      "final_url": "http://localhost:5000/settlement/dashboard",
+      "status": 200
+    },
+    {
+      "name": "Admin Dashboard",
+      "endpoint": "/admin/",
+      "final_url": "http://localhost:5000/admin/",
+      "status": 200
+    },
+    {
+      "name": "System Health",
+      "endpoint": "/system/dashboard",
+      "final_url": "http://localhost:5000/system/dashboard",
+      "status": 200
+    },
+    {
+      "name": "Maintenance Mode",
+      "endpoint": "/admin/maintenance",
+      "final_url": "http://localhost:5000/admin/maintenance",
+      "status": 200
+    },
+    {
+      "name": "Database Backups",
+      "endpoint": "/admin/backups",
+      "final_url": "http://localhost:5000/admin/backups",
+      "status": 200
+    },
+    {
+      "name": "Security Dashboard",
+      "endpoint": "/security/",
+      "final_url": "http://localhost:5000/security/",
+      "status": 200
+    },
+    {
+      "name": "Investigation Tools",
+      "endpoint": "/security/investigation",
+      "final_url": "http://localhost:5000/security/investigation",
+      "status": 200
+    },
+    {
+      "name": "Threat Monitoring",
+      "endpoint": "/security/threat-monitoring",
+      "final_url": "http://localhost:5000/security/threat-monitoring",
+      "status": 200
+    },
+    {
+      "name": "Incident Response",
+      "endpoint": "/security/incident-response",
+      "final_url": "http://localhost:5000/security/incident-response",
+      "status": 200
+    }
+  ],
+  "false_positives": []
+}

@@ -1,0 +1,285 @@
+{% extends "sovereign/layout.html" %}
+
+{% block title %}Foreign Exchange Operations{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-white">
+            <i class="fas fa-exchange-alt text-primary me-2"></i>
+            Foreign Exchange Operations
+        </h1>
+        <div class="text-white-50">
+            <i class="fas fa-chart-line me-1"></i>
+            Daily Turnover: ${{ "%.1f"|format(fx_data.fx_operations.daily_turnover_billions) }}B
+        </div>
+    </div>
+
+    <!-- Exchange Rate Policy -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog me-2"></i>
+                        Exchange Rate Policy
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Regime:</span>
+                            <span class="badge bg-primary">{{ fx_data.exchange_rate_policy.regime }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Intervention Policy:</span>
+                            <span class="badge bg-success">{{ fx_data.exchange_rate_policy.intervention_policy }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Target Volatility:</span>
+                            <span class="badge bg-info">{{ fx_data.exchange_rate_policy.target_volatility }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-2">Reference Basket</h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for currency in fx_data.exchange_rate_policy.reference_basket %}
+                            <span class="badge bg-outline-secondary">{{ currency }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        FX Reserves Adequacy
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <h3 class="text-success">${{ "%.1f"|format(fx_data.fx_reserves_management.total_reserves_billions) }}B</h3>
+                        <p class="text-muted">Total FX Reserves</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="text-center p-2 border rounded">
+                                <small class="text-muted">Import Cover</small>
+                                <div class="fw-bold text-primary">{{ "%.1f"|format(fx_data.fx_reserves_management.adequacy_metrics.import_cover_months) }} months</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center p-2 border rounded">
+                                <small class="text-muted">Debt Coverage</small>
+                                <div class="fw-bold text-success">{{ "%.1f"|format(fx_data.fx_reserves_management.adequacy_metrics.short_term_debt_coverage) }}x</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">IMF Adequacy Metric:</span>
+                            <span class="fw-bold text-success">{{ "%.1f"|format(fx_data.fx_reserves_management.adequacy_metrics.imf_adequacy_metric) }%}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Major Currency Pairs -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-coins me-2"></i>
+                        Major Currency Pairs (Real-time)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for pair, rate in fx_data.market_data.major_pairs.items() %}
+                        <div class="col-md-2">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="text-muted mb-1">{{ pair.replace('_', '/') }}</h6>
+                                <h5 class="text-primary">{{ "%.4f" if rate < 10 else "%.2f"|format(rate) }}</h5>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-muted mb-2">Volatility Indicators</h6>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Implied Vol (1M):</span>
+                                    <span class="fw-bold">{{ "%.1f"|format(fx_data.market_data.volatility_indicators.implied_volatility_1m) }%}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Realized Vol (1M):</span>
+                                    <span class="fw-bold">{{ "%.1f"|format(fx_data.market_data.volatility_indicators.realized_volatility_1m) }%}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Risk Reversal:</span>
+                                    <span class="fw-bold">{{ "%.2f"|format(fx_data.market_data.volatility_indicators.risk_reversal_1m) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FX Interventions -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-0">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-hand-paper me-2"></i>
+                        YTD FX Interventions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="text-center p-3 border rounded bg-light">
+                                <h6 class="text-muted mb-1">Purchases</h6>
+                                <h4 class="text-success">${{ "%.1f"|format(fx_data.fx_interventions.ytd_interventions.purchases_billions) }}B</h4>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center p-3 border rounded bg-light">
+                                <h6 class="text-muted mb-1">Sales</h6>
+                                <h4 class="text-danger">${{ "%.1f"|format(fx_data.fx_interventions.ytd_interventions.sales_billions) }}B</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="text-center p-3 border rounded">
+                            <h6 class="text-muted mb-1">Net Position</h6>
+                            <h4 class="text-{{ 'success' if fx_data.fx_interventions.ytd_interventions.net_position_billions > 0 else 'danger' }}">
+                                {{ "+" if fx_data.fx_interventions.ytd_interventions.net_position_billions > 0 else "" }}${{ "%.1f"|format(fx_data.fx_interventions.ytd_interventions.net_position_billions) }}B
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>
+                        Intervention Triggers
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        {% for trigger in fx_data.fx_interventions.intervention_triggers %}
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            {{ trigger }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FX Operations -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-0">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exchange-alt me-2"></i>
+                        Market Making Operations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Active Currency Pairs:</span>
+                            <span class="fw-bold">{{ fx_data.fx_operations.market_making.active_pairs }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Bid-Ask Spreads:</span>
+                            <span class="badge bg-success">{{ fx_data.fx_operations.market_making.bid_ask_spreads }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Market Share:</span>
+                            <span class="fw-bold text-primary">{{ "%.1f"|format(fx_data.fx_operations.market_making.market_share) }%}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Daily Turnover:</span>
+                            <span class="fw-bold text-success">${{ "%.1f"|format(fx_data.fx_operations.daily_turnover_billions) }}B</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-sync-alt me-2"></i>
+                        Swap Operations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">FX Swap Lines:</span>
+                            <span class="fw-bold">${{ "%.1f"|format(fx_data.fx_operations.swap_operations.fx_swap_lines_billions) }}B</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Cross-Currency Swaps:</span>
+                            <span class="fw-bold">${{ "%.1f"|format(fx_data.fx_operations.swap_operations.cross_currency_swaps_billions) }}B</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button class="btn btn-outline-primary btn-sm me-2">
+                            <i class="fas fa-plus me-1"></i>
+                            New Intervention
+                        </button>
+                        <button class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-chart-line me-1"></i>
+                            View Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.badge.bg-outline-secondary {
+    border: 1px solid #6c757d;
+    color: #6c757d;
+    background-color: transparent;
+}
+</style>
+{% endblock %}

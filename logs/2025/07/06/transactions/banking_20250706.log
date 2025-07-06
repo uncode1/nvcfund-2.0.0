@@ -1,0 +1,2 @@
+2025-07-06T03:19:40.168498 - BANKING - wire_transfer - {"timestamp": "2025-07-06T03:19:40.168498", "operation_type": "wire_transfer", "user_id": "test_user_123", "data": {"amount": 50000.0, "currency": "USD", "destination": "test_account"}, "category": "banking"}
+2025-07-06T03:26:58.296289 - BANKING - wire_transfer - {"timestamp": "2025-07-06T03:26:58.296289", "operation_type": "wire_transfer", "user_id": "test_user_123", "data": {"amount": 50000.0, "currency": "USD", "destination": "test_account"}, "category": "banking"}

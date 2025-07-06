@@ -1,0 +1,1547 @@
+<!-- Enterprise Sidebar Navigation -->
+<div id="enterpriseSidebar" class="enterprise-sidebar">
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <div class="logo-icon"><i class="fas fa-university"></i></div>
+            <span class="logo-text">NVC Banking</span>
+        </div>
+        <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Search -->
+    <div class="sidebar-search">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input id="sidebarSearch" class="search-input" type="text" placeholder="Search..." aria-label="Search navigation">
+            <kbd class="search-kbd">Ctrl + K</kbd>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar-nav" id="sidebarNav">
+        {% if current_user.is_authenticated %}
+        <!-- Dashboard -->
+        <div class="nav-section">
+            <div class="nav-section-label">Main</div>
+            <a class="nav-item" href="/dashboard/" data-tooltip="Dashboard">
+                <i class="fas fa-tachometer-alt nav-icon"></i>
+                <span class="nav-text">Dashboard</span>
+            </a>
+        </div>
+
+        <!-- Core Banking -->
+        <div class="nav-section">
+            <div class="nav-section-label">Core Banking</div>
+            <!-- Account Management -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Account Management">
+                    <i class="fas fa-user-tie nav-icon"></i>
+                    <span class="nav-text">Account Management</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/banking/accounts/create">Create New Account</a>
+                    <a class="nav-subitem" href="/accounts/">View All Accounts</a>
+                    <a class="nav-subitem" href="/accounts/">Account Statements</a>
+                    <a class="nav-subitem" href="/cards_payments/">Manage Cards</a>
+                </div>
+            </div>
+            
+            <!-- Transactions & Transfers -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Transactions & Transfers">
+                    <i class="fas fa-exchange-alt nav-icon"></i>
+                    <span class="nav-text">Transactions & Transfers</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/banking/send-transfer">Send Transfer</a>
+                    <a class="nav-subitem" href="/banking/history">Transfer History</a>
+                    <a class="nav-subitem" href="/banking/international-transfers">International Transfers</a>
+                    <a class="nav-subitem" href="/banking/wire-transfers">Wire Transfers</a>
+                </div>
+            </div>
+            
+            <!-- Payments & Bills -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Payments & Bills">
+                    <i class="fas fa-receipt nav-icon"></i>
+                    <span class="nav-text">Payments & Bills</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/banking/bill-payment">Bill Payments</a>
+                    <a class="nav-subitem" href="/banking/payment-history">Payment History</a>
+                    <a class="nav-subitem" href="/banking/scheduled-payments">Scheduled Payments</a>
+                    <a class="nav-subitem" href="/banking/recurring-payments">Recurring Payments</a>
+                </div>
+            </div>
+            
+            <!-- Support & Security -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Support & Security">
+                    <i class="fas fa-shield-alt nav-icon"></i>
+                    <span class="nav-text">Support & Security</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/contact">Support Center</a>
+                    <a class="nav-subitem" href="/banking/notifications">Notifications</a>
+                    <a class="nav-subitem" href="/banking/security">Security Settings</a>
+                    <a class="nav-subitem" href="/banking/preferences">Preferences</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Services -->
+        {% if current_user.role.value in ['treasury_officer', 'trading_officer', 'institutional_banker', 'super_admin'] %}
+        <div class="nav-section">
+            <div class="nav-section-label">Financial Services</div>
+            
+            <!-- Treasury Operations -->
+            {% if current_user.role.value in ['treasury_officer', 'super_admin'] %}
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Treasury Operations">
+                    <i class="fas fa-coins nav-icon"></i>
+                    <span class="nav-text">Treasury Operations</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/treasury/">Treasury Dashboard</a>
+                    <a class="nav-subitem" href="/nvct_stablecoin/">NVCT Operations</a>
+                    <a class="nav-subitem" href="/treasury/">Liquidity Management</a>
+                    <a class="nav-subitem" href="/treasury/">Reserve Management</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Trading & Markets -->
+            {% if current_user.role.value in ['trading_officer', 'super_admin'] %}
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Trading & Markets">
+                    <i class="fas fa-chart-line nav-icon"></i>
+                    <span class="nav-text">Trading & Markets</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/trading/">Trading Dashboard</a>
+                    <a class="nav-subitem" href="/trading/">Portfolio Management</a>
+                    <a class="nav-subitem" href="/trading/">Market Data</a>
+                    <a class="nav-subitem" href="/exchange/">Exchange Platform</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Institutional Banking -->
+            {% if current_user.role.value in ['institutional_banker', 'super_admin'] %}
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Institutional Banking">
+                    <i class="fas fa-building nav-icon"></i>
+                    <span class="nav-text">Institutional Banking</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/institutional/">Institutional Dashboard</a>
+                    <a class="nav-subitem" href="/institutional/">Corporate Banking</a>
+                    <a class="nav-subitem" href="/institutional/">Asset Management</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Investments & Insurance -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Investments & Insurance">
+                    <i class="fas fa-chart-bar nav-icon"></i>
+                    <span class="nav-text">Investments & Insurance</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/investments/">Investment Portfolio</a>
+                    <a class="nav-subitem" href="/investments/">Wealth Management</a>
+                    <a class="nav-subitem" href="/insurance/">Insurance Products</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Advanced Services -->
+        {% if current_user.role.value in ['compliance_officer', 'risk_manager', 'super_admin'] %}
+        <div class="nav-section">
+            <div class="nav-section-label">Advanced Services</div>
+            
+            <!-- Compliance & Regulatory -->
+            {% if current_user.role.value in ['compliance_officer', 'super_admin'] %}
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Compliance & Regulatory">
+                    <i class="fas fa-gavel nav-icon"></i>
+                    <span class="nav-text">Compliance & Regulatory</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/compliance/">Compliance Dashboard</a>
+                    <a class="nav-subitem" href="/compliance/">KYC/AML Monitoring</a>
+                    <a class="nav-subitem" href="/compliance/">Regulatory Reporting</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Risk Management -->
+            {% if current_user.role.value in ['risk_manager', 'super_admin'] %}
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Risk Management">
+                    <i class="fas fa-exclamation-triangle nav-icon"></i>
+                    <span class="nav-text">Risk Management</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/risk/">Risk Dashboard</a>
+                    <a class="nav-subitem" href="/risk/">Risk Analytics</a>
+                    <a class="nav-subitem" href="/risk/">Risk Controls</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Specialized Banking -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Specialized Banking">
+                    <i class="fas fa-star nav-icon"></i>
+                    <span class="nav-text">Specialized Banking</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/islamic_banking/">Islamic Banking</a>
+                    <a class="nav-subitem" href="/sovereign/">Sovereign Banking</a>
+                    <a class="nav-subitem" href="/interest_rate_management/">Interest Rate Management</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Administration -->
+        {% if current_user.role.value in ['super_admin', 'admin'] %}
+        <div class="nav-section">
+            <div class="nav-section-label">Administration</div>
+            
+            <!-- System Management -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="System Management">
+                    <i class="fas fa-cogs nav-icon"></i>
+                    <span class="nav-text">System Management</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/admin_management/">Admin Dashboard</a>
+                    <a class="nav-subitem" href="/system_management/">System Management</a>
+                    <a class="nav-subitem" href="/security_center/">Security Center</a>
+                </div>
+            </div>
+            
+            <!-- Integrations -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Integrations">
+                    <i class="fas fa-plug nav-icon"></i>
+                    <span class="nav-text">Integrations</span>
+                    <i class="fas fa-chevron-right nav-chevron"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/binance_integration/">Binance Integration</a>
+                    <a class="nav-subitem" href="/smart_contracts/">Smart Contracts</a>
+                    <a class="nav-subitem" href="/blockchain_analytics/">Blockchain Analytics</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% else %}
+        <!-- Public Navigation -->
+        <div class="nav-section">
+            <div class="nav-section-label">About NVC</div>
+            <a class="nav-item" href="/about" data-tooltip="About Platform">
+                <i class="fas fa-university nav-icon"></i>
+                <span class="nav-text">About Platform</span>
+            </a>
+            <a class="nav-item" href="/contact" data-tooltip="Contact Us">
+                <i class="fas fa-envelope nav-icon"></i>
+                <span class="nav-text">Contact Us</span>
+            </a>
+            <a class="nav-item" href="/api-documentation" data-tooltip="API Documentation">
+                <i class="fas fa-book nav-icon"></i>
+                <span class="nav-text">API Documentation</span>
+            </a>
+        </div>
+        {% endif %}
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        {% if current_user.is_authenticated %}
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="user-details">
+                <div class="user-name">{{ current_user.username }}</div>
+                <div class="user-role">{{ current_user.role | title }}</div>
+            </div>
+        </div>
+        <div class="footer-actions">
+            <a class="footer-link" href="/auth/profile" data-tooltip="Profile">
+                <i class="fas fa-user"></i>
+            </a>
+            <a class="footer-link" href="/auth/settings" data-tooltip="Settings">
+                <i class="fas fa-cog"></i>
+            </a>
+            <a class="footer-link" href="/auth/logout" data-tooltip="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+        {% else %}
+        <div class="auth-actions">
+            <a class="auth-link" href="/auth/login">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </a>
+            <a class="auth-link" href="/auth/register">
+                <i class="fas fa-user-plus"></i>
+                <span>Register</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <!-- Public Information -->
+        {% if not current_user.is_authenticated %}
+        <div class="sidebar-section">
+            <h6 class="sidebar-section-title">About NVC</h6>
+            <a class="sidebar-item" href="/about">
+                <i class="fas fa-university"></i>
+                <span>About Platform</span>
+            </a>
+            <a class="sidebar-item" href="/contact">
+                <i class="fas fa-envelope"></i>
+                <span>Contact Us</span>
+            </a>
+            <a class="sidebar-item" href="/api-documentation">
+                <i class="fas fa-book"></i>
+                <span>API Documentation</span>
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Dashboard - Always visible when authenticated -->
+        {% if current_user.is_authenticated %}
+        <div class="sidebar-section">
+            <a class="sidebar-item" href="/dashboard/">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Core Banking Operations -->
+        {% if current_user.is_authenticated %}
+        <div class="sidebar-section">
+            <h6 class="sidebar-section-title">Core Banking</h6>
+            
+            <!-- Account Management -->
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Account Management</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/banking/accounts/create">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Create New Account</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/accounts/">
+                        <i class="fas fa-eye"></i>
+                        <span>View All Accounts</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/accounts/">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Account Statements</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/cards_payments/">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Manage Cards</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Transactions & Transfers -->
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Transactions & Transfers</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/banking/send-transfer">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Send Transfer</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/banking/history">
+                        <i class="fas fa-history"></i>
+                        <span>Transfer History</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/banking/international-transfers">
+                        <i class="fas fa-globe"></i>
+                        <span>International Transfers</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/banking/wire-transfers">
+                        <i class="fas fa-satellite-dish"></i>
+                        <span>Wire Transfers</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Payments & Bills -->
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-receipt"></i>
+                    <span>Payments & Bills</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/banking/bill-payment">
+                        <i class="fas fa-receipt"></i>
+                        <span>Bill Payments</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/banking/payment-history">
+                        <i class="fas fa-history"></i>
+                        <span>Payment History</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/banking/scheduled-payments">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Scheduled Payments</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/banking/recurring-payments">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Recurring Payments</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Support & Security -->
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Support & Security</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/contact">
+                        <i class="fas fa-headset"></i>
+                        <span>Support Center</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/banking/notifications">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/banking/security">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security Settings</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/banking/preferences">
+                        <i class="fas fa-cog"></i>
+                        <span>Preferences</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Financial Services & Markets -->
+        {% if current_user.is_authenticated and (current_user.role.value in ['treasury_officer', 'trading_officer', 'institutional_banker', 'super_admin']) %}
+        <div class="sidebar-section">
+            <h6 class="sidebar-section-title">Financial Services</h6>
+            
+            <!-- Treasury Operations -->
+            {% if current_user.role.value in ['treasury_officer', 'super_admin'] %}
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-coins"></i>
+                    <span>Treasury Operations</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/treasury/">
+                        <i class="fas fa-coins"></i>
+                        <span>Treasury Dashboard</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/nvct_stablecoin/">
+                        <i class="fas fa-medal"></i>
+                        <span>NVCT Operations</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/treasury/">
+                        <i class="fas fa-water"></i>
+                        <span>Liquidity Management</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/treasury/">
+                        <i class="fas fa-vault"></i>
+                        <span>Reserve Management</span>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Trading & Markets -->
+            {% if current_user.role.value in ['trading_officer', 'super_admin'] %}
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Trading & Markets</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/trading/">
+                        <i class="fas fa-chart-candlestick"></i>
+                        <span>Trading Dashboard</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/trading/">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Portfolio Management</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/trading/">
+                        <i class="fas fa-chart-area"></i>
+                        <span>Market Data</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/exchange/">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Exchange Platform</span>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Institutional Banking -->
+            {% if current_user.role.value in ['institutional_banker', 'super_admin'] %}
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-building"></i>
+                    <span>Institutional Banking</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/institutional/">
+                        <i class="fas fa-building"></i>
+                        <span>Institutional Dashboard</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/institutional/">
+                        <i class="fas fa-handshake"></i>
+                        <span>Corporate Banking</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/institutional/">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Asset Management</span>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Investments & Insurance -->
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Investments & Insurance</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/investments/">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Investment Portfolio</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/investments/">
+                        <i class="fas fa-gem"></i>
+                        <span>Wealth Management</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/insurance/">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Insurance Products</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Advanced Services -->
+        {% if current_user.is_authenticated and (current_user.role.value in ['compliance_officer', 'risk_manager', 'super_admin']) %}
+        <div class="sidebar-section">
+            <h6 class="sidebar-section-title">Advanced Services</h6>
+            
+            <!-- Compliance & Regulatory -->
+            {% if current_user.role.value in ['compliance_officer', 'super_admin'] %}
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-gavel"></i>
+                    <span>Compliance & Regulatory</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/compliance/">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Compliance Dashboard</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/compliance/">
+                        <i class="fas fa-search"></i>
+                        <span>KYC/AML Monitoring</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/compliance/">
+                        <i class="fas fa-file-contract"></i>
+                        <span>Regulatory Reporting</span>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Risk Management -->
+            {% if current_user.role.value in ['risk_manager', 'super_admin'] %}
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Risk Management</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/risk/">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Risk Dashboard</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/risk/">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Risk Analytics</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/risk/">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Risk Controls</span>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Specialized Banking -->
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-star"></i>
+                    <span>Specialized Banking</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/islamic_banking/">
+                        <i class="fas fa-mosque"></i>
+                        <span>Islamic Banking</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/sovereign/">
+                        <i class="fas fa-flag"></i>
+                        <span>Sovereign Banking</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/interest_rate_management/">
+                        <i class="fas fa-percentage"></i>
+                        <span>Interest Rate Management</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Administration -->
+        {% if current_user.is_authenticated and (current_user.role.value in ['super_admin', 'admin']) %}
+        <div class="sidebar-section">
+            <h6 class="sidebar-section-title">Administration</h6>
+            
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-cogs"></i>
+                    <span>System Management</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/admin_management/">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Admin Dashboard</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/system_management/">
+                        <i class="fas fa-server"></i>
+                        <span>System Management</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/security_center/">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security Center</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-header">
+                    <i class="fas fa-plug"></i>
+                    <span>Integrations</span>
+                    <i class="fas fa-chevron-right group-toggle"></i>
+                </div>
+                <div class="sidebar-group-content">
+                    <a class="sidebar-subitem" href="/binance_integration/">
+                        <i class="fas fa-coins"></i>
+                        <span>Binance Integration</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/smart_contracts/">
+                        <i class="fas fa-file-contract"></i>
+                        <span>Smart Contracts</span>
+                    </a>
+                    <a class="sidebar-subitem" href="/blockchain_analytics/">
+                        <i class="fas fa-cube"></i>
+                        <span>Blockchain Analytics</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- User Account -->
+        {% if current_user.is_authenticated %}
+        <div class="sidebar-section">
+            <h6 class="sidebar-section-title">Account</h6>
+            <a class="sidebar-item" href="/auth/profile">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a class="sidebar-item" href="/auth/settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a class="sidebar-item" href="/auth/logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+        {% else %}
+        <div class="sidebar-section">
+            <a class="sidebar-item" href="/auth/login">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </a>
+            <a class="sidebar-item" href="/auth/register">
+                <i class="fas fa-user-plus"></i>
+                <span>Register</span>
+            </a>
+        </div>
+        {% endif %}
+    </nav>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Enterprise Sidebar Styles -->
+<style>
+:root {
+    --sidebar-width: 280px;
+    --sidebar-collapsed-width: 70px;
+    --sidebar-bg: linear-gradient(180deg, #0a2447 0%, #1e3c72 100%);
+    --sidebar-border: #66ccff;
+    --sidebar-text: #e5e7eb;
+    --sidebar-text-muted: #a0a9b8;
+    --sidebar-hover: rgba(102, 204, 255, 0.1);
+    --sidebar-active: #66ccff;
+    --transition-speed: 0.3s;
+}
+
+.enterprise-sidebar {
+    position: fixed;
+    top: 76px;
+    left: 0;
+    height: calc(100vh - 76px);
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 2px solid var(--sidebar-border);
+    z-index: 1000;
+    overflow: hidden;
+    transition: width var(--transition-speed) ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.enterprise-sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(102, 204, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 70px;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all var(--transition-speed) ease;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--sidebar-active);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0a2447;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.logo-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+    transition: opacity var(--transition-speed) ease;
+}
+
+.enterprise-sidebar.collapsed .logo-text {
+    opacity: 0;
+    width: 0;
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    color: var(--sidebar-text);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all var(--transition-speed) ease;
+}
+
+.sidebar-toggle:hover {
+    background: var(--sidebar-hover);
+    color: var(--sidebar-active);
+}
+
+.sidebar-search {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(102, 204, 255, 0.2);
+    transition: all var(--transition-speed) ease;
+}
+
+.enterprise-sidebar.collapsed .sidebar-search {
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    padding: 0 1rem;
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(102, 204, 255, 0.3);
+    border-radius: 8px;
+    padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+    color: white;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: var(--sidebar-text-muted);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--sidebar-active);
+    box-shadow: 0 0 0 3px rgba(102, 204, 255, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--sidebar-text-muted);
+    font-size: 0.9rem;
+}
+
+.search-kbd {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--sidebar-text-muted);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-family: monospace;
+}
+
+.sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--sidebar-active) transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: var(--sidebar-active);
+    border-radius: 2px;
+}
+
+.nav-section {
+    margin-bottom: 1.5rem;
+}
+
+.nav-section-label {
+    color: var(--sidebar-active);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    transition: opacity var(--transition-speed) ease;
+}
+
+.enterprise-sidebar.collapsed .nav-section-label {
+    opacity: 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--sidebar-text) !important;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    position: relative;
+}
+
+.nav-item:hover {
+    background: var(--sidebar-hover);
+    border-left-color: var(--sidebar-active);
+    color: var(--sidebar-active) !important;
+}
+
+.nav-icon {
+    width: 20px;
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.nav-text {
+    transition: opacity var(--transition-speed) ease;
+}
+
+.enterprise-sidebar.collapsed .nav-text {
+    opacity: 0;
+    width: 0;
+}
+
+.nav-group {
+    margin-bottom: 0.25rem;
+}
+
+.nav-group-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--sidebar-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    text-align: left;
+    position: relative;
+}
+
+.nav-group-trigger:hover {
+    background: var(--sidebar-hover);
+    border-left-color: var(--sidebar-active);
+    color: var(--sidebar-active);
+}
+
+.nav-chevron {
+    margin-left: auto;
+    font-size: 0.8rem;
+    transition: transform 0.2s ease, opacity var(--transition-speed) ease;
+}
+
+.enterprise-sidebar.collapsed .nav-chevron {
+    opacity: 0;
+}
+
+.nav-group.expanded .nav-chevron {
+    transform: rotate(90deg);
+}
+
+.nav-group-content {
+    display: none;
+    padding-left: 1rem;
+    transition: all 0.2s ease;
+}
+
+.enterprise-sidebar.collapsed .nav-group-content {
+    display: none !important;
+}
+
+.nav-group.expanded .nav-group-content {
+    display: block;
+}
+
+.nav-subitem {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    color: var(--sidebar-text-muted) !important;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    font-size: 0.9rem;
+}
+
+.nav-subitem:hover {
+    background: var(--sidebar-hover);
+    border-left-color: var(--sidebar-active);
+    color: var(--sidebar-active) !important;
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(102, 204, 255, 0.3);
+    transition: all var(--transition-speed) ease;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    transition: all var(--transition-speed) ease;
+}
+
+.enterprise-sidebar.collapsed .user-info {
+    justify-content: center;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--sidebar-active);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0a2447;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.user-details {
+    transition: opacity var(--transition-speed) ease;
+}
+
+.enterprise-sidebar.collapsed .user-details {
+    opacity: 0;
+    width: 0;
+}
+
+.user-name {
+    font-weight: 600;
+    color: white;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+
+.user-role {
+    color: var(--sidebar-text-muted);
+    font-size: 0.8rem;
+}
+
+.footer-actions {
+    display: flex;
+    justify-content: space-between;
+    transition: all var(--transition-speed) ease;
+}
+
+.enterprise-sidebar.collapsed .footer-actions {
+    justify-content: center;
+}
+
+.footer-link {
+    padding: 0.5rem;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.footer-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--sidebar-active);
+}
+
+.enterprise-sidebar.collapsed .footer-link:not(:first-child) {
+    display: none;
+}
+
+.auth-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.auth-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    color: var(--sidebar-text) !important;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.auth-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--sidebar-active) !important;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+/* Main Content Adjustment */
+body {
+    margin-left: var(--sidebar-width);
+    transition: margin-left var(--transition-speed) ease;
+}
+
+body.sidebar-collapsed {
+    margin-left: var(--sidebar-collapsed-width);
+}
+
+/* Tooltip styles */
+[data-tooltip] {
+    position: relative;
+}
+
+.enterprise-sidebar.collapsed [data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + 0.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1e1e1e;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    z-index: 1001;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Main content adjustment */
+.main-content {
+    margin-left: var(--sidebar-width);
+    transition: margin-left var(--transition-speed) ease;
+}
+
+.main-content.sidebar-collapsed {
+    margin-left: var(--sidebar-collapsed-width);
+}
+
+/* Mobile responsive */
+@media (max-width: 991.98px) {
+    .enterprise-sidebar {
+        transform: translateX(-100%);
+        width: var(--sidebar-width) !important;
+    }
+    
+    .enterprise-sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .main-content,
+    .main-content.sidebar-collapsed {
+        margin-left: 0;
+    }
+    
+    .sidebar-overlay.show {
+        display: block;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .enterprise-sidebar {
+        transform: translateX(-100%);
+        transition: transform var(--transition-speed) ease;
+        top: 0;
+        height: 100vh;
+    }
+    
+    .enterprise-sidebar.show {
+        transform: translateX(0);
+    }
+    
+    body {
+        margin-left: 0 !important;
+    }
+    
+    .sidebar-overlay.show {
+        display: block;
+        opacity: 1;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .enterprise-sidebar {
+        width: 100% !important;
+        max-width: 320px;
+    }
+}
+</style>
+
+<!-- Enterprise Sidebar JavaScript -->
+<script>
+class EnterpriseSidebar {
+    constructor() {
+        this.sidebar = document.getElementById('sidebar');
+        this.sidebarToggle = document.getElementById('sidebarToggle');
+        this.sidebarOverlay = document.getElementById('sidebarOverlay');
+        this.searchInput = document.getElementById('sidebarSearch');
+        this.mainContent = document.querySelector('.main-content');
+        
+        this.isCollapsed = this.getStoredState();
+        this.searchTimeout = null;
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupEventListeners();
+        this.setupSearch();
+        this.setupKeyboardShortcuts();
+        this.restoreState();
+        this.setupGroupToggles();
+    }
+    
+    setupEventListeners() {
+        // Toggle button
+        if (this.sidebarToggle) {
+            this.sidebarToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (window.innerWidth <= 991.98) {
+                    this.toggleMobile();
+                } else {
+                    this.toggleCollapse();
+                }
+            });
+        }
+        
+        // Overlay click
+        if (this.sidebarOverlay) {
+            this.sidebarOverlay.addEventListener('click', () => {
+                this.closeMobile();
+            });
+        }
+        
+        // Window resize
+        window.addEventListener('resize', () => {
+            this.handleResize();
+        });
+        
+        // Close mobile on navigation
+        const navLinks = document.querySelectorAll('.nav-item, .nav-subitem');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 991.98) {
+                    this.closeMobile();
+                }
+            });
+        });
+    }
+    
+    setupSearch() {
+        if (!this.searchInput) return;
+        
+        this.searchInput.addEventListener('input', (e) => {
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(() => {
+                this.performSearch(e.target.value);
+            }, 300);
+        });
+        
+        this.searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.clearSearch();
+            }
+        });
+    }
+    
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + K for search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                if (this.searchInput && !this.isCollapsed) {
+                    this.searchInput.focus();
+                }
+            }
+            
+            // Ctrl/Cmd + B for toggle
+            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                e.preventDefault();
+                if (window.innerWidth > 991.98) {
+                    this.toggleCollapse();
+                }
+            }
+        });
+    }
+    
+    setupGroupToggles() {
+        const groupTriggers = document.querySelectorAll('.nav-group-trigger');
+        groupTriggers.forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (this.isCollapsed && window.innerWidth > 991.98) {
+                    return; // Don't toggle groups when collapsed
+                }
+                
+                const group = trigger.closest('.nav-group');
+                this.toggleGroup(group);
+            });
+        });
+    }
+    
+    toggleCollapse() {
+        this.isCollapsed = !this.isCollapsed;
+        this.updateSidebarState();
+        this.storeState();
+    }
+    
+    toggleMobile() {
+        if (this.sidebar) {
+            this.sidebar.classList.toggle('show');
+            this.sidebarOverlay.classList.toggle('show');
+            document.body.style.overflow = this.sidebar.classList.contains('show') ? 'hidden' : '';
+        }
+    }
+    
+    closeMobile() {
+        if (this.sidebar) {
+            this.sidebar.classList.remove('show');
+            this.sidebarOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    updateSidebarState() {
+        if (!this.sidebar) return;
+        
+        if (this.isCollapsed) {
+            this.sidebar.classList.add('collapsed');
+            if (this.mainContent) {
+                this.mainContent.classList.add('sidebar-collapsed');
+            }
+        } else {
+            this.sidebar.classList.remove('collapsed');
+            if (this.mainContent) {
+                this.mainContent.classList.remove('sidebar-collapsed');
+            }
+        }
+    }
+    
+    toggleGroup(group) {
+        if (!group) return;
+        
+        const isExpanded = group.classList.contains('expanded');
+        
+        // Close other groups in the same section (optional accordion behavior)
+        const section = group.closest('.nav-section');
+        if (section && !isExpanded) {
+            const otherGroups = section.querySelectorAll('.nav-group.expanded');
+            otherGroups.forEach(otherGroup => {
+                if (otherGroup !== group) {
+                    otherGroup.classList.remove('expanded');
+                }
+            });
+        }
+        
+        group.classList.toggle('expanded');
+    }
+    
+    performSearch(query) {
+        if (!query.trim()) {
+            this.clearSearch();
+            return;
+        }
+        
+        const searchTerm = query.toLowerCase();
+        const navItems = document.querySelectorAll('.nav-item, .nav-subitem');
+        const navGroups = document.querySelectorAll('.nav-group');
+        const navSections = document.querySelectorAll('.nav-section');
+        
+        let hasResults = false;
+        
+        // Hide all sections first
+        navSections.forEach(section => {
+            section.style.display = 'none';
+        });
+        
+        // Search through nav items
+        navItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            const isMatch = text.includes(searchTerm);
+            
+            if (isMatch) {
+                hasResults = true;
+                item.style.display = 'flex';
+                
+                // Show parent group and section
+                const group = item.closest('.nav-group');
+                const section = item.closest('.nav-section');
+                
+                if (group) {
+                    group.style.display = 'block';
+                    group.classList.add('expanded');
+                }
+                
+                if (section) {
+                    section.style.display = 'block';
+                }
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // Handle groups
+        navGroups.forEach(group => {
+            const trigger = group.querySelector('.nav-group-trigger');
+            const hasVisibleItems = group.querySelectorAll('.nav-subitem[style*="flex"]').length > 0;
+            
+            if (hasVisibleItems || (trigger && trigger.textContent.toLowerCase().includes(searchTerm))) {
+                group.style.display = 'block';
+                if (hasVisibleItems) {
+                    group.classList.add('expanded');
+                }
+            } else {
+                group.style.display = 'none';
+            }
+        });
+        
+        if (!hasResults) {
+            this.showNoResults();
+        }
+    }
+    
+    clearSearch() {
+        if (this.searchInput) {
+            this.searchInput.value = '';
+        }
+        
+        // Reset all visibility
+        const allElements = document.querySelectorAll('.nav-section, .nav-group, .nav-item, .nav-subitem');
+        allElements.forEach(element => {
+            element.style.display = '';
+        });
+        
+        // Reset group states
+        const expandedGroups = document.querySelectorAll('.nav-group.expanded');
+        expandedGroups.forEach(group => {
+            group.classList.remove('expanded');
+        });
+        
+        this.hideNoResults();
+    }
+    
+    showNoResults() {
+        let noResults = document.getElementById('searchNoResults');
+        if (!noResults) {
+            noResults = document.createElement('div');
+            noResults.id = 'searchNoResults';
+            noResults.className = 'search-no-results';
+            noResults.innerHTML = `
+                <div style="text-align: center; padding: 2rem 1rem; color: var(--sidebar-text-muted);">
+                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+                    <div>No results found</div>
+                </div>
+            `;
+            this.sidebar.querySelector('.sidebar-nav').appendChild(noResults);
+        }
+        noResults.style.display = 'block';
+    }
+    
+    hideNoResults() {
+        const noResults = document.getElementById('searchNoResults');
+        if (noResults) {
+            noResults.style.display = 'none';
+        }
+    }
+    
+    handleResize() {
+        if (window.innerWidth > 991.98) {
+            this.closeMobile();
+            this.updateSidebarState();
+        }
+    }
+    
+    getStoredState() {
+        try {
+            const stored = localStorage.getItem('enterpriseSidebarCollapsed');
+            return stored === 'true';
+        } catch (e) {
+            return false;
+        }
+    }
+    
+    storeState() {
+        try {
+            localStorage.setItem('enterpriseSidebarCollapsed', this.isCollapsed.toString());
+        } catch (e) {
+            // Storage not available
+        }
+    }
+    
+    restoreState() {
+        this.updateSidebarState();
+    }
+}
+
+// Initialize sidebar when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    new EnterpriseSidebar();
+});
+</script>

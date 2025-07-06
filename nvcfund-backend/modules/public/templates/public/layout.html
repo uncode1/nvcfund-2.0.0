@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{% block title %}NVC Banking Platform{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* Global Layout Constraints */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* COMPREHENSIVE DARK THEME - ALL ELEMENTS */
+        body {
+            background-color: #1a1a1a !important;
+            color: #e5e7eb !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-top: 10px;
+        }
+
+        /* Universal text color override for ALL elements */
+        *, *::before, *::after {
+            color: #e5e7eb !important;
+        }
+
+        /* Body flex layout for footer positioning */
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        /* Override any existing text color classes */
+        .text-dark, .text-black, .text-secondary, .text-muted {
+            color: #e5e7eb !important;
+        }
+
+        /* Ensure all heading and text elements are visible */
+        h1, h2, h3, h4, h5, h6, p, span, div, label, small, strong, em, a {
+            color: #e5e7eb !important;
+        }
+
+        /* Fix any remaining invisible text */
+        input, textarea, select, button {
+            color: #e5e7eb !important;
+        }
+
+        /* Override Bootstrap text utilities */
+        .text-white { color: #ffffff !important; }
+        .text-light { color: #f8f9fa !important; }
+        .text-primary { color: #66ccff !important; }
+        .text-success { color: #2ecc71 !important; }
+        .text-info { color: #1abc9c !important; }
+        .text-warning { color: #f39c12 !important; }
+        .text-danger { color: #e74c3c !important; }
+
+        .navbar {
+            background-color: #0a2447 !important;
+            border-bottom: 2px solid #66ccff;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #66ccff !important;
+        }
+
+        .dropdown-menu {
+            background-color: #0a2447;
+            border: 1px solid #66ccff;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .dropdown-item {
+            color: white !important;
+            padding: 0.5rem 1rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: #66ccff;
+            color: #061c38 !important;
+        }
+
+        .dropdown-header {
+            color: #66ccff !important;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+
+        .dropdown-divider {
+            border-color: #66ccff;
+        }
+
+        .btn-outline-primary {
+            border-color: #66ccff;
+            color: #66ccff;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #66ccff;
+            color: #061c38;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .main-content {
+            margin-top: 2rem;
+            padding: 2rem 0;
+            color: #e5e7eb !important;
+        }
+
+        /* Conservative institutional banking colors */
+        body {
+            background-color: #1a1a1a;
+            color: #e5e7eb;
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-content {
+            background-color: #2d2d2d;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+            padding: 30px;
+            border: 1px solid #404040;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #e5e7eb;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Vibrant color utilities */
+        .text-primary {
+            color: #3498db !important;
+        }
+
+        .text-success {
+            color: #2ecc71 !important;
+        }
+
+        .text-info {
+            color: #1abc9c !important;
+        }
+
+        .text-warning {
+            color: #f39c12 !important;
+        }
+
+        .text-danger {
+            color: #e74c3c !important;
+        }
+
+        .text-purple {
+            color: #9b59b6 !important;
+        }
+
+        .text-indigo {
+            color: #6c5ce7 !important;
+        }
+
+        /* Dark theme buttons */
+        .btn-outline-primary {
+            color: #e5e7eb !important;
+            border: 1px solid #374151 !important;
+            background-color: #374151 !important;
+            font-weight: 600 !important;
+            transition: all 0.2s ease !important;
+            border-radius: 4px !important;
+        }
+
+        .btn-outline-primary:hover {
+            color: white !important;
+            background-color: #4b5563 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(55, 65, 81, 0.15) !important;
+        }
+
+        .btn-outline-success {
+            color: #059669 !important;
+            border: 1px solid #059669 !important;
+            background-color: #ffffff !important;
+            font-weight: 600 !important;
+            transition: all 0.2s ease !important;
+            border-radius: 4px !important;
+        }
+
+        .btn-outline-success:hover {
+            color: white !important;
+            background-color: #059669 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15) !important;
+        }
+
+        .btn-outline-info {
+            color: #0284c7 !important;
+            border: 1px solid #0284c7 !important;
+            background-color: #ffffff !important;
+            font-weight: 600 !important;
+            transition: all 0.2s ease !important;
+            border-radius: 4px !important;
+        }
+
+        .btn-outline-info:hover {
+            color: white !important;
+            background-color: #0284c7 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15) !important;
+        }
+
+        .btn-outline-warning {
+            color: #d97706 !important;
+            border: 1px solid #d97706 !important;
+            background-color: #ffffff !important;
+            font-weight: 600 !important;
+            transition: all 0.2s ease !important;
+            border-radius: 4px !important;
+        }
+
+        .btn-outline-warning:hover {
+            color: white !important;
+            background-color: #d97706 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15) !important;
+        }
+
+        /* Dashboard card footer text visibility */
+        .card-footer a {
+            color: #212529 !important;
+            font-weight: 600 !important;
+        }
+
+        /* Dark theme cards with proper contrast */
+        .card {
+            background: #2d2d2d !important;
+            border: 1px solid #404040 !important;
+            border-radius: 15px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+            transition: all 0.3s ease !important;
+            overflow: hidden !important;
+            color: #e5e7eb !important;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #374151, #4b5563) !important;
+            color: white !important;
+            font-weight: 600 !important;
+            border: none !important;
+            padding: 16px 20px !important;
+            border-radius: 4px 4px 0 0 !important;
+            position: relative !important;
+        }
+
+        .card-header::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 4px !important;
+            height: 100% !important;
+            background: linear-gradient(180deg, #3b82f6, #1d4ed8) !important;
+            border-radius: 4px 0 0 0 !important;
+        }
+
+        .card-header h1,
+        .card-header h2,
+        .card-header h3,
+        .card-header h4,
+        .card-header h5,
+        .card-header h6,
+        .card-header p,
+        .card-header span,
+        .card-header div,
+        .card-header * {
+            color: white !important;
+        }
+
+        /* Specific dashboard card styling */
+        .dashboard-card:nth-child(1) .card-header::before {
+            background: linear-gradient(180deg, #059669, #047857) !important;
+        }
+
+        .dashboard-card:nth-child(2) .card-header::before {
+            background: linear-gradient(180deg, #0284c7, #0369a1) !important;
+        }
+
+        .dashboard-card:nth-child(3) .card-header::before {
+            background: linear-gradient(180deg, #d97706, #b45309) !important;
+        }
+
+        .dashboard-card:nth-child(4) .card-header::before {
+            background: linear-gradient(180deg, #dc2626, #b91c1c) !important;
+        }
+
+        .card-body {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+            padding: 25px !important;
+        }
+
+        .card-body * {
+            color: #e5e7eb !important;
+        }
+
+        .card * {
+            color: #e5e7eb !important;
+        }
+
+        .card-title {
+            color: #e5e7eb !important;
+            font-weight: 700 !important;
+            margin-bottom: 15px !important;
+        }
+
+        .card-text {
+            color: #e5e7eb !important;
+            line-height: 1.6 !important;
+        }
+
+        /* Professional alert styles */
+        .alert-info {
+            background-color: #dbeafe !important;
+            border: 1px solid #3b82f6 !important;
+            color: #1e40af !important;
+            border-radius: 6px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .alert-success {
+            background-color: #dcfce7 !important;
+            border: 1px solid #22c55e !important;
+            color: #166534 !important;
+            border-radius: 6px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .alert-warning {
+            background-color: #fef3c7 !important;
+            border: 1px solid #f59e0b !important;
+            color: #92400e !important;
+            border-radius: 6px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .alert-danger {
+            background-color: #fee2e2 !important;
+            border: 1px solid #ef4444 !important;
+            color: #991b1b !important;
+            border-radius: 6px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        a {
+            color: #007bff !important;
+        }
+
+        a:hover {
+            color: #0056b3 !important;
+        }
+
+        .text-dark {
+            color: #333 !important;
+        }
+
+        .table {
+            background-color: white !important;
+            color: #333 !important;
+        }
+
+        .table th {
+            background-color: #f8f9fa !important;
+            color: #333 !important;
+            border-bottom: 2px solid #dee2e6 !important;
+        }
+
+        .table td {
+            color: #333 !important;
+            border-bottom: 1px solid #dee2e6 !important;
+        }
+
+        /* COMPREHENSIVE FORM STYLING - Fix all input visibility */
+        .form-control, .form-control:focus, .form-control:active, .form-control:hover,
+        input[type="text"], input[type="email"], input[type="password"], input[type="number"],
+        input[type="tel"], input[type="url"], input[type="search"], textarea {
+            border: 2px solid #4b5563 !important;
+            border-radius: 6px !important;
+            padding: 12px 16px !important;
+            font-size: 16px !important;
+            color: #e5e7eb !important;
+            background-color: #374151 !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* Fix modal and popup backgrounds */
+        .modal-content {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        .modal-header {
+            background-color: #374151 !important;
+            color: white !important;
+            border-bottom: 1px solid #4b5563 !important;
+        }
+
+        .modal-body {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        .modal-footer {
+            background-color: #374151 !important;
+            border-top: 1px solid #4b5563 !important;
+        }
+
+        .form-control:focus {
+            border-color: #1f2937 !important;
+            box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            outline: none !important;
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af !important;
+            opacity: 1 !important;
+        }
+
+        ::-webkit-input-placeholder {
+            color: #9ca3af !important;
+        }
+
+        ::-moz-placeholder {
+            color: #9ca3af !important;
+            opacity: 1 !important;
+        }
+
+        :-ms-input-placeholder {
+            color: #9ca3af !important;
+        }
+
+        .form-select, .form-select:focus, .form-select:active, .form-select:hover,
+        select, option {
+            border: 2px solid #4b5563 !important;
+            border-radius: 6px !important;
+            padding: 12px 16px !important;
+            font-size: 16px !important;
+            color: #e5e7eb !important;
+            background-color: #374151 !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* Fix dropdown options */
+        option {
+            background-color: #374151 !important;
+            color: #e5e7eb !important;
+        }
+
+        /* Fix button text visibility */
+        .btn, button {
+            color: #e5e7eb !important;
+        }
+
+        .btn-primary {
+            background-color: #3b82f6 !important;
+            border-color: #3b82f6 !important;
+            color: white !important;
+        }
+
+        .btn-secondary {
+            background-color: #6b7280 !important;
+            border-color: #6b7280 !important;
+            color: white !important;
+        }
+
+        /* Fix placeholder text visibility */
+        ::placeholder {
+            color: #9ca3af !important;
+            opacity: 1 !important;
+        }
+
+        ::-webkit-input-placeholder {
+            color: #9ca3af !important;
+        }
+
+        ::-moz-placeholder {
+            color: #9ca3af !important;
+            opacity: 1 !important;
+        }
+
+        :-ms-input-placeholder {
+            color: #9ca3af !important;
+        }
+
+        /* CRITICAL TABLE FIX - Force dark backgrounds on all table rows */
+        table, .table {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        table tr, .table tr, tbody tr, thead tr {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        table th, .table th, table td, .table td {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+            border-color: #4b5563 !important;
+        }
+
+        .table thead th {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+            border-bottom: 2px solid #4b5563 !important;
+        }
+
+        .table tbody tr {
+            background-color: #2d2d2d !important;
+        }
+
+        .table tbody td {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+        }
+
+        .table-hover tbody tr:hover td {
+            color: #ffffff !important;
+            background-color: #374151 !important;
+        }
+
+        /* Override Bootstrap light backgrounds */
+        .bg-light, .bg-light th, .bg-light td {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+        }
+
+        /* Force dark background on any remaining light elements */
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #374151 !important;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #2d2d2d !important;
+        }
+
+        /* Fix all link colors in tables */
+        table a, .table a, tbody a, thead a, td a, th a {
+            color: #66ccff !important;
+            text-decoration: none !important;
+        }
+
+        table a:hover, .table a:hover {
+            color: #99ddff !important;
+            text-decoration: underline !important;
+        }
+
+        /* Fix specific table cell content */
+        .transaction-row td, .transaction-row th {
+            color: #e5e7eb !important;
+        }
+
+        .transaction-row a {
+            color: #66ccff !important;
+        }
+
+        /* Override any remaining invisible text */
+        .fw-medium {
+            color: #66ccff !important;
+        }
+
+        .text-capitalize {
+            color: #e5e7eb !important;
+        }
+
+        /* Fix breadcrumb and navigation text */
+        .breadcrumb, .breadcrumb-item {
+            color: #e5e7eb !important;
+        }
+
+        .breadcrumb-item a {
+            color: #66ccff !important;
+        }
+
+        /* Fix alert text visibility */
+        .alert {
+            color: #1f2937 !important;
+        }
+
+        .alert-success {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+        }
+
+        .alert-danger {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+
+        .alert-warning {
+            background-color: #fef3c7 !important;
+            border-color: #f59e0b !important;
+            color: #92400e !important;
+        }
+
+        .alert-info {
+            background-color: #dbeafe !important;
+            border-color: #3b82f6 !important;
+            color: #1e40af !important;
+        }
+
+        /* Fix button hover states and light backgrounds */
+        .btn-light, .btn-outline-light {
+            background-color: #f8f9fa !important;
+            color: #198754 !important;
+            border-color: #198754 !important;
+        }
+
+        .btn-light:hover, .btn-outline-light:hover {
+            background-color: #198754 !important;
+            color: #ffffff !important;
+            border-color: #198754 !important;
+        }
+
+        /* Fix card footer light backgrounds */
+        .card-footer.bg-light {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+        }
+
+        .card-footer.bg-light .btn {
+            color: #e5e7eb !important;
+        }
+
+        .card-footer.bg-light .btn:hover {
+            color: #ffffff !important;
+            background-color: #4b5563 !important;
+        }
+
+        /* Fix white/light content areas */
+        .bg-white {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        /* Fix any remaining light text on light backgrounds */
+        .text-muted {
+            color: #9ca3af !important;
+        }
+
+        /* Ensure all button text is readable */
+        .btn-outline-primary:hover {
+            background-color: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+        }
+
+        .btn-outline-info:hover {
+            background-color: #06b6d4 !important;
+            color: #ffffff !important;
+        }
+
+        .btn-outline-warning:hover {
+            background-color: #f59e0b !important;
+            color: #000000 !important;
+        }
+
+        /* Fix navigation tabs and similar elements */
+        .nav-tabs .nav-link, .nav-pills .nav-link {
+            color: #ffffff !important;
+            background-color: #374151 !important;
+            border-color: #4b5563 !important;
+        }
+
+        .nav-tabs .nav-link.active, .nav-pills .nav-link.active {
+            background-color: #1f2937 !important;
+            color: #ffffff !important;
+            border-color: #4b5563 !important;
+        }
+
+        .nav-tabs .nav-link:hover, .nav-pills .nav-link:hover {
+            background-color: #4b5563 !important;
+            color: #ffffff !important;
+        }
+
+        /* Fix any remaining light text elements */
+        .text-light {
+            color: #f8f9fa !important;
+        }
+
+        /* Override any Bootstrap default text colors on light backgrounds */
+        .bg-light * {
+            color: #ffffff !important;
+        }
+
+        /* Fix small text elements */
+        small, .small {
+            color: #9ca3af !important;
+        }
+
+        /* Fix tab content areas */
+        .tab-content {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        .tab-pane {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        /* Fix specific blue header area */
+        .bg-primary, .bg-info {
+            background-color: #1f2937 !important;
+            color: #ffffff !important;
+        }
+
+        .bg-primary *, .bg-info * {
+            color: #ffffff !important;
+        }
+
+        /* Fix white/light gray button text specifically */
+        button, .btn {
+            color: #1f2937 !important;
+            font-weight: 600 !important;
+        }
+
+        button:hover, .btn:hover {
+            color: #ffffff !important;
+            background-color: #198754 !important;
+        }
+
+        /* Fix light background buttons specifically */
+        .btn-light {
+            background-color: #198754 !important;
+            color: #ffffff !important;
+            border: 2px solid #198754 !important;
+        }
+
+        .btn-light:hover {
+            background-color: #16a085 !important;
+            color: #ffffff !important;
+        }
+
+        /* Override any white buttons */
+        .btn-outline-light, .btn-outline-secondary {
+            background-color: #198754 !important;
+            color: #ffffff !important;
+            border: 2px solid #198754 !important;
+        }
+
+        .btn-outline-light:hover, .btn-outline-secondary:hover {
+            background-color: #16a085 !important;
+            color: #ffffff !important;
+        }
+
+        /* Fix any remaining light text on light backgrounds */
+        .card-text {
+            color: #1f2937 !important;
+        }
+
+        /* Ensure proper contrast for input placeholders */
+        input::placeholder, textarea::placeholder, select::placeholder {
+            color: #6b7280 !important;
+        }
+
+        /* Fix modal and dropdown text */
+        .modal-content, .dropdown-menu {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        .modal-content *, .dropdown-menu * {
+            color: #e5e7eb !important;
+        }
+
+        /* Fix remaining white/light gray areas */
+        .card-body {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        .card-footer {
+            background-color: #374151 !important;
+            color: #e5e7eb !important;
+        }
+
+        /* Override any remaining light backgrounds */
+        .bg-secondary {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+        }
+
+        /* Fix specific form elements and inputs with light backgrounds */
+        input[type="text"], input[type="email"], input[type="password"], 
+        textarea, select, .form-control {
+            background-color: #1f2937 !important;
+            color: #e5e7eb !important;
+            border: 1px solid #4b5563 !important;
+        }
+
+        /* Convert any remaining white backgrounds to green */
+        .bg-white, .card.bg-light, .alert.bg-light {
+            background-color: #198754 !important;
+            color: #ffffff !important;
+        }
+
+        .bg-white *, .card.bg-light *, .alert.bg-light * {
+            color: #ffffff !important;
+        }
+
+        /* Fix specific button text visibility */
+        .btn-secondary {
+            background-color: #198754 !important;
+            color: #ffffff !important;
+            border: 1px solid #198754 !important;
+        }
+
+        .btn-secondary:hover {
+            background-color: #16a085 !important;
+            color: #ffffff !important;
+        }
+
+        /* AGGRESSIVE FIX: Target ALL white/light backgrounds and convert to green */
+        * {
+            background-color: transparent !important;
+        }
+
+        body {
+            background-color: #1a1a1a !important;
+        }
+
+        .card, .container, .row, .col {
+            background-color: transparent !important;
+        }
+
+        /* Force all buttons to green with white text */
+        button, .btn, input[type="button"], input[type="submit"] {
+            background-color: #198754 !important;
+            color: #ffffff !important;
+            border: 1px solid #198754 !important;
+        }
+
+        button:hover, .btn:hover, input[type="button"]:hover, input[type="submit"]:hover {
+            background-color: #16a085 !important;
+            color: #ffffff !important;
+        }
+
+        /* Override any Bootstrap button classes */
+        .btn-outline-light, .btn-light, .btn-secondary, .btn-outline-secondary,
+        .btn-outline-primary, .btn-primary {
+            background-color: #198754 !important;
+            color: #ffffff !important;
+            border: 1px solid #198754 !important;
+        }
+
+        .btn-outline-light:hover, .btn-light:hover, .btn-secondary:hover, 
+        .btn-outline-secondary:hover, .btn-outline-primary:hover, .btn-primary:hover {
+            background-color: #16a085 !important;
+            color: #ffffff !important;
+        }
+
+        /* Fix error page alert backgrounds */
+        .alert-danger, .alert-warning, .alert-info, .alert-success {
+            background-color: #2d2d2d !important;
+            color: #ffffff !important;
+            border: 1px solid #4b5563 !important;
+        }
+
+        .alert-danger * {
+            color: #ffffff !important;
+        }
+
+        .alert-warning * {
+            color: #ffffff !important;
+        }
+
+        /* Fix card header backgrounds */
+        .card-header.bg-danger, .card-header.bg-warning, .card-header.bg-info {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+        }
+
+        /* Fix any remaining Bootstrap color classes */
+        .text-danger, .text-warning, .text-info, .text-success {
+            color: #e5e7eb !important;
+        }
+
+        /* COMPREHENSIVE FIX: All remaining contrast issues */
+
+        /* Fix all possible light backgrounds */
+        .list-group-item, .dropdown-item, .breadcrumb-item, .pagination .page-link,
+        .nav-link, .navbar-nav .nav-link, .card-title, .card-subtitle, .card-text,
+        .form-label, .form-text, .input-group-text, .badge {
+            background-color: transparent !important;
+            color: #e5e7eb !important;
+        }
+
+        /* Fix all form elements */
+        .form-control, .form-select, .form-check-input, .form-range {
+            background-color: #1f2937 !important;
+            color: #e5e7eb !important;
+            border: 1px solid #4b5563 !important;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #1f2937 !important;
+            color: #e5e7eb !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25) !important;
+        }
+
+        /* Fix all list and dropdown elements */
+        .list-group, .dropdown-menu {
+            background-color: #2d2d2d !important;
+        }
+
+        .list-group-item, .dropdown-item {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+            border-color: #4b5563 !important;
+        }
+
+        .list-group-item:hover, .dropdown-item:hover {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+        }
+
+        /* Fix pagination */
+        .pagination .page-link {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+            border-color: #4b5563 !important;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #198754 !important;
+            color: #ffffff !important;
+            border-color: #198754 !important;
+        }
+
+        /* Fix breadcrumbs */
+        .breadcrumb {
+            background-color: #2d2d2d !important;
+        }
+
+        .breadcrumb-item a {
+            color: #66ccff !important;
+        }
+
+        /* Fix badges */
+        .badge {
+            background-color: #198754 !important;
+            color: #ffffff !important;
+        }
+
+        /* Fix progress bars */
+        .progress {
+            background-color: #374151 !important;
+        }
+
+        .progress-bar {
+            background-color: #198754 !important;
+        }
+
+        /* Fix tooltips and popovers */
+        .tooltip-inner {
+            background-color: #1f2937 !important;
+            color: #e5e7eb !important;
+        }
+
+        .popover {
+            background-color: #2d2d2d !important;
+            color: #e5e7eb !important;
+        }
+
+        .popover-header {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+        }
+
+        .popover-body {
+            color: #e5e7eb !important;
+        }
+
+        /* Fix any remaining white or light backgrounds */
+        .bg-white, .bg-light, .bg-transparent {
+            background-color: transparent !important;
+        }
+
+        /* Fix text colors on any background */
+        p, span, div, h1, h2, h3, h4, h5, h6, li, td, th {
+            color: inherit !important;
+        }
+
+        /* Ensure main content area is dark */
+        main, .main-content, .content {
+            background-color: transparent !important;
+            color: #e5e7eb !important;
+        }
+
+        .form-select:focus {
+            border-color: #1f2937 !important;
+            box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            outline: none !important;
+        }
+
+        .form-label {
+            color: #e5e7eb !important;
+            font-weight: 700 !important;
+            margin-bottom: 8px !important;
+            font-size: 15px !important;
+        }
+
+        textarea.form-control {
+            min-height: 120px !important;
+            resize: vertical !important;
+        }
+
+        /* Input group styling */
+        .input-group-text {
+            background-color: #374151 !important;
+            border: 2px solid #4b5563 !important;
+            color: #e5e7eb !important;
+            font-weight: 600 !important;
+        }
+
+        /* Select dropdown arrows */
+        select.form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23e5e7eb' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+            background-position: right 12px center !important;
+            background-repeat: no-repeat !important;
+            background-size: 16px 12px !important;
+        }
+
+        /* Conservative badge styles */
+        .badge {
+            border-radius: 4px !important;
+            padding: 4px 8px !important;
+            font-weight: 600 !important;
+            font-size: 0.75rem !important;
+            letter-spacing: 0.025em !important;
+            color: white !important;
+        }
+
+        .badge-success {
+            background-color: #059669 !important;
+            color: white !important;
+        }
+
+        .badge-warning {
+            background-color: #d97706 !important;
+            color: white !important;
+        }
+
+        .badge-danger {
+            background-color: #dc2626 !important;
+            color: white !important;
+        }
+
+        .badge-info {
+            background-color: #0284c7 !important;
+            color: white !important;
+        }
+
+        .badge-primary {
+            background-color: #374151 !important;
+            color: white !important;
+        }
+
+        /* Conservative button styles */
+        .btn {
+            border-radius: 4px !important;
+            padding: 10px 20px !important;
+            font-weight: 600 !important;
+            transition: all 0.2s ease !important;
+            border: none !important;
+        }
+
+        .btn-primary {
+            background-color: #374151 !important;
+            color: white !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #4b5563 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(55, 65, 81, 0.15) !important;
+        }
+
+        .btn-success {
+            background-color: #059669 !important;
+            color: white !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .btn-success:hover {
+            background-color: #047857 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15) !important;
+        }
+
+        .btn-info {
+            background-color: #0284c7 !important;
+            color: white !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .btn-info:hover {
+            background-color: #0369a1 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15) !important;
+        }
+
+        .btn-warning {
+            background-color: #d97706 !important;
+            color: white !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .btn-warning:hover {
+            background-color: #b45309 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15) !important;
+        }
+
+        .btn-danger {
+            background-color: #dc2626 !important;
+            color: white !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15) !important;
+        }
+
+        .dropdown-menu-animated {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .footer {
+            background-color: #0a2447;
+            border-top: 2px solid #66ccff;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer a {
+            color: #66ccff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #99ddff;
+            text-decoration: underline;
+        }
+
+        /* Modern Clean Navbar Styles */
+        .modern-navbar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-bottom: 2px solid #4a90e2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            min-height: 60px;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        /* Navigation Links */
+        .nav-link-primary {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 0.75rem !important;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link-primary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff !important;
+        }
+
+        .nav-link-secondary {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 400;
+            padding: 0.5rem 0.75rem !important;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #fff !important;
+        }
+
+        /* Dropdown Menus */
+        .dropdown-menu-modern {
+            background-color: #fff;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 0.5rem 0;
+            min-width: 280px;
+        }
+
+        .dropdown-header {
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #6c757d;
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            color: #495057;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #1e3c72;
+        }
+
+        .dropdown-item i {
+            width: 16px;
+            text-align: center;
+        }
+
+        /* User Profile Section */
+        .user-profile-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem;
+            max-width: 200px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #ffd700;
+            color: #1e3c72;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* Improve navbar user section responsiveness */
+        @media (max-width: 1200px) {
+            .user-info {
+                display: none !important;
+            }
+
+            .user-avatar {
+                margin-right: 0 !important;
+            }
+        }
+
+        /* Navbar container improvements */
+        .navbar .container-fluid {
+            flex-wrap: nowrap;
+        }
+
+        .navbar-nav.ms-auto {
+            flex-shrink: 0;
+            margin-left: auto !important;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 991.98px) {
+            .nav-text {
+                display: inline;
+            }
+
+            .dropdown-menu-modern {
+                min-width: 100%;
+            }
+
+            .navbar-nav {
+                background-color: rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                padding: 0.5rem;
+                margin-top: 0.5rem;
+            }
+
+            .user-info {
+                display: flex !important;
+            }
+
+            .user-name {
+                font-size: 0.8rem !important;
+            }
+
+            .user-role, .last-login {
+                font-size: 0.65rem !important;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .nav-text {
+                font-size: 0.9rem;
+            }
+
+            .navbar-brand span {
+                font-size: 1.1rem;
+            }
+
+            .user-info {
+                display: none !important;
+            }
+
+            .user-avatar {
+                margin-right: 0 !important;
+            }
+        }
+    </style>
+    
+
+    
+    {% block extra_styles %}{% endblock %}
+</head>
+<body>
+    <!-- Professional Banking Header -->
+    {% include 'public/navbars/enhanced_navbar.html' %}
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Professional Footer -->
+    <footer class="bg-dark text-light py-5 mt-auto" style="background: linear-gradient(135deg, #0a2447 0%, #1e3c72 100%) !important;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold text-warning">NVC Banking Platform</h5>
+                    <p class="text-muted">Secure, intelligent financial services powered by blockchain technology.</p>
+                    <div class="d-flex">
+                        <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="fw-bold text-warning">Banking</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('public.contact') }}" class="text-light text-decoration-none">Accounts</a></li>
+                        <li><a href="{{ url_for('public.contact') }}" class="text-light text-decoration-none">Transfers</a></li>
+                        <li><a href="{{ url_for('public.contact') }}" class="text-light text-decoration-none">Cards</a></li>
+                        <li><a href="{{ url_for('public.contact') }}" class="text-light text-decoration-none">Loans</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="fw-bold text-warning">Resources</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('public.api_documentation') }}" class="text-light text-decoration-none">API Docs</a></li>
+                        <li><a href="{{ url_for('public.user_guide') }}" class="text-light text-decoration-none">User Guide</a></li>
+                        <li><a href="{{ url_for('public.faq') }}" class="text-light text-decoration-none">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="fw-bold text-warning">Legal</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('public.privacy_policy') }}" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="{{ url_for('public.terms_of_service') }}" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="fw-bold text-warning">Contact</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('public.contact') }}" class="text-light text-decoration-none">Support</a></li>
+                        <li><a href="mailto:info@nvcfund.com" class="text-light text-decoration-none">Email</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: #66ccff;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0 text-muted">&copy; 2025 NVC Banking Platform. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 text-muted">Secure • Compliant • Innovative</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+
+
+
+    <!-- Live Chat Modal -->
+    <div class="modal fade" id="liveChatModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title">
+                        <i class="fas fa-comments me-2"></i>NVC Banking Live Support
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="chat-container" style="height: 400px; overflow-y: auto; background: #1a1a1a; border-radius: 8px; padding: 15px;">
+                        <div class="message system-message mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-robot text-primary me-2"></i>
+                                <strong>NVC Support</strong>
+                                <small class="text-muted ms-2">Just now</small>
+                            </div>
+                            <p class="mb-0 mt-1">Welcome to NVC Banking live support! How can we assist you today?</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-secondary text-light border-secondary" 
+                                   placeholder="Type your message..." id="chatInput">
+                            <button class="btn btn-primary" type="button" onclick="sendChatMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openLiveChat() {
+            const modal = new bootstrap.Modal(document.getElementById('liveChatModal'));
+            modal.show();
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                // Add user message to chat
+                const chatContainer = document.querySelector('.chat-container');
+                const userMessage = document.createElement('div');
+                userMessage.className = 'message user-message mb-3 text-end';
+                userMessage.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-end">
+                        <small class="text-muted me-2">Just now</small>
+                        <strong>You</strong>
+                        <i class="fas fa-user text-success ms-2"></i>
+                    </div>
+                    <p class="mb-0 mt-1">${message}</p>
+                `;
+                chatContainer.appendChild(userMessage);
+                input.value = '';
+                
+                // Auto-scroll to bottom
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // Simulate response after 2 seconds
+                setTimeout(() => {
+                    const response = document.createElement('div');
+                    response.className = 'message system-message mb-3';
+                    response.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-robot text-primary me-2"></i>
+                            <strong>NVC Support</strong>
+                            <small class="text-muted ms-2">Just now</small>
+                        </div>
+                        <p class="mb-0 mt-1">Thank you for your message. Our team will review your inquiry and respond shortly.</p>
+                    `;
+                    chatContainer.appendChild(response);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 2000);
+            }
+        }
+
+        // Enter key to send message
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+    
+
+
+</body>
+</html>

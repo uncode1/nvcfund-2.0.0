@@ -1,0 +1,289 @@
+{% extends "banking/layout.html" %}
+
+{% block title %}Bill Payment{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark border-success">
+                <div class="card-header bg-gradient text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="mb-0">
+                                <i class="fas fa-file-invoice-dollar me-2"></i>Bill Payment
+                            </h3>
+                            <small class="text-light">Pay bills and manage payees</small>
+                        </div>
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPayeeModal">
+                            <i class="fas fa-plus me-2"></i>Add Payee
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bill Categories -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card bg-dark border-primary">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-th-list me-2"></i>Bill Categories
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        {% for category in bill_data.bill_categories %}
+                        <div class="list-group-item list-group-item-action bg-dark text-white border-secondary">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-folder-open me-2 text-success"></i>
+                                    {{ category }}
+                                </div>
+                                <button class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card bg-dark border-warning">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bookmark me-2"></i>Saved Payees
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if bill_data.saved_payees %}
+                        <div class="list-group list-group-flush">
+                            {% for payee in bill_data.saved_payees %}
+                            <div class="list-group-item list-group-item-action bg-dark text-white border-secondary">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ payee.name }}</strong>
+                                        <small class="text-muted d-block">{{ payee.type }}</small>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-credit-card me-1"></i>Pay
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No saved payees</h5>
+                            <p class="text-muted">Add a payee to get started with bill payments</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Pay Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark border-info">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Pay
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('banking.process_bill_payment') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label for="payee_name" class="form-label text-light">Payee Name</label>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" 
+                                           id="payee_name" name="payee_name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label for="account_number" class="form-label text-light">Account Number</label>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" 
+                                           id="account_number" name="account_number" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label for="amount" class="form-label text-light">Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-dark text-white border-secondary">$</span>
+                                        <input type="number" step="0.01" class="form-control bg-dark text-white border-secondary" 
+                                               id="amount" name="amount" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="category" class="form-label text-light">Category</label>
+                                    <select class="form-select bg-dark text-white border-secondary" 
+                                            id="category" name="category" required>
+                                        <option value="">Select Category</option>
+                                        {% for category in bill_data.bill_categories %}
+                                        <option value="{{ category }}">{{ category }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="due_date" class="form-label text-light">Due Date</label>
+                                    <input type="date" class="form-control bg-dark text-white border-secondary" 
+                                           id="due_date" name="due_date">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="memo" class="form-label text-light">Memo (Optional)</label>
+                            <textarea class="form-control bg-dark text-white border-secondary" 
+                                      id="memo" name="memo" rows="2"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-money-bill-wave me-2"></i>Pay Bill
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Bill Payments -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>Recent Bill Payments
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Payee</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if bill_data.payment_history %}
+                                    {% for payment in bill_data.payment_history %}
+                                    <tr>
+                                        <td>{{ payment.processed_at.strftime('%Y-%m-%d') }}</td>
+                                        <td>
+                                            <strong>{{ payment.payee_name }}</strong>
+                                            <small class="text-muted d-block">Acct: {{ payment.account_number[-4:].rjust(8, '*') }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ payment.category }}</span>
+                                        </td>
+                                        <td>
+                                            <strong>${{ "%.2f"|format(payment.amount) }}</strong>
+                                            <small class="text-muted d-block">{{ payment.currency }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success">{{ payment.status }}</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-info" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-primary" title="Repeat Payment">
+                                                <i class="fas fa-redo"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">
+                                            <i class="fas fa-file-invoice fa-2x mb-2"></i>
+                                            <div>No recent bill payments</div>
+                                            <small>Your bill payment history will appear here</small>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Payee Modal -->
+<div class="modal fade" id="addPayeeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header bg-gradient border-bottom border-secondary">
+                <h5 class="modal-title">Add New Payee</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addPayeeForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="modal_payee_name" class="form-label">Payee Name</label>
+                                <input type="text" class="form-control bg-dark text-white border-secondary" 
+                                       id="modal_payee_name" name="payee_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="modal_category" class="form-label">Category</label>
+                                <select class="form-select bg-dark text-white border-secondary" 
+                                        id="modal_category" name="category" required>
+                                    <option value="">Select Category</option>
+                                    {% for category in bill_data.bill_categories %}
+                                    <option value="{{ category }}">{{ category }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="modal_account_number" class="form-label">Account Number</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" 
+                               id="modal_account_number" name="account_number" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="modal_notes" class="form-label">Notes (Optional)</label>
+                        <textarea class="form-control bg-dark text-white border-secondary" 
+                                  id="modal_notes" name="notes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success">
+                    <i class="fas fa-save me-2"></i>Save Payee
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

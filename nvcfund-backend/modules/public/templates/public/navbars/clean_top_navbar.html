@@ -1,0 +1,721 @@
+<!-- Clean Top Navbar for Enterprise Layout -->
+<nav class="top-navbar" id="topNavbar">
+    <div class="navbar-container">
+        <!-- Left Section: Sidebar Toggle (Mobile) -->
+        <div class="navbar-left">
+            <button class="mobile-sidebar-toggle d-lg-none" id="mobileSidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- Breadcrumb Navigation -->
+            <div class="breadcrumb-nav d-none d-md-flex">
+                <span class="breadcrumb-item">
+                    <i class="fas fa-home"></i>
+                    <span>{{ breadcrumb_section or 'Dashboard' }}</span>
+                </span>
+                {% if breadcrumb_page %}
+                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                <span class="breadcrumb-item current">{{ breadcrumb_page }}</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Center Section: Global Search -->
+        <div class="navbar-center">
+            <div class="global-search">
+                <div class="search-input-group">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search transactions, accounts, users..." id="globalSearch">
+                    <div class="search-shortcuts">
+                        <kbd>Ctrl</kbd> + <kbd>K</kbd>
+                    </div>
+                </div>
+                
+                <!-- Search Results Dropdown -->
+                <div class="search-results" id="searchResults" style="display: none;">
+                    <div class="search-category">
+                        <h6>Recent Searches</h6>
+                        <div class="search-item">
+                            <i class="fas fa-history"></i>
+                            <span>Account SAV-007-000001</span>
+                        </div>
+                        <div class="search-item">
+                            <i class="fas fa-history"></i>
+                            <span>Transfer to John Doe</span>
+                        </div>
+                    </div>
+                    <div class="search-category">
+                        <h6>Quick Actions</h6>
+                        <div class="search-item">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Create New Account</span>
+                        </div>
+                        <div class="search-item">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>New Transfer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Section: User Actions -->
+        <div class="navbar-right">
+            <!-- Notifications -->
+            <div class="navbar-item dropdown" id="notificationsDropdown">
+                <button class="navbar-btn" data-bs-toggle="dropdown">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <div class="dropdown-menu notification-dropdown">
+                    <div class="dropdown-header">
+                        <h6>Notifications</h6>
+                        <button class="btn-link">Mark all read</button>
+                    </div>
+                    <div class="notification-list">
+                        <div class="notification-item unread">
+                            <div class="notification-icon">
+                                <i class="fas fa-credit-card text-primary"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p>New card application approved</p>
+                                <small>2 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon">
+                                <i class="fas fa-exchange-alt text-success"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p>Transfer of $2,500 completed</p>
+                                <small>1 hour ago</small>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon">
+                                <i class="fas fa-shield-alt text-warning"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p>Security alert: New login detected</p>
+                                <small>3 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-footer">
+                        <a href="/notifications" class="btn-link">View all notifications</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="navbar-item dropdown" id="quickActionsDropdown">
+                <button class="navbar-btn" data-bs-toggle="dropdown">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <div class="dropdown-menu quick-actions-dropdown">
+                    <div class="dropdown-header">
+                        <h6>Quick Actions</h6>
+                    </div>
+                    <a href="/banking/accounts/create" class="dropdown-item">
+                        <i class="fas fa-university"></i>
+                        Create Account
+                    </a>
+                    <a href="/banking/transfers/new" class="dropdown-item">
+                        <i class="fas fa-exchange-alt"></i>
+                        New Transfer
+                    </a>
+                    <a href="/cards_payments/apply" class="dropdown-item">
+                        <i class="fas fa-credit-card"></i>
+                        Apply for Card
+                    </a>
+                    <a href="/banking/statements/generate" class="dropdown-item">
+                        <i class="fas fa-file-pdf"></i>
+                        Generate Statement
+                    </a>
+                </div>
+            </div>
+            
+            <!-- User Profile -->
+            <div class="navbar-item dropdown" id="userProfileDropdown">
+                <button class="navbar-btn user-btn" data-bs-toggle="dropdown">
+                    <div class="user-avatar">
+                        {% if current_user.is_authenticated and current_user.profile_picture %}
+                        <img src="{{ current_user.profile_picture }}" alt="Profile" class="avatar-img">
+                        {% else %}
+                        <i class="fas fa-user-circle"></i>
+                        {% endif %}
+                    </div>
+                    <span class="user-name d-none d-lg-inline">
+                        {{ current_user.first_name if current_user.is_authenticated else 'Guest' }}
+                    </span>
+                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                </button>
+                <div class="dropdown-menu user-dropdown">
+                    {% if current_user.is_authenticated %}
+                    <div class="dropdown-header">
+                        <div class="user-info">
+                            <h6>{{ current_user.first_name }} {{ current_user.last_name }}</h6>
+                            <small>{{ current_user.email }}</small>
+                            <span class="user-role-badge">{{ current_user.role }}</span>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="/profile" class="dropdown-item">
+                        <i class="fas fa-user"></i>
+                        My Profile
+                    </a>
+                    <a href="/settings" class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                    <a href="/security" class="dropdown-item">
+                        <i class="fas fa-shield-alt"></i>
+                        Security
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/help" class="dropdown-item">
+                        <i class="fas fa-question-circle"></i>
+                        Help & Support
+                    </a>
+                    <a href="/auth/logout" class="dropdown-item text-danger">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                    {% else %}
+                    <a href="/auth/login" class="dropdown-item">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </a>
+                    <a href="/auth/register" class="dropdown-item">
+                        <i class="fas fa-user-plus"></i>
+                        Register
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Clean Top Navbar Styles -->
+<style>
+.top-navbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: var(--sidebar-width);
+    height: 70px;
+    background: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+    z-index: 999;
+    transition: left 0.3s ease;
+}
+
+.enterprise-sidebar.collapsed + .top-navbar {
+    left: var(--sidebar-collapsed-width);
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 1.5rem;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mobile-sidebar-toggle {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #6c757d;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.mobile-sidebar-toggle:hover {
+    background: #f8f9fa;
+    color: #495057;
+}
+
+.breadcrumb-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.breadcrumb-item.current {
+    color: #495057;
+    font-weight: 500;
+}
+
+.breadcrumb-separator {
+    font-size: 0.75rem;
+    opacity: 0.6;
+}
+
+.navbar-center {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 2rem;
+}
+
+.global-search {
+    position: relative;
+}
+
+.search-input-group {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 25px;
+    padding: 0 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input-group:focus-within {
+    background: #ffffff;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.search-icon {
+    color: #6c757d;
+    margin-right: 0.75rem;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    background: none;
+    padding: 0.75rem 0;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #adb5bd;
+}
+
+.search-shortcuts {
+    display: flex;
+    gap: 0.25rem;
+    margin-left: 0.75rem;
+    font-size: 0.75rem;
+    color: #adb5bd;
+}
+
+.search-shortcuts kbd {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 3px;
+    padding: 0.1rem 0.3rem;
+    font-size: 0.7rem;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 0.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.search-category {
+    padding: 1rem;
+}
+
+.search-category:not(:last-child) {
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.search-category h6 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+}
+
+.search-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.search-item:hover {
+    background: #f8f9fa;
+}
+
+.search-item i {
+    width: 16px;
+    text-align: center;
+    color: #6c757d;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar-item {
+    position: relative;
+}
+
+.navbar-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 8px;
+    color: #6c757d;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar-btn:hover {
+    background: #f8f9fa;
+    color: #495057;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #dc3545;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.user-btn {
+    padding: 0.25rem 0.75rem;
+    border-radius: 25px;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e9ecef;
+    overflow: hidden;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-avatar i {
+    font-size: 1.5rem;
+    color: #6c757d;
+}
+
+.user-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+.dropdown-arrow {
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+}
+
+.dropdown.show .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menus */
+.dropdown-menu {
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 0;
+    margin-top: 0.5rem;
+    min-width: 280px;
+}
+
+.dropdown-header {
+    padding: 1rem;
+    border-bottom: 1px solid #f8f9fa;
+    background: #f8f9fa;
+    border-radius: 12px 12px 0 0;
+}
+
+.dropdown-header h6 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+.dropdown-footer {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #f8f9fa;
+    background: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+    text-align: center;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    border: none;
+    background: none;
+    width: 100%;
+    text-decoration: none;
+    color: #495057;
+    transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: #f8f9fa;
+    color: #495057;
+}
+
+.dropdown-item i {
+    width: 16px;
+    text-align: center;
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+    max-width: 350px;
+}
+
+.notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    transition: background 0.2s ease;
+}
+
+.notification-item:hover {
+    background: #f8f9fa;
+}
+
+.notification-item.unread {
+    background: rgba(0, 123, 255, 0.05);
+    border-left: 3px solid #007bff;
+}
+
+.notification-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.notification-content p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.notification-content small {
+    color: #6c757d;
+    font-size: 0.75rem;
+}
+
+/* User Dropdown */
+.user-info h6 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+.user-info small {
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+
+.user-role-badge {
+    display: inline-block;
+    background: #e3f2fd;
+    color: #1976d2;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 0.8rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .top-navbar {
+        left: 0;
+        right: 0;
+    }
+    
+    .navbar-container {
+        padding: 0 1rem;
+    }
+    
+    .navbar-center {
+        margin: 0 1rem;
+        max-width: none;
+    }
+    
+    .search-shortcuts {
+        display: none;
+    }
+    
+    .dropdown-menu {
+        min-width: 250px;
+        margin-left: -100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .breadcrumb-nav {
+        display: none;
+    }
+    
+    .search-input::placeholder {
+        content: "Search...";
+    }
+}
+</style>
+
+<!-- Top Navbar JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const globalSearch = document.getElementById('globalSearch');
+    const searchResults = document.getElementById('searchResults');
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    
+    // Global search functionality
+    if (globalSearch && searchResults) {
+        globalSearch.addEventListener('focus', function() {
+            searchResults.style.display = 'block';
+        });
+        
+        globalSearch.addEventListener('blur', function(e) {
+            // Delay hiding to allow clicking on results
+            setTimeout(() => {
+                if (!searchResults.contains(e.relatedTarget)) {
+                    searchResults.style.display = 'none';
+                }
+            }, 200);
+        });
+        
+        globalSearch.addEventListener('input', function() {
+            const query = this.value.trim();
+            if (query.length > 0) {
+                // Perform search (implement your search logic here)
+                performGlobalSearch(query);
+            }
+        });
+        
+        // Keyboard shortcut for search
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                globalSearch.focus();
+            }
+        });
+    }
+    
+    // Mobile sidebar toggle
+    if (mobileSidebarToggle) {
+        mobileSidebarToggle.addEventListener('click', function() {
+            const sidebar = document.getElementById('enterpriseSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar && overlay) {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('show');
+            }
+        });
+    }
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        const dropdowns = document.querySelectorAll('.dropdown.show');
+        dropdowns.forEach(dropdown => {
+            if (!dropdown.contains(e.target)) {
+                const dropdownToggle = dropdown.querySelector('[data-bs-toggle="dropdown"]');
+                if (dropdownToggle) {
+                    bootstrap.Dropdown.getInstance(dropdownToggle).hide();
+                }
+            }
+        });
+    });
+});
+
+// Global search function (implement your search logic)
+function performGlobalSearch(query) {
+    // This would typically make an API call to search
+    console.log('Searching for:', query);
+    
+    // Example: Update search results
+    const searchResults = document.getElementById('searchResults');
+    if (searchResults) {
+        // Update results based on query
+        // This is where you'd populate real search results
+    }
+}
+</script>

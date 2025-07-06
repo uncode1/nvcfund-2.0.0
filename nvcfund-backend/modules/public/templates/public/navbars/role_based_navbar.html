@@ -1,0 +1,251 @@
+<!-- Enterprise Role-Based Dynamic Navigation with RBAC Permission Checking -->
+<nav class="navbar navbar-expand-lg navbar-dark modern-navbar">
+    <div class="container-fluid px-3">
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('public.index') }}" style="font-size: 1.25rem;">
+            <i class="fas fa-university me-2" style="color: #ffd700;"></i>
+            <span class="d-none d-sm-inline">NVC Banking</span>
+            <span class="d-inline d-sm-none">NVC</span>
+        </a>
+
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false">
+            <i class="fas fa-bars" style="color: #fff; font-size: 1.1rem;"></i>
+        </button>
+
+        <!-- Navigation Items -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <!-- Dashboard - Available to all authenticated users -->
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('dashboard.dashboard_overview') }}">
+                        <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                    </a>
+                </li>
+                {% endif %}
+
+                <!-- Administrative Functions -->
+                {% if current_user.is_authenticated and check_permission('can_access_admin_dashboard') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-crown me-1"></i> Admin
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern" aria-labelledby="adminDropdown" style="background-color: #0a2447; border: 1px solid #66ccff;">
+                        <li><a class="dropdown-item text-light" href="{{ url_for('admin_management.admin_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-tools me-1"></i> Admin Dashboard</a></li>
+                        {% if check_permission('can_manage_users') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('admin_management.admin_management_users_detailed_view_wrapper') }}" style="color: #ffffff !important;"><i class="fas fa-users me-1"></i> User Management</a></li>
+                        {% endif %}
+                        {% if check_permission('can_view_system_logs') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('admin_management.admin_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-file-alt me-1"></i> Logs Dashboard</a></li>
+                        {% endif %}
+                        {% if check_permission('can_modify_system_settings') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('admin_management.admin_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-cog me-1"></i> System Settings</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% endif %}
+
+                <!-- Banking Services -->
+                {% if current_user.is_authenticated and check_permission('can_view_accounts') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="bankingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-university me-1"></i> Banking Services
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern" aria-labelledby="bankingDropdown" style="background-color: #0a2447; border: 1px solid #66ccff;">
+                        <li><a class="dropdown-item text-light" href="{{ url_for('banking.banking_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-piggy-bank me-1"></i> My Accounts</a></li>
+                        {% if check_permission('can_initiate_transfer') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('banking.send_transfer') }}" style="color: #ffffff !important;"><i class="fas fa-exchange-alt me-1"></i> Transfer Funds</a></li>
+                        {% endif %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('banking.apply_card') }}" style="color: #ffffff !important;"><i class="fas fa-credit-card me-1"></i> Apply for Card</a></li>
+                        <li><a class="dropdown-item text-light" href="{{ url_for('banking.create_account') }}" style="color: #ffffff !important;"><i class="fas fa-plus-circle me-1"></i> Create Account</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+
+                <!-- Treasury Operations -->
+                {% if current_user.is_authenticated and check_permission('can_access_treasury') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="treasuryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-coins me-1"></i> Treasury
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern" aria-labelledby="treasuryDropdown" style="background-color: #0a2447; border: 1px solid #66ccff;">
+                        <li><a class="dropdown-item text-light" href="{{ url_for('treasury.main_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-chart-line me-1"></i> Treasury Dashboard</a></li>
+                        {% if check_permission('can_access_nvct_operations') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('nvct_stablecoin.nvct_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-coins me-1"></i> NVCT Operations</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% endif %}
+
+                <!-- Sovereign Banking -->
+                {% if current_user.is_authenticated and check_permission('can_access_sovereign_banking') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('sovereign.dashboard') }}">
+                        <i class="fas fa-flag me-1"></i> Sovereign Banking
+                    </a>
+                </li>
+                {% endif %}
+
+                <!-- Compliance & Risk -->
+                {% if current_user.is_authenticated and check_permission('can_access_compliance') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="complianceDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-balance-scale me-1"></i> Compliance & Risk
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern" aria-labelledby="complianceDropdown" style="background-color: #0a2447; border: 1px solid #66ccff;">
+                        <li><a class="dropdown-item text-light" href="{{ url_for('compliance.main_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-chart-bar me-1"></i> Compliance Dashboard</a></li>
+                        {% if check_permission('can_access_risk_management') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('compliance.risk_management') }}" style="color: #ffffff !important;"><i class="fas fa-exclamation-triangle me-1"></i> Risk Management</a></li>
+                        {% endif %}
+                        {% if check_permission('can_manage_kyc') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('compliance.main_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-user-check me-1"></i> KYC Management</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% endif %}
+
+                <!-- Branch Operations -->
+                {% if current_user.is_authenticated and check_permission('can_access_branch_management') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="branchDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-building me-1"></i> Branch Operations
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern" aria-labelledby="branchDropdown" style="background-color: #0a2447; border: 1px solid #66ccff;">
+                        <li><a class="dropdown-item text-light" href="{{ url_for('admin_management.admin_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-tachometer-alt me-1"></i> Branch Dashboard</a></li>
+                        {% if check_permission('can_manage_customer_service') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('chat.chat_home') }}" style="color: #ffffff !important;"><i class="fas fa-headset me-1"></i> Customer Service</a></li>
+                        {% endif %}
+                        {% if check_permission('can_approve_branch_transactions') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('banking.transaction_history') }}" style="color: #ffffff !important;"><i class="fas fa-check-circle me-1"></i> Transaction Approvals</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% endif %}
+
+                <!-- Asset Liability Management -->
+                {% if current_user.is_authenticated and check_permission('can_access_alm') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="almDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-percentage me-1"></i> ALM
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern" aria-labelledby="almDropdown" style="background-color: #0a2447; border: 1px solid #66ccff;">
+                        <li><a class="dropdown-item text-light" href="{{ url_for('interest_rate_management.main_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-percentage me-1"></i> Interest Rate Management</a></li>
+                        {% if check_permission('can_access_balance_sheet') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('treasury.main_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-file-invoice-dollar me-1"></i> Balance Sheet</a></li>
+                        {% endif %}
+                        {% if check_permission('can_manage_liquidity') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('treasury.main_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-tint me-1"></i> Liquidity Management</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% endif %}
+
+                <!-- Institutional Banking -->
+                {% if current_user.is_authenticated and check_permission('can_access_institutional') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="institutionalDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-university me-1"></i> Institutional
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern" aria-labelledby="institutionalDropdown" style="background-color: #0a2447; border: 1px solid #66ccff;">
+                        <li><a class="dropdown-item text-light" href="{{ url_for('institutional.main_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-chart-line me-1"></i> Institutional Dashboard</a></li>
+                        {% if check_permission('can_access_wholesale_banking') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('institutional.main_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-handshake me-1"></i> Wholesale Banking</a></li>
+                        {% endif %}
+                        {% if check_permission('can_manage_correspondent_banks') %}
+                        <li><a class="dropdown-item text-light" href="{{ url_for('institutional.main_dashboard') }}" style="color: #ffffff !important;"><i class="fas fa-network-wired me-1"></i> Correspondent Banks</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% endif %}
+
+                <!-- Security Center -->
+                {% if current_user.is_authenticated and check_permission('can_access_security_center') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('security_center.security_investigation') }}">
+                        <i class="fas fa-shield-alt me-1"></i> Security Center
+                    </a>
+                </li>
+                {% endif %}
+
+                <!-- Public Services (always visible for guests) -->
+                {% if not current_user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-info-circle me-1"></i> Services
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern" aria-labelledby="servicesDropdown" style="background-color: #0a2447; border: 1px solid #66ccff;">
+                        <li><a class="dropdown-item text-light" href="{{ url_for('public.about') }}" style="color: #ffffff !important;"><i class="fas fa-building me-1"></i> About NVC Banking</a></li>
+                        <li><a class="dropdown-item text-light" href="{{ url_for('public.api_documentation') }}" style="color: #ffffff !important;"><i class="fas fa-code me-1"></i> API Documentation</a></li>
+                        <li><a class="dropdown-item text-light" href="{{ url_for('public.contact') }}" style="color: #ffffff !important;"><i class="fas fa-envelope me-1"></i> Contact</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+
+            <!-- User Profile Section -->
+            <ul class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center px-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1" style="color: #66ccff; font-size: 1.2rem;"></i>
+                            <span class="d-none d-lg-inline">{{ current_user.username }}</span>
+                            <small class="text-muted ms-1 d-none d-lg-inline">({{ user_role_display }})</small>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-modern" aria-labelledby="userDropdown" style="background-color: #0a2447; border: 1px solid #66ccff;">
+                            <li><span class="dropdown-item-text text-light"><strong>{{ current_user.username }}</strong></span></li>
+                            <li><span class="dropdown-item-text text-muted small">{{ user_role_display }}</span></li>
+                            <li><hr class="dropdown-divider" style="border-color: #66ccff;"></li>
+                            <li><a class="dropdown-item text-light" href="{{ url_for('dashboard.dashboard_home') }}" style="color: #ffffff !important;"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
+                            {% if check_permission('can_view_accounts') %}
+                            <li><a class="dropdown-item text-light" href="{{ url_for('banking.create_account') }}" style="color: #ffffff !important;"><i class="fas fa-university me-1"></i> Create Account</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider" style="border-color: #66ccff;"></li>
+                            <li><a class="dropdown-item text-light" href="{{ url_for('auth.logout') }}" style="color: #ffffff !important;"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <!-- Guest Authentication Menu -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.register') }}">
+                            <i class="fas fa-user-plus me-1"></i> Register
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+/* Enhanced dropdown styling for role-based navigation */
+.dropdown-menu-modern {
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.dropdown-item:hover {
+    background-color: #66ccff !important;
+    color: #0a2447 !important;
+}
+
+.modern-navbar {
+    background: linear-gradient(135deg, #0a2447 0%, #1e3c72 100%) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #66ccff;
+}
+
+.nav-link:hover {
+    color: #66ccff !important;
+}
+
+.navbar-brand:hover {
+    color: #ffd700 !important;
+}
+</style>

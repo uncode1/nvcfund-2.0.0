@@ -1,0 +1,94 @@
+{% extends "public/layout.html" %}
+
+{% block title %}Getting Started Guide - NVC Banking Platform{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="mb-4">Getting Started with NVC Banking Platform</h1>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Welcome to NVC Banking Platform</h5>
+                </div>
+                <div class="card-body">
+                    <p>Welcome to the NVC Banking Platform, your comprehensive financial services solution. This guide will help you get started with our platform's features and services.</p>
+                    
+                    <h6>Quick Start Steps:</h6>
+                    <ol>
+                        <li><strong>Account Registration:</strong> Create your account with our KYC-compliant registration process</li>
+                        <li><strong>Account Verification:</strong> Complete identity verification for full access</li>
+                        <li><strong>Banking Services:</strong> Access our comprehensive banking features</li>
+                        <li><strong>NVCT Stablecoin:</strong> Explore our digital currency offerings</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Core Features</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-university me-2"></i>Banking Services</h6>
+                            <ul>
+                                <li>Account Management</li>
+                                <li>Money Transfers</li>
+                                <li>Bill Payments</li>
+                                <li>Transaction History</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-coins me-2"></i>NVCT Stablecoin</h6>
+                            <ul>
+                                <li>Digital Currency Operations</li>
+                                <li>Cross-border Payments</li>
+                                <li>Tokenized Assets</li>
+                                <li>Blockchain Integration</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Account Types</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6>Individual Account</h6>
+                            <p>Personal banking services with standard features for individual customers.</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Business Client</h6>
+                            <p>Enhanced business banking with commercial features and higher limits.</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Partner Program</h6>
+                            <p>Premium institutional services with advanced features and dedicated support.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Next Steps</h5>
+                </div>
+                <div class="card-body">
+                    <p>Ready to get started? Choose one of the following options:</p>
+                    <div class="d-flex gap-3">
+                        <a href="/auth/register" class="btn btn-primary">Create Account</a>
+                        <a href="/auth/login" class="btn btn-outline-primary">Login</a>
+                        <a href="/public/contact" class="btn btn-outline-secondary">Contact Support</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

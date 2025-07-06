@@ -1,0 +1,213 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Trade Credits Management - Sovereign Banking{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-gradient-primary border-0">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h1 class="card-title text-white mb-0">
+                                    <i class="fas fa-handshake me-2"></i>Trade Credits Management
+                                </h1>
+                                <p class="card-description text-light mb-0">International trade finance and credit facilities</p>
+                            </div>
+                            <div class="col-auto">
+                                <a href="{{ url_for('sovereign.operations_overview') }}" class="btn btn-light">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Operations
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="card-subtitle mb-1">Total Trade Credits</h6>
+                                <h3 class="card-title mb-0">$127.5B</h3>
+                            </div>
+                            <div class="bg-light bg-opacity-20 rounded p-2">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="card-subtitle mb-1">Active Letters of Credit</h6>
+                                <h3 class="card-title mb-0">8,453</h3>
+                            </div>
+                            <div class="bg-light bg-opacity-20 rounded p-2">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="card-subtitle mb-1">Trade Finance Volume</h6>
+                                <h3 class="card-title mb-0">$89.2B</h3>
+                            </div>
+                            <div class="bg-light bg-opacity-20 rounded p-2">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="card-subtitle mb-1">Countries Active</h6>
+                                <h3 class="card-title mb-0">185</h3>
+                            </div>
+                            <div class="bg-light bg-opacity-20 rounded p-2">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trade Credit Operations -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Recent Trade Credit Activities</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Country</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>LC-2025-001</td>
+                                        <td>Letter of Credit</td>
+                                        <td>$5.2M</td>
+                                        <td>Germany</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td><button class="btn btn-sm btn-outline-primary">View</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>TF-2025-089</td>
+                                        <td>Trade Finance</td>
+                                        <td>$12.8M</td>
+                                        <td>Japan</td>
+                                        <td><span class="badge bg-warning">Pending</span></td>
+                                        <td><button class="btn btn-sm btn-outline-primary">Review</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BG-2025-045</td>
+                                        <td>Bank Guarantee</td>
+                                        <td>$8.5M</td>
+                                        <td>United Kingdom</td>
+                                        <td><span class="badge bg-success">Issued</span></td>
+                                        <td><button class="btn btn-sm btn-outline-primary">Manage</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Credit Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Letters of Credit</span>
+                                <span>45%</span>
+                            </div>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-primary" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Trade Finance</span>
+                                <span>30%</span>
+                            </div>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success" style="width: 30%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Bank Guarantees</span>
+                                <span>25%</span>
+                            </div>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-info" style="width: 25%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>New Letter of Credit
+                            </button>
+                            <button class="btn btn-success">
+                                <i class="fas fa-handshake me-2"></i>Trade Finance Application
+                            </button>
+                            <button class="btn btn-info">
+                                <i class="fas fa-shield-alt me-2"></i>Bank Guarantee Request
+                            </button>
+                            <button class="btn btn-warning">
+                                <i class="fas fa-chart-bar me-2"></i>Credit Analytics
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+</style>
+{% endblock %}

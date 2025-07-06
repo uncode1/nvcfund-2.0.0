@@ -1,0 +1,54 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Withdraw Funds - NVC Banking{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Withdraw Funds</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('dashboard.dashboard_home') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('banking.banking_dashboard') }}">Banking</a></li>
+                        <li class="breadcrumb-item active">Withdrawal</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Withdrawal Form -->
+            {% include 'banking/forms/withdrawal_form.html' %}
+            
+            <!-- Security Notice -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="fas fa-shield-alt text-warning"></i> Withdrawal Security</h6>
+                    <p class="card-text small text-muted">
+                        All withdrawals are subject to verification procedures for security.
+                        Wire transfers and large withdrawals may require additional approval.
+                        Daily withdrawal limits apply and can be adjusted by contacting customer service.
+                        Withdrawals to external accounts are processed within 1-5 business days.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

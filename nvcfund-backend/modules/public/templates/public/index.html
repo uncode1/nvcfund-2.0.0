@@ -1,0 +1,2070 @@
+{% extends "public/layout.html" %}
+
+{% block title %}NVC Banking Platform - Advanced Digital Banking & Blockchain Finance{% endblock %}
+
+{% block content %}
+<style>
+    /* Enhanced Hero Section Styling */
+    .hero-section {
+        background: linear-gradient(135deg, #0a2447 0%, #1e3c72 50%, #2a5298 100%);
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="%23fff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23fff" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="300" fill="url(%23a)"/><circle cx="800" cy="800" r="400" fill="url(%23a)"/></svg>');
+        z-index: 1;
+    }
+
+    .hero-content {
+        z-index: 2;
+        position: relative;
+    }
+
+    .hero-content h1 {
+        font-size: 3.5rem;
+        line-height: 1.1;
+        background: linear-gradient(135deg, #ffffff, #66ccff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .hero-content p {
+        font-size: 1.25rem;
+        opacity: 0.9;
+        animation: fadeInUp 1s ease-out 0.2s both;
+    }
+
+    .hero-buttons {
+        animation: fadeInUp 1s ease-out 0.4s both;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #66ccff, #3498db);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 204, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 204, 255, 0.4);
+        background: linear-gradient(135deg, #3498db, #66ccff);
+    }
+
+    .btn-outline-light {
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    /* Enhanced Stats Grid */
+    .hero-stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        z-index: 2;
+        position: relative;
+        animation: fadeInRight 1s ease-out 0.6s both;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s;
+    }
+
+    .stat-card:hover::before {
+        left: 100%;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border-color: rgba(102, 204, 255, 0.5);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #66ccff, #ffffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+    }
+
+    .stat-label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2.5rem;
+        }
+        
+        .hero-stats-grid {
+            grid-template-columns: 1fr;
+            margin-top: 3rem;
+        }
+        
+        .btn-lg {
+            display: block;
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<!-- Enhanced Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="display-4 fw-bold mb-4">
+                        Next-Generation <span style="color: #66ccff;">Banking Platform</span>
+                    </h1>
+                    <p class="lead mb-4">
+                        Experience the future of digital banking with our advanced blockchain-integrated platform. 
+                        Secure, scalable, and built for the modern financial ecosystem.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="/auth/login" class="btn btn-primary btn-lg me-3">Get Started</a>
+                        <a href="/about" class="btn btn-outline-light btn-lg">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">$30T</div>
+                        <div class="stat-label">NVCT Stablecoin Supply</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">189%</div>
+                        <div class="stat-label">Over-Collateralization</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Global Operations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Platform Uptime</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Services Overview Section -->
+<div class="services-overview-section py-5" style="background: linear-gradient(180deg, #0a2447 0%, #1a1a2e 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="display-6 fw-bold text-white">Complete Banking Ecosystem</h2>
+                <p class="lead text-light">Comprehensive financial services for individuals, businesses, and institutions</p>
+                <div class="section-divider mx-auto mt-4" style="width: 80px; height: 3px; background: linear-gradient(90deg, #66ccff, #3498db); border-radius: 2px;"></div>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h6>Digital Banking</h6>
+                    <p>Full-service accounts, cards, and payment solutions</p>
+                    <div class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h6>Investment Management</h6>
+                    <p>Portfolio management and trading services</p>
+                    <div class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h6>Corporate Banking</h6>
+                    <p>Business accounts and institutional services</p>
+                    <div class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h6>Cryptocurrency</h6>
+                    <p>Digital asset trading and management</p>
+                    <div class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h6>Security Center</h6>
+                    <p>Advanced fraud protection and monitoring</p>
+                    <div class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h6>International</h6>
+                    <p>Global transfers and multi-currency support</p>
+                    <div class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h6>Mobile Banking</h6>
+                    <p>Full-featured mobile and web applications</p>
+                    <div class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h6>24/7 Support</h6>
+                    <p>Round-the-clock customer service</p>
+                    <div class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Enhanced Service Items */
+    .service-item {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .service-item::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(102, 204, 255, 0.1) 0%, transparent 70%);
+        transform: scale(0);
+        transition: transform 0.6s ease;
+        z-index: 1;
+    }
+
+    .service-item:hover::before {
+        transform: scale(1);
+    }
+
+    .service-item:hover {
+        transform: translateY(-10px);
+        border-color: rgba(102, 204, 255, 0.4);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .service-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #66ccff, #3498db);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 2;
+    }
+
+    .service-icon i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    .service-item:hover .service-icon {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(102, 204, 255, 0.3);
+    }
+
+    .service-item h6 {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .service-item p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .service-arrow {
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+        color: #66ccff;
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .service-item:hover .service-arrow {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .service-item {
+            margin-bottom: 1.5rem;
+        }
+    }
+</style>
+
+<!-- Enhanced Features Section -->
+<div class="features-section py-5" style="background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="display-6 fw-bold text-white">Banking Innovation</h2>
+                <p class="lead text-light">Comprehensive financial services powered by blockchain technology</p>
+                <div class="section-divider mx-auto mt-4" style="width: 80px; height: 3px; background: linear-gradient(90deg, #66ccff, #3498db); border-radius: 2px;"></div>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Bank-Grade Security</h4>
+                    <p>Advanced encryption, multi-factor authentication, and real-time threat detection protect your assets.</p>
+                    <div class="feature-highlight">
+                        <span class="highlight-badge">99.9% Secure</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h4>NVCT Stablecoin</h4>
+                    <p>$30 trillion supply backed by $56.7T in documented assets with 189% over-collateralization.</p>
+                    <div class="feature-highlight">
+                        <span class="highlight-badge">189% Backed</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h4>Multi-Blockchain</h4>
+                    <p>Integrated support for Ethereum, Polygon, BSC, and other major blockchain networks.</p>
+                    <div class="feature-highlight">
+                        <span class="highlight-badge">5+ Networks</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Real-Time Analytics</h4>
+                    <p>Comprehensive dashboard with live market data, portfolio tracking, and performance metrics.</p>
+                    <div class="feature-highlight">
+                        <span class="highlight-badge">Live Data</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h4>Global Payments</h4>
+                    <p>Instant cross-border transfers with competitive rates and transparent fee structures.</p>
+                    <div class="feature-highlight">
+                        <span class="highlight-badge">Instant</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h4>AI-Powered Trading</h4>
+                    <p>Advanced algorithmic trading with risk management and automated portfolio optimization.</p>
+                    <div class="feature-highlight">
+                        <span class="highlight-badge">AI Powered</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Enhanced Feature Cards */
+    .feature-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(102, 204, 255, 0.05) 0%, rgba(52, 152, 219, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 1;
+    }
+
+    .feature-card:hover::before {
+        opacity: 1;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-15px);
+        border-color: rgba(102, 204, 255, 0.3);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 2rem;
+        background: linear-gradient(135deg, #66ccff, #3498db);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.4s ease;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 10px 30px rgba(102, 204, 255, 0.2);
+    }
+
+    .feature-icon i {
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 15px 40px rgba(102, 204, 255, 0.4);
+    }
+
+    .feature-card h4 {
+        color: white;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        font-size: 1.4rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .feature-card p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        flex-grow: 1;
+        position: relative;
+        z-index: 2;
+    }
+
+    .feature-highlight {
+        position: relative;
+        z-index: 2;
+        margin-top: auto;
+    }
+
+    .highlight-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #66ccff, #3498db);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 204, 255, 0.3);
+    }
+
+    .feature-card:hover .highlight-badge {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(102, 204, 255, 0.4);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .feature-card {
+            margin-bottom: 2rem;
+            padding: 2rem 1.5rem;
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+        }
+        
+        .feature-icon i {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<!-- Network Status Section -->
+<div class="network-status-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="display-5 fw-bold">Network Status</h2>
+                <p class="lead">Real-time monitoring of our blockchain and exchange integrations</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="network-card ethereum">
+                    <div class="network-header">
+                        <i class="fab fa-ethereum"></i>
+                        <h5 class="mb-0">Ethereum</h5>
+                    </div>
+                    <div class="network-status">
+                        <span class="status-indicator online"></span>
+                        <span>Operational</span>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Block: 18,500,234</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="network-card polygon">
+                    <div class="network-header">
+                        <i class="fas fa-gem"></i>
+                        <h5 class="mb-0">Polygon</h5>
+                    </div>
+                    <div class="network-status">
+                        <span class="status-indicator online"></span>
+                        <span>Operational</span>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Block: 48,750,123</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="network-card bsc">
+                    <div class="network-header">
+                        <i class="fas fa-link"></i>
+                        <h5 class="mb-0">BSC</h5>
+                    </div>
+                    <div class="network-status">
+                        <span class="status-indicator online"></span>
+                        <span>Operational</span>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Block: 32,150,876</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="network-card binance">
+                    <div class="network-header">
+                        <i class="fas fa-exchange-alt"></i>
+                        <h5 class="mb-0">Binance Service</h5>
+                    </div>
+                    <div class="network-status">
+                        <span class="status-indicator online"></span>
+                        <span>Operational</span>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Latency: 12ms</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Access Section -->
+<div class="quick-access-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="display-5 fw-bold">Quick Access</h2>
+                <p class="lead">Access key platform features and documentation</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="access-card">
+                    <div class="access-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h5>Analytics Dashboard</h5>
+                    <p>Monitor blockchain network performance and token analytics</p>
+                    <a href="/blockchain_analytics/" class="btn btn-outline-primary">View Analytics</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="access-card">
+                    <div class="access-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h5>Service Documentation</h5>
+                    <p>Comprehensive REST Service documentation and developer resources</p>
+                    <a href="/public/api_documentation" class="btn btn-outline-primary">View Docs</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="access-card">
+                    <div class="access-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h5>NVCT Whitepaper</h5>
+                    <p>Technical specifications and tokenomics of our stablecoin</p>
+                    <a href="/public/nvct_whitepaper" class="btn btn-outline-primary">Read Whitepaper</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="access-card">
+                    <div class="access-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h5>Support Center</h5>
+                    <p>Get help, contact support, and access user guides</p>
+                    <a href="/public/contact" class="btn btn-outline-primary">Get Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Real-time Data Stream Section -->
+<div class="streaming-data-section py-5" style="background: linear-gradient(135deg, #16213e 0%, #0a1929 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="display-5 fw-bold text-white">Live Platform Data</h2>
+                <p class="lead text-light">Real-time streaming data from our banking platform</p>
+                <div class="live-indicator">
+                    <span class="live-dot"></span>
+                    <span class="text-success fw-bold">LIVE</span>
+                </div>
+                <div class="section-divider mx-auto mt-4" style="width: 80px; height: 3px; background: linear-gradient(90deg, #66ccff, #3498db); border-radius: 2px;"></div>
+            </div>
+        </div>
+        
+        <!-- Main Data Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-6">
+                <div class="enhanced-data-card market-data">
+                    <div class="card-header-enhanced">
+                        <div class="header-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="header-content">
+                            <h5>Market Data Stream</h5>
+                            <span class="stream-status active">
+                                <span class="pulse-dot"></span>
+                                Active
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body-enhanced">
+                        <div class="data-grid">
+                            <div class="data-item">
+                                <div class="data-icon">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="data-content">
+                                    <div class="data-label">NVCT Price</div>
+                                    <div class="data-value" id="nvct-price">$1.0000</div>
+                                    <div class="data-change positive">
+                                        <i class="fas fa-arrow-up"></i>
+                                        +0.0001%
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-icon">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="data-content">
+                                    <div class="data-label">Market Cap</div>
+                                    <div class="data-value" id="market-cap">$30.0T</div>
+                                    <div class="data-change positive">
+                                        <i class="fas fa-arrow-up"></i>
+                                        +0.15%
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-icon">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <div class="data-content">
+                                    <div class="data-label">24h Volume</div>
+                                    <div class="data-value" id="volume-24h">$2.4B</div>
+                                    <div class="data-change positive">
+                                        <i class="fas fa-arrow-up"></i>
+                                        +8.7%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="enhanced-data-card transaction-data">
+                    <div class="card-header-enhanced">
+                        <div class="header-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="header-content">
+                            <h5>Transaction Stream</h5>
+                            <span class="stream-status active">
+                                <span class="pulse-dot"></span>
+                                Active
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body-enhanced">
+                        <div class="transaction-feed-enhanced" id="transaction-feed">
+                            <div class="transaction-item-enhanced">
+                                <div class="tx-icon transfer">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                                <div class="tx-details">
+                                    <div class="tx-type">Transfer</div>
+                                    <div class="tx-time">2s ago</div>
+                                </div>
+                                <div class="tx-amount">$125,000</div>
+                            </div>
+                            <div class="transaction-item-enhanced">
+                                <div class="tx-icon deposit">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="tx-details">
+                                    <div class="tx-type">Deposit</div>
+                                    <div class="tx-time">5s ago</div>
+                                </div>
+                                <div class="tx-amount">$89,500</div>
+                            </div>
+                            <div class="transaction-item-enhanced">
+                                <div class="tx-icon exchange">
+                                    <i class="fas fa-sync"></i>
+                                </div>
+                                <div class="tx-details">
+                                    <div class="tx-type">Exchange</div>
+                                    <div class="tx-time">8s ago</div>
+                                </div>
+                                <div class="tx-amount">$234,750</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- System Metrics Row -->
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="metric-card-enhanced">
+                    <div class="metric-header">
+                        <div class="metric-icon-circle users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="metric-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +12.5%
+                        </div>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-number" id="active-users">24,847</div>
+                        <div class="metric-label">Active Users</div>
+                        <div class="metric-progress">
+                            <div class="progress-bar" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="metric-card-enhanced">
+                    <div class="metric-header">
+                        <div class="metric-icon-circle security">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="metric-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +0.2%
+                        </div>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-number" id="security-score">99.8%</div>
+                        <div class="metric-label">Security Score</div>
+                        <div class="metric-progress">
+                            <div class="progress-bar security" style="width: 99.8%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="metric-card-enhanced">
+                    <div class="metric-header">
+                        <div class="metric-icon-circle uptime">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="metric-trend stable">
+                            <i class="fas fa-check-circle"></i>
+                            Stable
+                        </div>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-number" id="system-uptime">99.99%</div>
+                        <div class="metric-label">System Uptime</div>
+                        <div class="metric-progress">
+                            <div class="progress-bar uptime" style="width: 99.99%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trust & Statistics Section -->
+<div class="trust-section py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="row g-4">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="trust-metric">
+                            <div class="metric-value">$56.7T</div>
+                            <div class="metric-label">Asset Backing</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="trust-metric">
+                            <div class="metric-value">99.99%</div>
+                            <div class="metric-label">Security Rating</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="trust-metric">
+                            <div class="metric-value">5+</div>
+                            <div class="metric-label">Blockchain Networks</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="trust-metric">
+                            <div class="metric-value">24/7</div>
+                            <div class="metric-label">Live Support</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="trust-indicators">
+                    <h6 class="mb-3">Security & Compliance</h6>
+                    <div class="indicator-item">
+                        <i class="fas fa-shield-check"></i>
+                        <span>Bank-grade encryption</span>
+                    </div>
+                    <div class="indicator-item">
+                        <i class="fas fa-certificate"></i>
+                        <span>SOC 2 Type II certified</span>
+                    </div>
+                    <div class="indicator-item">
+                        <i class="fas fa-lock"></i>
+                        <span>Multi-signature security</span>
+                    </div>
+                    <div class="indicator-item">
+                        <i class="fas fa-globe"></i>
+                        <span>Global regulatory compliance</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Optimized CSS for Fast Loading */
+:root {
+    --primary: #667eea;
+    --accent: #4facfe;
+    --dark: #111827;
+    --glass: rgba(255, 255, 255, 0.1);
+    --border: rgba(255, 255, 255, 0.2);
+    --transition: all 0.3s ease;
+}
+
+/* Hero Section - Simplified */
+.hero-section {
+    background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
+    color: white;
+    position: relative;
+}
+
+/* Services Overview Section */
+.services-overview-section {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+.service-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: var(--transition);
+    height: 100%;
+}
+
+.service-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.service-item i {
+    font-size: 2rem;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.service-item h6 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.service-item p {
+    font-size: 0.85rem;
+    color: #d1d5db;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Trust Section */
+.trust-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trust-metric {
+    text-align: center;
+    padding: 1rem;
+}
+
+.metric-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.trust-indicators h6 {
+    color: white;
+    font-weight: 600;
+}
+
+.indicator-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: #d1d5db;
+}
+
+.indicator-item i {
+    color: var(--accent);
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    width: 20px;
+}
+
+.indicator-item span {
+    font-size: 0.9rem;
+}
+
+.hero-content h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.hero-content .text-primary {
+    color: #00f2fe;
+}
+
+.hero-buttons .btn {
+    padding: 0.875rem 2rem;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.hero-buttons .btn-primary {
+    background: var(--accent);
+    border: none;
+}
+
+.hero-buttons .btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+.hero-buttons .btn-outline-light {
+    background: var(--glass);
+    border: 2px solid var(--border);
+    color: white;
+}
+
+.hero-buttons .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Stats Grid */
+.hero-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Feature Cards - Simplified */
+.features-section {
+    background: var(--dark);
+}
+
+.feature-card {
+    background: rgba(31, 41, 55, 0.8);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid rgba(55, 65, 81, 0.3);
+    transition: var(--transition);
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent);
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.feature-card h4 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.feature-card p {
+    color: #d1d5db;
+    line-height: 1.6;
+}
+
+/* Network Status */
+.network-status-section {
+    background: #0f172a;
+}
+
+.network-card {
+    background: rgba(30, 41, 59, 0.8);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(51, 65, 85, 0.3);
+    transition: var(--transition);
+}
+
+.network-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+}
+
+.network-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.network-header i {
+    font-size: 1.5rem;
+    color: var(--accent);
+}
+
+.network-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+}
+
+/* Quick Access */
+.quick-access-section {
+    background: var(--dark);
+}
+
+.access-card {
+    background: rgba(31, 41, 55, 0.6);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid rgba(55, 65, 81, 0.3);
+    transition: var(--transition);
+    height: 100%;
+}
+
+.access-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent);
+}
+
+.access-icon {
+    width: 70px;
+    height: 70px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.75rem;
+    color: white;
+}
+
+.access-card h5 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.access-card p {
+    color: #d1d5db;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.access-card .btn {
+    background: var(--accent);
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-number {
+        font-size: 1.75rem;
+    }
+    
+    .feature-icon, .access-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .feature-card, .access-card, .network-card {
+        padding: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Lightweight network status (no frequent updates for performance)
+function initNetworkStatus() {
+    const indicators = document.querySelectorAll('.status-indicator');
+    indicators.forEach(indicator => {
+        indicator.classList.add('online');
+    });
+}
+
+// Single initialization on load
+document.addEventListener('DOMContentLoaded', initNetworkStatus);
+
+// Streaming Data Animation
+function initStreamingData() {
+    const transactions = [
+        { type: 'transfer', amount: '$125,000', class: 'transfer' },
+        { type: 'deposit', amount: '$89,500', class: 'deposit' },
+        { type: 'exchange', amount: '$234,750', class: 'exchange' },
+        { type: 'withdrawal', amount: '$45,200', class: 'transfer' },
+        { type: 'payment', amount: '$67,800', class: 'deposit' }
+    ];
+    
+    let transactionIndex = 0;
+    
+    function addNewTransaction() {
+        const feed = document.getElementById('transaction-feed');
+        if (!feed) return;
+        
+        const transaction = transactions[transactionIndex % transactions.length];
+        const newItem = document.createElement('div');
+        newItem.className = 'transaction-item-enhanced';
+        
+        // Map transaction types to icons
+        const iconMap = {
+            'transfer': 'fas fa-arrow-right',
+            'deposit': 'fas fa-arrow-down', 
+            'exchange': 'fas fa-sync',
+            'withdrawal': 'fas fa-arrow-up',
+            'payment': 'fas fa-credit-card'
+        };
+        
+        const iconClass = iconMap[transaction.type] || 'fas fa-exchange-alt';
+        
+        newItem.innerHTML = `
+            <div class="tx-icon ${transaction.class}">
+                <i class="${iconClass}"></i>
+            </div>
+            <div class="tx-details">
+                <div class="tx-type">${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</div>
+                <div class="tx-time">Just now</div>
+            </div>
+            <div class="tx-amount">${transaction.amount}</div>
+        `;
+        
+        feed.insertBefore(newItem, feed.firstChild);
+        
+        // Remove oldest items if more than 3
+        while (feed.children.length > 3) {
+            feed.removeChild(feed.lastChild);
+        }
+        
+        // Update timestamps
+        const timeElements = feed.querySelectorAll('.tx-time');
+        timeElements.forEach((el, index) => {
+            if (index === 0) {
+                el.textContent = 'Just now';
+            } else {
+                el.textContent = `${(index + 1) * 3}s ago`;
+            }
+        });
+        
+        transactionIndex++;
+    }
+    
+    function updateMetrics() {
+        // Update NVCT price with small fluctuations
+        const priceEl = document.getElementById('nvct-price');
+        if (priceEl) {
+            const currentPrice = 1.0000;
+            const fluctuation = (Math.random() - 0.5) * 0.0002;
+            const newPrice = currentPrice + fluctuation;
+            priceEl.textContent = `$${newPrice.toFixed(4)}`;
+        }
+        
+        // Update active users
+        const usersEl = document.getElementById('active-users');
+        if (usersEl) {
+            const baseUsers = 24847;
+            const variation = Math.floor(Math.random() * 20) - 10;
+            usersEl.textContent = (baseUsers + variation).toLocaleString();
+        }
+        
+        // Update volume
+        const volumeEl = document.getElementById('volume-24h');
+        if (volumeEl) {
+            const baseVolume = 2.4;
+            const variation = (Math.random() - 0.5) * 0.2;
+            const newVolume = baseVolume + variation;
+            volumeEl.textContent = `$${newVolume.toFixed(1)}B`;
+        }
+    }
+    
+    // Start streaming animations
+    setInterval(addNewTransaction, 3000);
+    setInterval(updateMetrics, 5000);
+}
+
+document.addEventListener('DOMContentLoaded', initStreamingData);
+</script>
+
+<style>
+/* Enhanced Streaming Data Section */
+.streaming-data-section {
+    background: linear-gradient(135deg, #16213e 0%, #0a1929 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.streaming-data-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(102, 204, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Enhanced Data Cards */
+.enhanced-data-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 0;
+    height: 100%;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.enhanced-data-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #66ccff, #3498db);
+    opacity: 0.8;
+}
+
+.enhanced-data-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(102, 204, 255, 0.5);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.card-header-enhanced {
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #66ccff, #3498db);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 204, 255, 0.3);
+}
+
+.header-content h5 {
+    color: #ffffff;
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.card-body-enhanced {
+    padding: 1.5rem;
+}
+
+/* Data Grid Layout */
+.data-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.data-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.data-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(102, 204, 255, 0.3);
+    transform: translateX(5px);
+}
+
+.data-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(102, 204, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #66ccff;
+    font-size: 1.1rem;
+}
+
+.data-content {
+    flex: 1;
+}
+
+.data-label {
+    font-size: 0.9rem;
+    color: #cbd5e0;
+    margin-bottom: 0.25rem;
+}
+
+.data-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.25rem;
+}
+
+.data-change {
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.data-change.positive {
+    color: #22c55e;
+}
+
+.data-change i {
+    font-size: 0.75rem;
+}
+
+/* Enhanced Transaction Feed */
+.transaction-feed-enhanced {
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.transaction-item-enhanced {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    animation: slideInRight 0.5s ease-out;
+}
+
+.transaction-item-enhanced:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(102, 204, 255, 0.3);
+    transform: translateX(5px);
+}
+
+.tx-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.tx-icon.transfer {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.tx-icon.deposit {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.tx-icon.exchange {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.tx-details {
+    flex: 1;
+}
+
+.tx-type {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+
+.tx-time {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+.tx-amount {
+    font-weight: 700;
+    color: #66ccff;
+    font-size: 1.1rem;
+}
+
+/* Enhanced Metric Cards */
+.metric-card-enhanced {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 1.5rem;
+    height: 100%;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card-enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #66ccff, #3498db);
+    opacity: 0.8;
+}
+
+.metric-card-enhanced:hover {
+    transform: translateY(-8px);
+    border-color: rgba(102, 204, 255, 0.5);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.metric-icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.metric-icon-circle.users {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.metric-icon-circle.security {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.metric-icon-circle.uptime {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.metric-trend {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+.metric-trend.positive {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.metric-trend.stable {
+    color: #6b7280;
+    background: rgba(107, 114, 128, 0.1);
+}
+
+.metric-content {
+    text-align: center;
+}
+
+.metric-number {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+
+.metric-label {
+    font-size: 0.95rem;
+    color: #cbd5e0;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.metric-progress {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #66ccff, #3498db);
+    border-radius: 3px;
+    transition: width 1s ease-in-out;
+}
+
+.progress-bar.security {
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.progress-bar.uptime {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+/* Pulse Animation for Live Indicators */
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    margin-right: 0.5rem;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+.live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.data-stream-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0;
+    height: 100%;
+}
+
+.data-stream-card .card-header {
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.data-stream-card .card-body {
+    padding: 1rem;
+}
+
+.stream-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.stream-status.active {
+    background: #22c55e;
+    color: white;
+}
+
+.stream-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stream-item:last-child {
+    border-bottom: none;
+}
+
+.stream-label {
+    font-size: 0.9rem;
+    color: #cbd5e0;
+}
+
+.stream-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.stream-change {
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.stream-change.positive {
+    color: #22c55e;
+}
+
+.transaction-feed {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    animation: slideInRight 0.5s ease-out;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.tx-type {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    min-width: 80px;
+    text-align: center;
+}
+
+.tx-type.transfer {
+    background: #3b82f6;
+    color: white;
+}
+
+.tx-type.deposit {
+    background: #22c55e;
+    color: white;
+}
+
+.tx-type.exchange {
+    background: #f59e0b;
+    color: white;
+}
+
+.tx-amount {
+    font-weight: bold;
+    color: #fff;
+}
+
+.tx-time {
+    font-size: 0.8rem;
+    color: #cbd5e0;
+}
+
+.metric-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+.metric-icon {
+    background: rgba(255, 255, 255, 0.1);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #3b82f6;
+}
+
+.metric-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: #cbd5e0;
+    margin-bottom: 0.5rem;
+}
+
+.metric-trend {
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.metric-trend.positive {
+    color: #22c55e;
+}
+
+.metric-trend.stable {
+    color: #6b7280;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Database Backups{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Database Backups</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-info"><i class="fas fa-database"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total Backups</span>
+                                    <span class="info-box-number">{{ backup_data.total_backups }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Backup List</h4>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Size</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for backup in backup_data.backups %}
+                                    <tr>
+                                        <td>{{ backup.id }}</td>
+                                        <td>{{ backup.name }}</td>
+                                        <td>{{ backup.size }}</td>
+                                        <td>{{ backup.date }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

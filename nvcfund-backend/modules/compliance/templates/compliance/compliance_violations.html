@@ -1,0 +1,214 @@
+{% extends "compliance/layout.html" %}
+
+{% block title %}Compliance Violations - NVC Banking Platform{% endblock %}
+
+{% block content %}
+<div class="compliance-violations-container">
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Compliance Violations
+        </h1>
+        <p class="page-subtitle">Track and manage compliance violations and remediation efforts</p>
+    </div>
+
+    <!-- Violations Summary -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-muted mb-1">Open Violations</h6>
+                            <h3 class="text-danger mb-0">3</h3>
+                        </div>
+                        <div class="metric-icon bg-danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-muted mb-1">In Progress</h6>
+                            <h3 class="text-warning mb-0">7</h3>
+                        </div>
+                        <div class="metric-icon bg-warning">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-muted mb-1">Resolved (30 days)</h6>
+                            <h3 class="text-success mb-0">24</h3>
+                        </div>
+                        <div class="metric-icon bg-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-muted mb-1">Avg Resolution</h6>
+                            <h3 class="text-info mb-0">5.2 days</h3>
+                        </div>
+                        <div class="metric-icon bg-info">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Violations Table -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-list me-2"></i>
+                Active Violations
+            </h5>
+            <button class="btn btn-primary btn-sm">
+                <i class="fas fa-plus me-2"></i>
+                Report Violation
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Severity</th>
+                            <th>Description</th>
+                            <th>Assigned To</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>V-2025-001</strong></td>
+                            <td>GDPR</td>
+                            <td><span class="badge bg-danger">Critical</span></td>
+                            <td>Data retention policy violation - customer data retained beyond 36 months</td>
+                            <td>Sarah Mitchell</td>
+                            <td>July 10, 2025</td>
+                            <td><span class="badge bg-warning">In Progress</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                <button class="btn btn-sm btn-outline-success">Update</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>V-2025-002</strong></td>
+                            <td>PCI DSS</td>
+                            <td><span class="badge bg-warning">High</span></td>
+                            <td>Insufficient access controls on cardholder data environment</td>
+                            <td>Michael Chen</td>
+                            <td>July 15, 2025</td>
+                            <td><span class="badge bg-info">Open</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                <button class="btn btn-sm btn-outline-success">Assign</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>V-2025-003</strong></td>
+                            <td>SOX</td>
+                            <td><span class="badge bg-warning">High</span></td>
+                            <td>Missing approval documentation for financial transactions</td>
+                            <td>Lisa Rodriguez</td>
+                            <td>July 12, 2025</td>
+                            <td><span class="badge bg-warning">In Progress</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                <button class="btn btn-sm btn-outline-success">Update</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>V-2025-004</strong></td>
+                            <td>FFIEC</td>
+                            <td><span class="badge bg-secondary">Medium</span></td>
+                            <td>Incomplete cybersecurity assessment documentation</td>
+                            <td>David Park</td>
+                            <td>July 20, 2025</td>
+                            <td><span class="badge bg-warning">In Progress</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                <button class="btn btn-sm btn-outline-success">Update</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>V-2025-005</strong></td>
+                            <td>ISO 27001</td>
+                            <td><span class="badge bg-secondary">Medium</span></td>
+                            <td>Risk assessment documentation needs updating</td>
+                            <td>Emma Wilson</td>
+                            <td>July 25, 2025</td>
+                            <td><span class="badge bg-info">Open</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                <button class="btn btn-sm btn-outline-success">Assign</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.compliance-violations-container {
+    padding: 2rem 0;
+}
+
+.metric-card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+}
+
+.metric-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    border-top: none;
+    font-weight: 600;
+}
+
+.table td {
+    vertical-align: middle;
+}
+</style>
+{% endblock %}

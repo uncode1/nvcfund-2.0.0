@@ -1,0 +1,363 @@
+{% extends "public/layout.html" %}
+
+{% block title %}System Settings - NVC Banking Platform{% endblock %}
+
+{% block head %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+    .settings-dashboard {
+        background: linear-gradient(135deg, #0a2447 0%, #1a365d 100%);
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 20px;
+    }
+    
+    .settings-header {
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .settings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .settings-card {
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 25px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .settings-card h3 {
+        color: #66ccff;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #66ccff;
+        padding-bottom: 10px;
+    }
+    
+    .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .setting-item:last-child {
+        border-bottom: none;
+    }
+    
+    .setting-label {
+        font-weight: 500;
+        color: #ffffff;
+    }
+    
+    .setting-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .toggle-switch {
+        position: relative;
+        width: 50px;
+        height: 25px;
+        background-color: #374151;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .toggle-switch.active {
+        background-color: #00ff88;
+    }
+    
+    .toggle-switch::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 21px;
+        height: 21px;
+        background-color: #ffffff;
+        border-radius: 50%;
+        transition: transform 0.3s;
+    }
+    
+    .toggle-switch.active::after {
+        transform: translateX(25px);
+    }
+    
+    .setting-input {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: #ffffff;
+        width: 120px;
+    }
+    
+    .save-button {
+        background: #66ccff;
+        color: #0a2447;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+    
+    .save-button:hover {
+        background: #4db8ff;
+        transform: scale(1.05);
+    }
+    
+    .danger-zone {
+        background: rgba(255,68,68,0.2);
+        border: 2px solid #ff4444;
+        border-radius: 15px;
+        padding: 25px;
+        margin-top: 30px;
+    }
+    
+    .danger-zone h3 {
+        color: #ff4444;
+        margin-bottom: 15px;
+    }
+    
+    .danger-button {
+        background: #ff4444;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .danger-button:hover {
+        background: #cc0000;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="settings-dashboard">
+    <!-- Settings Header -->
+    <div class="settings-header">
+        <h1><i class="fas fa-cog"></i> System Settings</h1>
+        <p>Configure system-wide settings and security preferences</p>
+        <div>Last Updated: {{ settings_data.timestamp }}</div>
+    </div>
+
+    <!-- Settings Grid -->
+    <div class="settings-grid">
+        <!-- System Settings -->
+        <div class="settings-card">
+            <h3><i class="fas fa-server"></i> System Configuration</h3>
+            
+            <div class="setting-item">
+                <div class="setting-label">Maintenance Mode</div>
+                <div class="setting-control">
+                    <div class="toggle-switch {% if settings_data.system_settings.maintenance_mode %}active{% endif %}" 
+                         onclick="toggleSetting('maintenance_mode')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">Allow New Registrations</div>
+                <div class="setting-control">
+                    <div class="toggle-switch {% if settings_data.system_settings.allow_registrations %}active{% endif %}" 
+                         onclick="toggleSetting('allow_registrations')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">Session Timeout (seconds)</div>
+                <div class="setting-control">
+                    <input type="number" class="setting-input" value="{{ settings_data.system_settings.session_timeout }}" 
+                           id="session_timeout" min="300" max="3600">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">Max Login Attempts</div>
+                <div class="setting-control">
+                    <input type="number" class="setting-input" value="{{ settings_data.system_settings.max_login_attempts }}" 
+                           id="max_login_attempts" min="3" max="10">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">Backup Enabled</div>
+                <div class="setting-control">
+                    <div class="toggle-switch {% if settings_data.system_settings.backup_enabled %}active{% endif %}" 
+                         onclick="toggleSetting('backup_enabled')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">Logging Level</div>
+                <div class="setting-control">
+                    <select class="setting-input" id="logging_level">
+                        <option value="DEBUG" {% if settings_data.system_settings.logging_level == 'DEBUG' %}selected{% endif %}>DEBUG</option>
+                        <option value="INFO" {% if settings_data.system_settings.logging_level == 'INFO' %}selected{% endif %}>INFO</option>
+                        <option value="WARNING" {% if settings_data.system_settings.logging_level == 'WARNING' %}selected{% endif %}>WARNING</option>
+                        <option value="ERROR" {% if settings_data.system_settings.logging_level == 'ERROR' %}selected{% endif %}>ERROR</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="save-button" onclick="saveSystemSettings()">
+                <i class="fas fa-save"></i> Save System Settings
+            </button>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="settings-card">
+            <h3><i class="fas fa-shield-alt"></i> Security Configuration</h3>
+            
+            <div class="setting-item">
+                <div class="setting-label">Require 2FA for Admin</div>
+                <div class="setting-control">
+                    <div class="toggle-switch {% if settings_data.security_settings.require_2fa %}active{% endif %}" 
+                         onclick="toggleSetting('require_2fa')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">Password Complexity</div>
+                <div class="setting-control">
+                    <div class="toggle-switch {% if settings_data.security_settings.password_complexity %}active{% endif %}" 
+                         onclick="toggleSetting('password_complexity')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">IP Whitelisting</div>
+                <div class="setting-control">
+                    <div class="toggle-switch {% if settings_data.security_settings.ip_whitelisting %}active{% endif %}" 
+                         onclick="toggleSetting('ip_whitelisting')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">Audit Logging</div>
+                <div class="setting-control">
+                    <div class="toggle-switch {% if settings_data.security_settings.audit_logging %}active{% endif %}" 
+                         onclick="toggleSetting('audit_logging')"></div>
+                </div>
+            </div>
+            
+            <button class="save-button" onclick="saveSecuritySettings()">
+                <i class="fas fa-shield-alt"></i> Save Security Settings
+            </button>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="settings-card">
+            <h3><i class="fas fa-bell"></i> Notification Preferences</h3>
+            
+            <div class="setting-item">
+                <div class="setting-label">Email Alerts</div>
+                <div class="setting-control">
+                    <div class="toggle-switch {% if settings_data.notification_settings.email_alerts %}active{% endif %}" 
+                         onclick="toggleSetting('email_alerts')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">SMS Alerts</div>
+                <div class="setting-control">
+                    <div class="toggle-switch {% if settings_data.notification_settings.sms_alerts %}active{% endif %}" 
+                         onclick="toggleSetting('sms_alerts')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">System Notifications</div>
+                <div class="setting-control">
+                    <div class="toggle-switch {% if settings_data.notification_settings.system_notifications %}active{% endif %}" 
+                         onclick="toggleSetting('system_notifications')"></div>
+                </div>
+            </div>
+            
+            <button class="save-button" onclick="saveNotificationSettings()">
+                <i class="fas fa-bell"></i> Save Notification Settings
+            </button>
+        </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="danger-zone">
+        <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+        <p>These actions are irreversible and may cause system downtime.</p>
+        
+        <button class="danger-button" onclick="confirmAction('reset_system')">
+            <i class="fas fa-redo"></i> Reset System
+        </button>
+        
+        <button class="danger-button" onclick="confirmAction('clear_logs')">
+            <i class="fas fa-trash"></i> Clear All Logs
+        </button>
+        
+        <button class="danger-button" onclick="confirmAction('reset_security')">
+            <i class="fas fa-key"></i> Reset Security Settings
+        </button>
+    </div>
+</div>
+
+<script>
+// Toggle switch functionality
+function toggleSetting(settingName) {
+    const toggle = event.target;
+    toggle.classList.toggle('active');
+    
+    // You can add AJAX call here to save the setting immediately
+    console.log(`Setting ${settingName} toggled to: ${toggle.classList.contains('active')}`);
+}
+
+// Save functions
+function saveSystemSettings() {
+    const settings = {
+        session_timeout: document.getElementById('session_timeout').value,
+        max_login_attempts: document.getElementById('max_login_attempts').value,
+        logging_level: document.getElementById('logging_level').value
+    };
+    
+    alert('System settings saved successfully!');
+    console.log('Saving system settings:', settings);
+}
+
+function saveSecuritySettings() {
+    alert('Security settings saved successfully!');
+    console.log('Saving security settings');
+}
+
+function saveNotificationSettings() {
+    alert('Notification settings saved successfully!');
+    console.log('Saving notification settings');
+}
+
+function confirmAction(action) {
+    const confirmMsg = `Are you sure you want to ${action.replace('_', ' ')}? This action cannot be undone.`;
+    
+    if (confirm(confirmMsg)) {
+        alert(`${action.replace('_', ' ').toUpperCase()} action would be executed here.`);
+        console.log(`Executing dangerous action: ${action}`);
+    }
+}
+</script>
+{% endblock %}

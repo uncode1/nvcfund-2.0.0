@@ -1,0 +1,303 @@
+<!-- Enterprise Sidebar Container -->
+<div class="enterprise-sidebar" id="enterpriseSidebar">
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <i class="fas fa-university"></i>
+            </div>
+            <div class="logo-text">NVC Fund</div>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Search -->
+    <div class="sidebar-search">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input id="sidebarSearch" class="search-input" type="text" placeholder="Search..." aria-label="Search navigation">
+            <kbd class="search-kbd">Ctrl + K</kbd>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar-nav" id="sidebarNav">
+        {% if current_user.is_authenticated %}
+        <!-- Dashboard -->
+        <div class="nav-section">
+            <div class="nav-section-label">Main</div>
+            <a class="nav-item" href="/dashboard/" data-tooltip="Dashboard">
+                <i class="fas fa-tachometer-alt nav-icon"></i>
+                <span class="nav-text">Dashboard</span>
+            </a>
+        </div>
+
+        <!-- Core Banking -->
+        <div class="nav-section">
+            <div class="nav-section-label">Core Banking</div>
+            <!-- Account Management -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Account Management" aria-expanded="false">
+                    <i class="fas fa-user-tie nav-icon"></i>
+                    <span class="nav-text">Account Management</span>
+                    <i class="fas fa-chevron-down nav-arrow"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/accounts/create">
+                        <i class="fas fa-plus nav-icon"></i>
+                        <span class="nav-text">Create Account</span>
+                    </a>
+                    <a class="nav-subitem" href="/accounts/manage">
+                        <i class="fas fa-cog nav-icon"></i>
+                        <span class="nav-text">Manage Accounts</span>
+                    </a>
+                    <a class="nav-subitem" href="/accounts/kyc">
+                        <i class="fas fa-shield-alt nav-icon"></i>
+                        <span class="nav-text">KYC Verification</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Banking Operations -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Banking Operations" aria-expanded="false">
+                    <i class="fas fa-university nav-icon"></i>
+                    <span class="nav-text">Banking Operations</span>
+                    <i class="fas fa-chevron-down nav-arrow"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/banking/deposits">
+                        <i class="fas fa-arrow-down nav-icon"></i>
+                        <span class="nav-text">Deposits</span>
+                    </a>
+                    <a class="nav-subitem" href="/banking/withdrawals">
+                        <i class="fas fa-arrow-up nav-icon"></i>
+                        <span class="nav-text">Withdrawals</span>
+                    </a>
+                    <a class="nav-subitem" href="/banking/transfers">
+                        <i class="fas fa-exchange-alt nav-icon"></i>
+                        <span class="nav-text">Money Transfers</span>
+                    </a>
+                    <a class="nav-subitem" href="/banking/history">
+                        <i class="fas fa-history nav-icon"></i>
+                        <span class="nav-text">Transfer History</span>
+                    </a>
+                    <a class="nav-subitem" href="/banking/wire-transfers">
+                        <i class="fas fa-globe nav-icon"></i>
+                        <span class="nav-text">Wire Transfers</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Treasury -->
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Treasury" aria-expanded="false">
+                    <i class="fas fa-coins nav-icon"></i>
+                    <span class="nav-text">Treasury</span>
+                    <i class="fas fa-chevron-down nav-arrow"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/treasury/cash-management">
+                        <i class="fas fa-money-bill-wave nav-icon"></i>
+                        <span class="nav-text">Cash Management</span>
+                    </a>
+                    <a class="nav-subitem" href="/treasury/liquidity">
+                        <i class="fas fa-tint nav-icon"></i>
+                        <span class="nav-text">Liquidity</span>
+                    </a>
+                    <a class="nav-subitem" href="/treasury/settlements">
+                        <i class="fas fa-handshake nav-icon"></i>
+                        <span class="nav-text">Settlements</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trading & Exchange -->
+        <div class="nav-section">
+            <div class="nav-section-label">Trading & Exchange</div>
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Trading" aria-expanded="false">
+                    <i class="fas fa-chart-line nav-icon"></i>
+                    <span class="nav-text">Trading</span>
+                    <i class="fas fa-chevron-down nav-arrow"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/trading/forex">
+                        <i class="fas fa-dollar-sign nav-icon"></i>
+                        <span class="nav-text">Forex</span>
+                    </a>
+                    <a class="nav-subitem" href="/trading/crypto">
+                        <i class="fab fa-bitcoin nav-icon"></i>
+                        <span class="nav-text">Cryptocurrency</span>
+                    </a>
+                    <a class="nav-subitem" href="/trading/portfolio">
+                        <i class="fas fa-briefcase nav-icon"></i>
+                        <span class="nav-text">Portfolio</span>
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-item" href="/exchange/" data-tooltip="Exchange">
+                <i class="fas fa-exchange-alt nav-icon"></i>
+                <span class="nav-text">Exchange</span>
+            </a>
+        </div>
+
+        <!-- NVCT Stablecoin -->
+        <div class="nav-section">
+            <div class="nav-section-label">NVCT Stablecoin</div>
+            <a class="nav-item" href="/nvct-stablecoin/" data-tooltip="NVCT Overview">
+                <i class="fas fa-coins nav-icon"></i>
+                <span class="nav-text">NVCT Overview</span>
+            </a>
+            <a class="nav-item" href="/nvct-stablecoin/mint" data-tooltip="Mint NVCT">
+                <i class="fas fa-plus-circle nav-icon"></i>
+                <span class="nav-text">Mint NVCT</span>
+            </a>
+            <a class="nav-item" href="/nvct-stablecoin/burn" data-tooltip="Burn NVCT">
+                <i class="fas fa-minus-circle nav-icon"></i>
+                <span class="nav-text">Burn NVCT</span>
+            </a>
+        </div>
+
+        <!-- Compliance -->
+        <div class="nav-section">
+            <div class="nav-section-label">Compliance</div>
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Compliance" aria-expanded="false">
+                    <i class="fas fa-shield-alt nav-icon"></i>
+                    <span class="nav-text">Compliance</span>
+                    <i class="fas fa-chevron-down nav-arrow"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/compliance/aml">
+                        <i class="fas fa-search nav-icon"></i>
+                        <span class="nav-text">AML Monitoring</span>
+                    </a>
+                    <a class="nav-subitem" href="/compliance/kyc">
+                        <i class="fas fa-user-check nav-icon"></i>
+                        <span class="nav-text">KYC Management</span>
+                    </a>
+                    <a class="nav-subitem" href="/compliance/reports">
+                        <i class="fas fa-file-alt nav-icon"></i>
+                        <span class="nav-text">Reports</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="nav-section">
+            <div class="nav-section-label">Analytics</div>
+            <a class="nav-item" href="/analytics/" data-tooltip="Analytics">
+                <i class="fas fa-chart-bar nav-icon"></i>
+                <span class="nav-text">Analytics</span>
+            </a>
+            <a class="nav-item" href="/blockchain-analytics/" data-tooltip="Blockchain Analytics">
+                <i class="fas fa-cube nav-icon"></i>
+                <span class="nav-text">Blockchain Analytics</span>
+            </a>
+        </div>
+
+        <!-- Administration -->
+        {% if current_user.role == 'super_admin' %}
+        <div class="nav-section">
+            <div class="nav-section-label">Administration</div>
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="Admin Management" aria-expanded="false">
+                    <i class="fas fa-users-cog nav-icon"></i>
+                    <span class="nav-text">Admin Management</span>
+                    <i class="fas fa-chevron-down nav-arrow"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/admin-management/users">
+                        <i class="fas fa-users nav-icon"></i>
+                        <span class="nav-text">User Management</span>
+                    </a>
+                    <a class="nav-subitem" href="/admin-management/roles">
+                        <i class="fas fa-user-shield nav-icon"></i>
+                        <span class="nav-text">Role Management</span>
+                    </a>
+                    <a class="nav-subitem" href="/admin-management/branches">
+                        <i class="fas fa-building nav-icon"></i>
+                        <span class="nav-text">Branch Management</span>
+                    </a>
+                    <a class="nav-subitem" href="/admin-management/tellers">
+                        <i class="fas fa-cash-register nav-icon"></i>
+                        <span class="nav-text">Teller Operations</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-group">
+                <button class="nav-group-trigger" data-tooltip="System Management" aria-expanded="false">
+                    <i class="fas fa-cogs nav-icon"></i>
+                    <span class="nav-text">System Management</span>
+                    <i class="fas fa-chevron-down nav-arrow"></i>
+                </button>
+                <div class="nav-group-content">
+                    <a class="nav-subitem" href="/system-management/monitoring">
+                        <i class="fas fa-heartbeat nav-icon"></i>
+                        <span class="nav-text">System Monitoring</span>
+                    </a>
+                    <a class="nav-subitem" href="/system-management/logs">
+                        <i class="fas fa-file-alt nav-icon"></i>
+                        <span class="nav-text">System Logs</span>
+                    </a>
+                    <a class="nav-subitem" href="/system-management/backups">
+                        <i class="fas fa-database nav-icon"></i>
+                        <span class="nav-text">Backups</span>
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-item" href="/security-center/" data-tooltip="Security Center">
+                <i class="fas fa-shield-alt nav-icon"></i>
+                <span class="nav-text">Security Center</span>
+            </a>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- Public Navigation -->
+        <div class="nav-section">
+            <div class="nav-section-label">Account</div>
+            <a class="nav-item" href="/auth/login">
+                <i class="fas fa-sign-in-alt nav-icon"></i>
+                <span class="nav-text">Login</span>
+            </a>
+            <a class="nav-item" href="/auth/register">
+                <i class="fas fa-user-plus nav-icon"></i>
+                <span class="nav-text">Register</span>
+            </a>
+        </div>
+        {% endif %}
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        {% if current_user.is_authenticated %}
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="user-details">
+                <div class="user-name">{{ current_user.username }}</div>
+                <div class="user-role">{{ current_user.role|title }}</div>
+            </div>
+        </div>
+        <div class="footer-actions">
+            <a href="/auth/logout" class="nav-item" data-tooltip="Logout">
+                <i class="fas fa-sign-out-alt nav-icon"></i>
+                <span class="nav-text">Logout</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>

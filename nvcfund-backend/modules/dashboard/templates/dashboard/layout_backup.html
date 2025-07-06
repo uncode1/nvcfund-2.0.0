@@ -1,0 +1,627 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - NVC Banking Platform{% endblock %}
+
+{% block head %}
+    <!-- Chart.js for interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Moment.js for date handling -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    
+    <!-- Socket.IO for real-time updates -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    
+    <!-- Dashboard Specific Styles -->
+    <style>
+        :root {
+            --dashboard-primary: #0a2447;
+            --dashboard-secondary: #1e4f72;
+            --dashboard-accent: #66ccff;
+            --dashboard-success: #28a745;
+            --dashboard-warning: #ffc107;
+            --dashboard-danger: #dc3545;
+            --dashboard-light: #f8f9fa;
+            --dashboard-shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Global Layout Constraints */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dashboard-light) 0%, #e9ecef 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-top: 10px;
+        }
+        
+        .dashboard-container {
+            min-height: 100vh;
+            padding-top: 20px;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Interactive Dashboard Elements */
+        .dashboard-stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px var(--dashboard-shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--dashboard-primary), var(--dashboard-accent));
+        }
+
+        .dashboard-stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--dashboard-shadow);
+        }
+
+        .dashboard-stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dashboard-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px var(--dashboard-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            box-shadow: 0 5px 20px var(--dashboard-shadow);
+        }
+
+        .dashboard-card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .dashboard-card-body {
+            padding: 1.5rem;
+        }
+
+        /* Quick Action Buttons */
+        .quick-action-btn {
+            background: white;
+            border: 2px solid var(--dashboard-primary);
+            color: var(--dashboard-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--dashboard-primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--dashboard-shadow);
+        }
+
+        .quick-action-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* Interactive Tables */
+        .interactive-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px var(--dashboard-shadow);
+        }
+
+        .interactive-table thead {
+            background: var(--dashboard-primary);
+            color: white;
+        }
+
+        .interactive-table th {
+            padding: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .interactive-table th:hover {
+            background: var(--dashboard-secondary);
+        }
+
+        .interactive-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .interactive-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Notification System */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        .notification {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px var(--dashboard-shadow);
+            border-left: 4px solid var(--dashboard-primary);
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .notification-show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification-success {
+            border-left-color: var(--dashboard-success);
+        }
+
+        .notification-error {
+            border-left-color: var(--dashboard-danger);
+        }
+
+        .notification-warning {
+            border-left-color: var(--dashboard-warning);
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            color: #6c757d;
+            cursor: pointer;
+        }
+
+        /* Search and Filter Elements */
+        .search-input {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--dashboard-primary);
+            box-shadow: 0 0 0 0.2rem rgba(10, 36, 71, 0.25);
+            outline: none;
+        }
+
+        .filter-control {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-control:focus {
+            border-color: var(--dashboard-primary);
+            box-shadow: 0 0 0 0.2rem rgba(10, 36, 71, 0.25);
+            outline: none;
+        }
+
+        /* Transaction Feed */
+        .transaction-item {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 5px var(--dashboard-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .transaction-item:hover {
+            box-shadow: 0 4px 10px var(--dashboard-shadow);
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-type {
+            font-weight: 600;
+            color: var(--dashboard-primary);
+        }
+
+        .transaction-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .transaction-time {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .transaction-amount.positive {
+            color: var(--dashboard-success);
+        }
+
+        .transaction-amount.negative {
+            color: var(--dashboard-danger);
+        }
+
+        .transaction-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-completed {
+            background: var(--dashboard-success);
+            color: white;
+        }
+
+        .status-pending {
+            background: var(--dashboard-warning);
+            color: white;
+        }
+
+        /* Chart Containers */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1rem 0;
+        }
+
+        .chart-container canvas {
+            max-width: 100%;
+            height: 100%;
+        }
+
+        /* Loading Indicator */
+        .loading-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--dashboard-shadow);
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--dashboard-primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-stat-card {
+                margin-bottom: 1rem;
+            }
+            
+            .notification-container {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        /* Keyboard Shortcuts Help */
+        .keyboard-shortcuts-help {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--dashboard-primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .keyboard-shortcuts-help:hover {
+            opacity: 1;
+        }
+
+        /* Navigation Badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--dashboard-danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Collapsible Sections */
+        .collapsible-section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px var(--dashboard-shadow);
+        }
+
+        .collapsible-header {
+            padding: 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .collapsible-header:hover {
+            background: #f8f9fa;
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsible-content.show {
+            max-height: 1000px;
+        }
+
+        .collapsible-body {
+            padding: 1rem;
+        }
+    </style>
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-recent-item:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .dashboard-section-title {
+            color: var(--dashboard-primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--dashboard-accent);
+        }
+        
+        .dashboard-badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .dashboard-badge-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--dashboard-success);
+        }
+        
+        .dashboard-badge-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--dashboard-warning);
+        }
+        
+        .dashboard-badge-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--dashboard-danger);
+        }
+        
+        .dashboard-chart-container {
+            position: relative;
+            height: 300px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding-top: 10px;
+            }
+            
+            .dashboard-card-body {
+                padding: 15px;
+            }
+            
+            .dashboard-stat-number {
+                font-size: 2rem;
+            }
+            
+            .dashboard-quick-action {
+                padding: 15px;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+    
+    {% block extra_head %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+    <!-- Dashboard Content Area -->
+    <div class="dashboard-container">
+        <div class="container-fluid">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' if category == 'info' else 'check-circle' }} me-2"></i>
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Dashboard Header -->
+            {% block dashboard_header %}
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="dashboard-card fade-in">
+                        <div class="dashboard-card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="mb-0">
+                                        <i class="fas fa-tachometer-alt me-2"></i>
+                                        {% block page_title %}Dashboard{% endblock %}
+                                    </h4>
+                                    <p class="mb-0 opacity-75">
+                                        {% block page_subtitle %}Welcome to your banking dashboard{% endblock %}
+                                    </p>
+                                </div>
+                                <div class="col-auto">
+                                    <span class="badge bg-light text-dark">
+                                        <i class="fas fa-clock me-1"></i>
+                                        Last updated: <span id="last-updated">Just now</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+            
+            <!-- Main Dashboard Content -->
+            <div class="row">
+                <div class="col-12">
+                    <!-- Child template content will render here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Interactive Dashboard JavaScript - Temporarily disabled for clean presentation -->
+    <!-- <script src="/static/dashboard/dashboard_interactive.js"></script> -->
+    
+    <!-- Banking Platform Actions - Temporarily disabled for clean presentation -->
+    <!-- <script src="/static/js/banking_platform_actions.js"></script> -->
+    
+    <!-- Clean Dashboard Scripts -->
+    <script>
+        // Minimal clean JavaScript for basic functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simple timestamp update
+            function updateTimestamp() {
+                const timestampElement = document.getElementById('last-updated');
+                if (timestampElement) {
+                    const now = new Date();
+                    timestampElement.textContent = now.toLocaleTimeString();
+                }
+            }
+            
+            // Update timestamp every minute
+            setInterval(updateTimestamp, 60000);
+            updateTimestamp();
+        });
+    </script>
+    </div>
+{% endblock %}

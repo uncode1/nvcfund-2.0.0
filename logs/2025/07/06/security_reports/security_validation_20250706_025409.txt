@@ -1,0 +1,17 @@
+/home/runner/workspace/scripts/check_security.py:42: DeprecationWarning: The '__version__' attribute is deprecated and will be removed in Flask 3.1. Use feature detection or 'importlib.metadata.version("flask")' instead.
+  return {"version": flask.__version__, "status": "OK"}
+NVC Banking Platform - Simple Security Check
+==================================================
+Flask Version: 3.1.0 (OK)
+
+Critical Package Imports:
+  ✓ flask: OK
+  ✓ sqlalchemy: OK
+  ✓ flask_login: OK
+  ✓ flask_cors: OK
+  ✓ werkzeug: OK
+
+Flask Ecosystem Packages: 12 found
+
+==================================================
+Status: ✓ Package environment is healthy

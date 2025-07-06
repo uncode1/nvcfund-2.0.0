@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NVC Banking Platform{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Enhanced Professional Dark Theme Styling -->
+    <style>
+        /* Import navbar and footer styles from main layout */
+        .modern-navbar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+            margin: 0 2px;
+            padding: 0.5rem 0.8rem !important;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .dropdown-menu-modern {
+            background: linear-gradient(135deg, #0a2447 0%, #1e3c72 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .dropdown-item {
+            color: #e5e7eb;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+            margin: 0 0.5rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transform: translateX(5px);
+        }
+
+        .dropdown-header {
+            color: #ffd700;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .dropdown-divider {
+            border-color: rgba(255, 255, 255, 0.2);
+            margin: 0.5rem 0.5rem;
+        }
+
+        /* Footer styling */
+        footer {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+        }
+
+        footer a {
+            color: #e5e7eb !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #ffd700 !important;
+            transform: translateX(3px);
+        }
+
+        /* Ensure proper flexbox layout */
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-content {
+            flex: 1;
+        }
+    </style>
+    
+    {% block extra_styles %}{% endblock %}
+</head>
+<body>
+    <!-- Include navbar from main layout -->
+    <nav class="navbar navbar-expand-lg navbar-dark modern-navbar">
+        <div class="container-fluid px-3">
+            <!-- Brand - Compact Design -->
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('public.index') }}" style="font-size: 1.25rem;">
+                <i class="fas fa-university me-2" style="color: #ffd700;"></i>
+                <span class="d-none d-sm-inline">NVC Banking</span>
+                <span class="d-inline d-sm-none">NVC</span>
+            </a>
+
+            <!-- Smart Toggle Button -->
+            <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false">
+                <i class="fas fa-bars" style="color: #fff; font-size: 1.1rem;"></i>
+            </button>
+
+            <!-- Collapsible Navigation Container -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Main Navigation -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="/contact" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-university me-1"></i> Services
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-modern" aria-labelledby="servicesDropdown">
+                            <li><h6 class="dropdown-header"><i class="fas fa-info-circle me-1"></i> Learn More</h6></li>
+                            <li><a class="dropdown-item" href="{{ url_for('public.about') }}"><i class="fas fa-building me-1"></i> About NVC Banking</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('public.index') }}#live-data-section"><i class="fas fa-chart-line me-1"></i> Live Platform Data</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header"><i class="fas fa-link me-1"></i> Blockchain</h6></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blockchain_analytics.dashboard') }}"><i class="fas fa-cube me-1"></i> Analytics Dashboard</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="/contact" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-book me-1"></i> Resources
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-modern" aria-labelledby="resourcesDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('public.api_documentation') }}"><i class="fas fa-code me-1"></i> Service Documentation</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('public.nvct_whitepaper') }}"><i class="fas fa-file-alt me-1"></i> NVCT Whitepaper</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('public.user_guide') }}"><i class="fas fa-book-open me-1"></i> User Guide</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('public.faq') }}"><i class="fas fa-question-circle me-1"></i> FAQ</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('public.contact') }}">
+                            <i class="fas fa-envelope me-1"></i> Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact" onclick="openLiveChat()">
+                            <i class="fas fa-comments me-1"></i> Live Chat
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- User Profile & Authentication -->
+                <ul class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated %}
+                        <!-- User Profile Menu - Professional Responsive -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center px-2" href="/contact" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="user-avatar d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; border-radius: 50%; background-color: #ffd700; color: #1e3c72; font-weight: 600; font-size: 0.9rem; flex-shrink: 0;">
+                                    {{ current_user.username[0].upper() }}
+                                </div>
+                                <div class="user-info d-none d-lg-flex align-items-center">
+                                    <div class="user-name" style="font-size: 0.85rem; font-weight: 500; color: #fff; margin: 0;">{{ current_user.username }}</div>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-modern dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><h6 class="dropdown-header"><i class="fas fa-user me-1"></i> Account</h6></li>
+                                <li><a class="dropdown-item" href="/profile"><i class="fas fa-user-edit me-1"></i> My Profile</a></li>
+                                <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog me-1"></i> Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><span class="dropdown-item-text text-muted">
+                                    <small><i class="fas fa-shield-alt me-1"></i> Role: {{ current_user.role.value if current_user.role else 'USER' }}</small>
+                                </span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <!-- Authentication Buttons - Clean Design -->
+                        <li class="nav-item me-2">
+                            <a class="btn btn-outline-light btn-sm" href="{{ url_for('auth.register') }}" style="border-radius: 20px; padding: 0.375rem 1rem;">
+                                <i class="fas fa-user-plus me-1"></i> Open Account
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-light btn-sm" href="{{ url_for('auth.login') }}" style="border-radius: 20px; padding: 0.375rem 1rem; color: #1e3c72; font-weight: 500;">
+                                <i class="fas fa-sign-in-alt me-1"></i> Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content area -->
+    <div class="auth-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Professional Footer -->
+    <footer class="mt-auto py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="fw-bold mb-3" style="color: #ffd700;">
+                        <i class="fas fa-university me-2"></i>NVC Banking
+                    </h6>
+                    <p class="text-light mb-3" style="font-size: 0.9rem;">
+                        Professional blockchain financial platform delivering institutional-grade stablecoin infrastructure with advanced security.
+                    </p>
+                    <div class="d-flex gap-2">
+                        <a href="/contact" class="text-light" style="font-size: 1.2rem;">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="/contact" class="text-light" style="font-size: 1.2rem;">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="/contact" class="text-light" style="font-size: 1.2rem;">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="fw-bold mb-3 text-light">Platform</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('public.about') }}" class="text-light text-decoration-none">About Us</a></li>
+                        <li><a href="{{ url_for('public.index') }}#live-data-section" class="text-light text-decoration-none">Live Data</a></li>
+                        <li><a href="{{ url_for('public.contact') }}" class="text-light text-decoration-none">Contact</a></li>
+                        <li><a href="/contact" onclick="openLiveChat()" class="text-light text-decoration-none">Live Chat</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="fw-bold mb-3 text-light">Blockchain</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('blockchain_analytics.dashboard') }}" class="text-light text-decoration-none">Analytics Dashboard</a></li>
+                        <li><a href="{{ url_for('public.api_documentation') }}" class="text-light text-decoration-none">Developer Service</a></li>
+                        <li><a href="{{ url_for('public.faq') }}" class="text-light text-decoration-none">FAQ</a></li>
+                        <li><a href="{{ url_for('public.user_guide') }}" class="text-light text-decoration-none">User Guide</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="fw-bold mb-3 text-light">Resources</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('public.api_documentation') }}" class="text-light text-decoration-none">Service Docs</a></li>
+                        <li><a href="{{ url_for('public.faq') }}" class="text-light text-decoration-none">FAQ</a></li>
+                        <li><a href="{{ url_for('public.user_guide') }}" class="text-light text-decoration-none">User Guide</a></li>
+                        <li><a href="{{ url_for('public.nvct_whitepaper') }}" class="text-light text-decoration-none">Documentation</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="fw-bold mb-3 text-light">Contact Info</h6>
+                    <div class="contact-info">
+                        <p class="mb-2">
+                            <i class="fas fa-envelope me-2" style="color: #ffd700;"></i>
+                            support@nvcfund.com
+                        </p>
+                        <p class="mb-2">
+                            <i class="fas fa-phone me-2" style="color: #ffd700;"></i>
+                            +1 (555) 123-4567
+                        </p>
+                        <p class="mb-2">
+                            <i class="fas fa-clock me-2" style="color: #ffd700;"></i>
+                            24/7 Digital Support
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 2rem 0 1rem 0;">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="text-light mb-0" style="font-size: 0.85rem;">
+                        &copy; 2025 NVC Banking Platform. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="{{ url_for('public.privacy_policy') }}" class="text-light text-decoration-none me-3" style="font-size: 0.85rem;">Privacy Policy</a>
+                    <a href="{{ url_for('public.terms_of_service') }}" class="text-light text-decoration-none me-3" style="font-size: 0.85rem;">Terms of Service</a>
+                    <a href="{{ url_for('public.contact') }}" class="text-light text-decoration-none" style="font-size: 0.85rem;">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Live Chat and Navigation Scripts -->
+    <script>
+        // Live Chat Functionality
+        function openLiveChat() {
+            // Create chat widget modal
+            const existingModal = document.getElementById('liveChatModal');
+            if (existingModal) {
+                const modal = new bootstrap.Modal(existingModal);
+                modal.show();
+                return;
+            }
+
+            const chatModal = document.createElement('div');
+            chatModal.className = 'modal fade';
+            chatModal.id = 'liveChatModal';
+            chatModal.innerHTML = `
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background: #2d2d2d; border: 1px solid #404040;">
+                        <div class="modal-header" style="background: linear-gradient(135deg, #374151, #4b5563); border-bottom: 1px solid #4b5563;">
+                            <h5 class="modal-title text-white">
+                                <i class="fas fa-comments me-2"></i>Live Chat Support
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" style="background: #2d2d2d; color: #e5e7eb;">
+                            <div class="chat-container" style="height: 400px; overflow-y: auto; border: 1px solid #404040; border-radius: 8px; padding: 15px; background: #1a1a1a;">
+                                <div class="chat-message bot-message mb-3">
+                                    <div class="d-flex align-items-start">
+                                        <div class="chat-avatar me-2" style="width: 32px; height: 32px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
+                                            <i class="fas fa-robot"></i>
+                                        </div>
+                                        <div class="chat-bubble" style="background: #374151; padding: 12px; border-radius: 12px; max-width: 70%;">
+                                            <p class="mb-1 text-white">Hello! I'm here to help you with NVC Banking Platform. How can I assist you today?</p>
+                                            <small class="text-muted">${new Date().toLocaleTimeString()}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input mt-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="chatMessageInput" placeholder="Type your message..." style="background: #374151; border: 1px solid #4b5563; color: #e5e7eb;">
+                                    <button class="btn btn-primary" type="button" onclick="sendChatMessage()">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="background: #374151; border-top: 1px solid #4b5563;">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Secure chat - Your conversations are encrypted
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(chatModal);
+            const modal = new bootstrap.Modal(chatModal);
+            modal.show();
+
+            // Add enter key support
+            document.getElementById('chatMessageInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendChatMessage();
+                }
+            });
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatMessageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            const chatContainer = document.querySelector('.chat-container');
+            const timestamp = new Date().toLocaleTimeString();
+
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'chat-message user-message mb-3';
+            userMessage.innerHTML = `
+                <div class="d-flex align-items-start justify-content-end">
+                    <div class="chat-bubble me-2" style="background: #3b82f6; padding: 12px; border-radius: 12px; max-width: 70%;">
+                        <p class="mb-1 text-white">${message}</p>
+                        <small class="text-light">${timestamp}</small>
+                    </div>
+                    <div class="chat-avatar" style="width: 32px; height: 32px; background: #ffd700; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1e3c72; font-size: 0.8rem;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            `;
+
+            chatContainer.appendChild(userMessage);
+            input.value = '';
+
+            // Simulate bot response
+            setTimeout(() => {
+                const botResponse = document.createElement('div');
+                botResponse.className = 'chat-message bot-message mb-3';
+                botResponse.innerHTML = `
+                    <div class="d-flex align-items-start">
+                        <div class="chat-avatar me-2" style="width: 32px; height: 32px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="chat-bubble" style="background: #374151; padding: 12px; border-radius: 12px; max-width: 70%;">
+                            <p class="mb-1 text-white">Thank you for your message. A support representative will be with you shortly. In the meantime, you can explore our <a href="/public/faq" class="text-primary">FAQ section</a> or <a href="/public/user-guide" class="text-primary">User Guide</a>.</p>
+                            <small class="text-muted">${new Date().toLocaleTimeString()}</small>
+                        </div>
+                    </div>
+                `;
+                chatContainer.appendChild(botResponse);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 1000);
+
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

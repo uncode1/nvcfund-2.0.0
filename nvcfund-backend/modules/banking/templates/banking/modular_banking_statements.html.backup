@@ -1,0 +1,284 @@
+{% extends "banking/layout.html" %}
+
+{% block title %}Account Statements{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark border-info">
+                <div class="card-header bg-gradient text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="mb-0">
+                                <i class="fas fa-file-alt me-2"></i>Account Statements
+                            </h3>
+                            <small class="text-light">Download and view your account statements</small>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fas fa-download me-2"></i>Download
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Current Month</a></li>
+                                <li><a class="dropdown-item" href="#">Last 3 Months</a></li>
+                                <li><a class="dropdown-item" href="#">Year to Date</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statement Filters -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <label class="form-label text-light">Account</label>
+            <select class="form-control bg-dark text-light border-secondary">
+                <option>All Accounts</option>
+                <option>Checking ****1234</option>
+                <option>Savings ****5678</option>
+                <option>Business ****9012</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label text-light">Statement Period</label>
+            <select class="form-control bg-dark text-light border-secondary">
+                <option>Last 6 Months</option>
+                <option>Last 12 Months</option>
+                <option>Last 24 Months</option>
+                <option>All Available</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label text-light">Format</label>
+            <select class="form-control bg-dark text-light border-secondary">
+                <option>PDF</option>
+                <option>Excel</option>
+                <option>CSV</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button class="btn btn-primary w-100">
+                <i class="fas fa-search me-2"></i>Filter
+            </button>
+        </div>
+    </div>
+
+    <!-- Available Statements -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>Available Statements
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Account</th>
+                                    <th>Statement Period</th>
+                                    <th>Generated Date</th>
+                                    <th>File Size</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-university text-primary me-2"></i>
+                                        Checking ****1234
+                                    </td>
+                                    <td>June 2025</td>
+                                    <td>2025-07-01</td>
+                                    <td>245 KB</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-outline-success btn-sm">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </button>
+                                            <button class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-download me-1"></i>Download
+                                            </button>
+                                            <button class="btn btn-outline-warning btn-sm">
+                                                <i class="fas fa-envelope me-1"></i>Email
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-piggy-bank text-success me-2"></i>
+                                        Savings ****5678
+                                    </td>
+                                    <td>June 2025</td>
+                                    <td>2025-07-01</td>
+                                    <td>198 KB</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-outline-success btn-sm">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </button>
+                                            <button class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-download me-1"></i>Download
+                                            </button>
+                                            <button class="btn btn-outline-warning btn-sm">
+                                                <i class="fas fa-envelope me-1"></i>Email
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-university text-primary me-2"></i>
+                                        Checking ****1234
+                                    </td>
+                                    <td>May 2025</td>
+                                    <td>2025-06-01</td>
+                                    <td>267 KB</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-outline-success btn-sm">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </button>
+                                            <button class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-download me-1"></i>Download
+                                            </button>
+                                            <button class="btn btn-outline-warning btn-sm">
+                                                <i class="fas fa-envelope me-1"></i>Email
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-briefcase text-warning me-2"></i>
+                                        Business ****9012
+                                    </td>
+                                    <td>May 2025</td>
+                                    <td>2025-06-01</td>
+                                    <td>412 KB</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-outline-success btn-sm">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </button>
+                                            <button class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-download me-1"></i>Download
+                                            </button>
+                                            <button class="btn btn-outline-warning btn-sm">
+                                                <i class="fas fa-envelope me-1"></i>Email
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statement Preferences -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card bg-dark border-warning">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog me-2"></i>Statement Preferences
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label text-light">Delivery Method</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="delivery" id="electronic" checked>
+                            <label class="form-check-label text-light" for="electronic">
+                                Electronic Statements (Recommended)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="delivery" id="postal">
+                            <label class="form-check-label text-light" for="postal">
+                                Postal Mail ($2.50/month)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-light">Email Notifications</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="statementReady" checked>
+                            <label class="form-check-label text-light" for="statementReady">
+                                Statement Ready Notification
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="lowBalance">
+                            <label class="form-check-label text-light" for="lowBalance">
+                                Low Balance Alerts
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-warning">
+                        <i class="fas fa-save me-2"></i>Save Preferences
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card bg-dark border-success">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>Security & Privacy
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="security-feature mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light fw-bold">Password Protection</span><br>
+                                <small class="text-muted">All statements are password protected</small>
+                            </div>
+                            <i class="fas fa-shield-alt text-success"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="security-feature mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light fw-bold">Encryption</span><br>
+                                <small class="text-muted">256-bit SSL encryption in transit</small>
+                            </div>
+                            <i class="fas fa-lock text-success"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="security-feature mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-light fw-bold">Audit Trail</span><br>
+                                <small class="text-muted">All downloads are logged</small>
+                            </div>
+                            <i class="fas fa-history text-success"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <small>Statements are retained for 7 years and automatically deleted thereafter.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
