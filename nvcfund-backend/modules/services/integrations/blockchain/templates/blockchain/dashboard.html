@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Blockchain Integration Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="dashboard-stat-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">
+                            <i class="fas fa-link me-2" style="color: #f7931a;"></i>
+                            Blockchain Infrastructure
+                        </h3>
+                        <p class="text-light mb-0">Multi-chain blockchain services and infrastructure management</p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-success px-3 py-2">{{ service_status.upper() }}</span>
+                        <div class="small text-light mt-1">{{ networks_supported }} networks supported</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="dashboard-stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Transactions</h6>
+                            <h3 class="text-primary">{{ "{:,}".format(total_transactions) }}</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-cubes fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="dashboard-stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Network Health</h6>
+                            <h3 class="text-success">{{ network_health }}%</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-heartbeat fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="dashboard-stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Avg Block Time</h6>
+                            <h3 class="text-info">{{ avg_block_time }}</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="dashboard-stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Current Gas Price</h6>
+                            <h3 class="text-warning">{{ gas_price }}</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-gas-pump fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supported Networks -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="dashboard-stat-card">
+                <div class="card-header">
+                    <h5 class="mb-0">Supported Networks</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Network</th>
+                                    <th>Symbol</th>
+                                    <th>Status</th>
+                                    <th>Block Height</th>
+                                    <th>Gas Price</th>
+                                    <th>TPS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for network in supported_networks %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ network.name }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ network.symbol }}</span>
+                                    </td>
+                                    <td>
+                                        {% if network.status == 'operational' %}
+                                            <span class="badge bg-success">Operational</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">{{ network.status.title() }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ "{:,}".format(network.block_height) }}</td>
+                                    <td>{{ network.gas_price }}</td>
+                                    <td>{{ network.tps }} TPS</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities & Integration Services -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="dashboard-stat-card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Blockchain Activities</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Activity Type</th>
+                                    <th>Network</th>
+                                    <th>Transaction Hash</th>
+                                    <th>Status</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activity in recent_activities %}
+                                <tr>
+                                    <td>{{ activity.type }}</td>
+                                    <td>
+                                        <span class="badge bg-info">{{ activity.network }}</span>
+                                    </td>
+                                    <td><code>{{ activity.hash }}</code></td>
+                                    <td>
+                                        {% if activity.status == 'confirmed' %}
+                                            <span class="badge bg-success">Confirmed</span>
+                                        {% elif activity.status == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">{{ activity.status.title() }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ activity.timestamp }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-stat-card">
+                <div class="card-header">
+                    <h5 class="mb-0">Integration Services</h5>
+                </div>
+                <div class="card-body">
+                    {% for service in integration_services %}
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <span>{{ service }}</span>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="mt-4">
+                        <button class="btn btn-warning me-2">
+                            <i class="fas fa-cog me-1"></i>
+                            Network Config
+                        </button>
+                        <button class="btn btn-outline-secondary">
+                            <i class="fas fa-chart-line me-1"></i>
+                            Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

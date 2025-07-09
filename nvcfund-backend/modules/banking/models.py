@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship, validates
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
 import uuid
 
-from ..core.extensions import db
+from modules.core.extensions import db
 
 class BankAccountType(Enum):
     """Bank account types"""
@@ -129,7 +129,7 @@ class DigitalAssetAccount(db.Model):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     
     # Account identification
-    account_holder_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    account_holder_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     asset_symbol = Column(String(10), nullable=False)  # BTC, ETH, NVCT, etc.
     asset_name = Column(String(100), nullable=False)
     network = Column(String(50), nullable=False)  # ethereum, polygon, bsc, etc.

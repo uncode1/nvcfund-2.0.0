@@ -45,4 +45,6 @@ dependencies = [
     "pip-audit>=2.9.0",
     "pip-tools>=7.4.1",
     "playwright>=1.53.0",
+    "email-validator>=2.2.0",
+    "boto3>=1.39.3",
 ]

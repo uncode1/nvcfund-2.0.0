@@ -2,6 +2,10 @@
 
 {% block title %}Security Center - NVC Banking Platform{% endblock %}
 
+{% block extra_css %}
+<link href="{{ url_for('static', filename='css/text_contrast_fix.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid py-4">
     <!-- Security Center Header -->
@@ -32,47 +36,67 @@
         </div>
     </div>
 
-    <!-- Security Metrics -->
+    <!-- Security Metrics - Now Clickable for Drill-Down -->
     <div class="row mb-4">
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-success">
-                <div class="card-body text-center">
-                    <i class="fas fa-check-circle fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">System Status</h4>
-                    <h2 class="text-white">Secure</h2>
-                    <small class="text-light">All Systems Green</small>
+            <a href="{{ url_for('security_center.investigation_tools') }}" class="text-decoration-none">
+                <div class="card bg-success dashboard-stat-card hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-check-circle fa-3x text-white-50 mb-3"></i>
+                        <h4 class="text-white">System Status</h4>
+                        <h2 class="text-white">Secure</h2>
+                        <small class="text-light">All Systems Green</small>
+                        <div class="mt-2">
+                            <small class="text-light"><i class="fas fa-arrow-right me-1"></i>Investigation Tools</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-warning">
-                <div class="card-body text-center">
-                    <i class="fas fa-exclamation-triangle fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Active Threats</h4>
-                    <h2 class="text-white">{{ "3"|default("0") }}</h2>
-                    <small class="text-light">Being Monitored</small>
+            <a href="{{ url_for('security_center.threat_monitoring') }}" class="text-decoration-none">
+                <div class="card bg-warning dashboard-stat-card hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-exclamation-triangle fa-3x text-white-50 mb-3"></i>
+                        <h4 class="text-white">Active Threats</h4>
+                        <h2 class="text-white">{{ "3"|default("0") }}</h2>
+                        <small class="text-light">Being Monitored</small>
+                        <div class="mt-2">
+                            <small class="text-light"><i class="fas fa-arrow-right me-1"></i>Threat Monitoring</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-info">
-                <div class="card-body text-center">
-                    <i class="fas fa-user-shield fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Failed Logins</h4>
-                    <h2 class="text-white">{{ "47"|default("0") }}</h2>
-                    <small class="text-light">Last 24 Hours</small>
+            <a href="{{ url_for('security_center.investigation_tools') }}" class="text-decoration-none">
+                <div class="card bg-info dashboard-stat-card hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-shield fa-3x text-white-50 mb-3"></i>
+                        <h4 class="text-white">Failed Logins</h4>
+                        <h2 class="text-white">{{ "47"|default("0") }}</h2>
+                        <small class="text-light">Last 24 Hours</small>
+                        <div class="mt-2">
+                            <small class="text-light"><i class="fas fa-arrow-right me-1"></i>Login Analysis</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-primary">
-                <div class="card-body text-center">
-                    <i class="fas fa-lock fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Security Score</h4>
-                    <h2 class="text-white">{{ "98.7%"|default("0%") }}</h2>
-                    <small class="text-light">Excellent</small>
+            <a href="{{ url_for('security_center.incident_response') }}" class="text-decoration-none">
+                <div class="card bg-primary dashboard-stat-card hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lock fa-3x text-white-50 mb-3"></i>
+                        <h4 class="text-white">Security Score</h4>
+                        <h2 class="text-white">{{ "98.7%"|default("0%") }}</h2>
+                        <small class="text-light">Excellent</small>
+                        <div class="mt-2">
+                            <small class="text-light"><i class="fas fa-arrow-right me-1"></i>Incident Response</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -273,28 +297,28 @@
                             <div class="text-center">
                                 <h6>SOX Compliance</h6>
                                 <h4 class="text-success">100%</h4>
-                                <small class="text-muted">Fully Compliant</small>
+                                <small class="text-light">Fully Compliant</small>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="text-center">
                                 <h6>PCI DSS</h6>
                                 <h4 class="text-success">Level 1</h4>
-                                <small class="text-muted">Certified</small>
+                                <small class="text-light">Certified</small>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="text-center">
                                 <h6>GDPR</h6>
                                 <h4 class="text-success">Compliant</h4>
-                                <small class="text-muted">Data Protected</small>
+                                <small class="text-light">Data Protected</small>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="text-center">
                                 <h6>Audit Score</h6>
                                 <h4 class="text-primary">A+</h4>
-                                <small class="text-muted">Excellent</small>
+                                <small class="text-light">Excellent</small>
                             </div>
                         </div>
                     </div>

@@ -2,69 +2,93 @@
 
 {% block title %}Threat Monitoring - Security Center{% endblock %}
 
-{% block content %}
-<div class="container-fluid">
-    <div class="row">
+{% block dashboard_content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Threat Monitoring Dashboard</h3>
+                    <h1 class="h2 text-light mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>Threat Monitoring
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Threat Monitoring Dashboard -->
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-radar me-2"></i>Real-time Threat Detection</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-danger"><i class="fas fa-shield-alt"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Active Threats</span>
-                                    <span class="info-box-number">{{ threat_data.active_threats }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-success"><i class="fas fa-ban"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Blocked Attempts</span>
-                                    <span class="info-box-number">{{ threat_data.blocked_attempts }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-warning"><i class="fas fa-exclamation-triangle"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Threat Level</span>
-                                    <span class="info-box-number">{{ threat_data.threat_level }}</span>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Threat ID</th>
+                                    <th>Type</th>
+                                    <th>Source</th>
+                                    <th>Risk Level</th>
+                                    <th>Status</th>
+                                    <th>Detected</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>THR-001</td>
+                                    <td>Brute Force Attack</td>
+                                    <td>185.220.101.42</td>
+                                    <td><span class="badge bg-danger">High</span></td>
+                                    <td><span class="badge bg-warning">Monitoring</span></td>
+                                    <td>5 minutes ago</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-danger">Block</button>
+                                        <button class="btn btn-sm btn-outline-primary">Details</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>THR-002</td>
+                                    <td>SQL Injection</td>
+                                    <td>192.168.1.100</td>
+                                    <td><span class="badge bg-warning">Medium</span></td>
+                                    <td><span class="badge bg-success">Blocked</span></td>
+                                    <td>15 minutes ago</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">Details</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <h4>Recent Threats</h4>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Source</th>
-                                        <th>Time</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for threat in threat_data.recent_threats %}
-                                    <tr>
-                                        <td>{{ threat.type }}</td>
-                                        <td>{{ threat.source }}</td>
-                                        <td>{{ threat.time }}</td>
-                                        <td><span class="badge badge-success">{{ threat.status }}</span></td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-tachometer-alt me-2"></i>Threat Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Threats Detected Today</label>
+                        <div class="h4 text-danger">23</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Threats Blocked</label>
+                        <div class="h4 text-success">20</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Active Monitoring</label>
+                        <div class="h4 text-warning">3</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Risk Level</label>
+                        <div class="h4 text-info">Medium</div>
                     </div>
                 </div>
             </div>

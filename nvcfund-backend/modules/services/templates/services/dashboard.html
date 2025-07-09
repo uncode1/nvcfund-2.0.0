@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block title %}Services Management - Main Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-success">
+                            <i class="fas fa-concierge-bell me-2"></i>Services Management Dashboard
+                        </h6>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-success">
+                                <i class="fas fa-plus me-1"></i>Add Service
+                            </button>
+                            <button class="btn btn-sm btn-outline-info">
+                                <i class="fas fa-sync me-1"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-light mb-0">Centralized management for all banking services and operations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overview Statistics -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Services</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_services }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-concierge-bell fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Active Services</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ active_services }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Daily Requests</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ daily_requests | int | round | string }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Service Uptime</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ service_uptime }}%</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-heartbeat fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Categories Grid -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Service Categories</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for category in service_categories %}
+                        <div class="col-lg-6 col-md-12 mb-4">
+                            <div class="card shadow h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="m-0 font-weight-bold text-{{ category.color }}">
+                                        <i class="{{ category.icon }} me-2"></i>{{ category.name }}
+                                    </h6>
+                                    <div class="d-flex gap-2">
+                                        <span class="badge badge-{{ category.color }}">{{ category.active }}/{{ category.count }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-light mb-3">{{ category.description }}</p>
+                                    
+                                    <div class="row text-center mb-3">
+                                        <div class="col-6">
+                                            <strong>{{ category.count }}</strong>
+                                            <small class="text-light d-block">Total Services</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <strong>{{ category.active }}</strong>
+                                            <small class="text-light d-block">Active Services</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <small class="text-light">Modules:</small>
+                                        <div class="mt-1">
+                                            {% for module in category.modules %}
+                                            <span class="badge badge-outline-{{ category.color }} me-1">{{ module }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                                            <div class="progress-bar bg-{{ category.color }}" 
+                                                 style="width: {{ (category.active / category.count * 100) | round(1) }}%"></div>
+                                        </div>
+                                        <a href="{{ category.url }}" class="btn btn-sm btn-{{ category.color }}">
+                                            <i class="fas fa-arrow-right me-1"></i>View Category
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Service Performance</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="mb-2">
+                                <strong class="text-success">{{ response_time }}ms</strong>
+                                <small class="text-light d-block">Avg Response Time</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="mb-2">
+                                <strong class="text-primary">{{ client_satisfaction }}%</strong>
+                                <small class="text-light d-block">Client Satisfaction</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="mb-2">
+                                <strong class="text-info">{{ service_uptime }}%</strong>
+                                <small class="text-light d-block">Service Uptime</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Recent Service Activity</h6>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Live Chat Support</strong>
+                                <small class="text-light d-block">547 chats processed</small>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Security Center</strong>
+                                <small class="text-light d-block">2,456 security scans</small>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Settlement Operations</strong>
+                                <small class="text-light d-block">1,456 settlements processed</small>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Multi-Factor Auth</strong>
+                                <small class="text-light d-block">15,647 authentications</small>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -239,6 +239,25 @@ class AuditLog(db.Model):
     def __repr__(self):
         return f'<AuditLog {self.log_id}: {self.event_type}>'
 
+# === API KEY MANAGEMENT ===
+
+class APIKeyStore(TimestampMixin, db.Model):
+    """Secure storage for external API credentials"""
+    __tablename__ = 'api_key_store'
+    __table_args__ = {'extend_existing': True}
+    
+    id = Column(Integer, primary_key=True)
+    service_name = Column(String(100), nullable=False, index=True)
+    encrypted_api_key = Column(Text, nullable=True)
+    encrypted_secret_key = Column(Text, nullable=True)
+    key_alias = Column(String(100), nullable=True)
+    is_active = Column(Boolean, nullable=False, default=True)
+    last_used = Column(DateTime, nullable=True)
+    usage_count = Column(Integer, nullable=False, default=0)
+    
+    def __repr__(self):
+        return f'<APIKeyStore {self.service_name}:{self.key_alias}>'
+
 # === ADDITIONAL MODELS FOR COMPATIBILITY ===
 
 # Account alias for backwards compatibility - will be set by banking module

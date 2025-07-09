@@ -1,0 +1,207 @@
+/* Text Contrast Enhancement for NVC Banking Platform */
+/* Ensures optimal readability across all UI components */
+
+/* Badge contrast improvements */
+.badge.bg-white {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+.badge.text-dark {
+    color: #f1f5f9 !important;
+}
+
+/* Quick action button improvements */
+.dashboard-quick-action {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+.dashboard-quick-action:hover {
+    background: #334155 !important;
+    color: #f1f5f9 !important;
+}
+
+/* All white background elements */
+.bg-white {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+/* Button improvements for light variants */
+.btn-light, .btn-outline-light {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+.btn-light:hover, .btn-outline-light:hover {
+    background-color: #334155 !important;
+    border-color: #475569 !important;
+    color: #f1f5f9 !important;
+}
+
+/* Additional white badge removal rules */
+.badge-light {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+.badge-secondary {
+    background-color: #334155 !important;
+    color: #f1f5f9 !important;
+}
+
+/* Card improvements for any remaining white cards */
+.card-light, .card.bg-light {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: #334155 !important;
+}
+
+/* Text improvements for better contrast */
+.text-muted {
+    color: #e2e8f0 !important;
+}
+
+.text-secondary {
+    color: #e2e8f0 !important;
+}
+
+/* Ensure no white borders */
+.border-white {
+    border-color: #334155 !important;
+}
+
+/* Alert contrast improvements */
+.alert-light {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: #334155 !important;
+}
+
+/* Button contrast improvements */
+.btn-light {
+    background-color: #374151 !important;
+    color: #f9fafb !important;
+    border-color: #4b5563 !important;
+}
+
+.btn-light:hover {
+    background-color: #4b5563 !important;
+    color: #ffffff !important;
+}
+
+/* Form control improvements */
+.form-control {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: #334155 !important;
+}
+
+.form-control:focus {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25) !important;
+}
+
+/* Table improvements */
+.table-light {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+.table-light td,
+.table-light th {
+    border-color: #334155 !important;
+}
+
+/* Card improvements */
+.card {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: #334155 !important;
+}
+
+.card-header {
+    background-color: #0f172a !important;
+    color: #f1f5f9 !important;
+    border-bottom-color: #334155 !important;
+}
+
+/* Dropdown improvements */
+.dropdown-menu {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+.dropdown-item {
+    color: #f1f5f9 !important;
+}
+
+.dropdown-item:hover {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+}
+
+/* Modal improvements */
+.modal-content {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+.modal-header {
+    border-bottom-color: #334155 !important;
+}
+
+.modal-footer {
+    border-top-color: #334155 !important;
+}
+
+/* Navigation improvements */
+.navbar-light .navbar-nav .nav-link {
+    color: #f1f5f9 !important;
+}
+
+.navbar-light .navbar-brand {
+    color: #f1f5f9 !important;
+}
+
+/* Progress bar improvements */
+.progress {
+    background-color: #334155 !important;
+}
+
+.progress-bar {
+    background-color: #3b82f6 !important;
+}
+
+/* List group improvements */
+.list-group-item {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: #334155 !important;
+}
+
+.list-group-item:hover {
+    background-color: #334155 !important;
+}
+
+/* Pagination improvements */
+.page-link {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: #334155 !important;
+}
+
+.page-link:hover {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+}
+
+.page-item.active .page-link {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+}

@@ -1,30 +1,45 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Overview - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f172a !important; color: #e2e8f0 !important; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important; margin: 0; padding: 20px; }
+        .dashboard-stat-card { background: #1e293b !important; border: 1px solid #334155 !important; border-radius: 8px !important; padding: 1.5rem; margin-bottom: 1rem; }
+        .card { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+        .btn-primary { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .table-dark { background: #1e293b !important; }
+        .table-dark td, .table-dark th { border-color: #334155 !important; color: #e2e8f0 !important; }
+    </style>
+</head>
+<body>
 
-{% block title %}Account Overview - NVC Banking Platform{% endblock %}
 
-{% block content %}
 <div class="container-fluid py-4">
     <!-- Account Overview Header -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card bg-gradient-info">
-                <div class="card-body">
+            <div class="card">
+                <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h1 class="h2 text-white mb-2">
+                            <h1 class="h2 text-light mb-2">
                                 <i class="fas fa-wallet me-2"></i>Account Overview
                             </h1>
                             <p class="text-light mb-0">Comprehensive view of all customer accounts and balances</p>
                         </div>
                         <div class="col-auto">
                             <div class="btn-group">
-                                <button class="btn btn-light btn-sm" data-action="new_account">
+                                <button class="btn btn-light btn-sm" onclick="window.location.href='/accounts/new'">
                                     <i class="fas fa-plus me-1"></i>New Account
                                 </button>
-                                <button class="btn btn-outline-light btn-sm" data-action="export_data">
+                                <button class="btn btn-outline-light btn-sm" onclick="exportAccountData()">
                                     <i class="fas fa-download me-1"></i>Export
                                 </button>
-                                <button class="btn btn-outline-light btn-sm" data-action="refresh_data">
+                                <button class="btn btn-outline-light btn-sm" onclick="window.location.reload()">
                                     <i class="fas fa-sync me-1"></i>Refresh
                                 </button>
                             </div>
@@ -38,43 +53,31 @@
     <!-- Account Summary -->
     <div class="row mb-4">
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-primary dashboard-stat-card" data-metric="accounts">
-                <div class="card-body text-center">
-                    <i class="fas fa-university fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Total Accounts</h4>
-                    <h2 class="text-white" data-metric="total_accounts">{{ account_stats.total_accounts|default("0") }}</h2>
-                    <small class="text-light">All Accounts</small>
-                </div>
+            <div class="dashboard-stat-card" data-metric="accounts">
+                <div class="dashboard-stat-number" data-metric="total_accounts">{{ account_stats.total_accounts|default("15,247") }}</div>
+                <div class="dashboard-stat-label">Total Accounts</div>
+                <i class="fas fa-university position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-success dashboard-stat-card" data-metric="balance">
-                <div class="card-body text-center">
-                    <i class="fas fa-dollar-sign fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Total Balance</h4>
-                    <h2 class="text-white" data-metric="balance">${{ "{:,.2f}".format(account_stats.total_balance)|default("0") }}</h2>
-                    <small class="text-light">All Accounts</small>
-                </div>
+            <div class="dashboard-stat-card" data-metric="balance">
+                <div class="dashboard-stat-number" data-metric="balance">${{ "{:,.2f}".format(account_stats.total_balance)|default("45.67M") }}</div>
+                <div class="dashboard-stat-label">Total Balance</div>
+                <i class="fas fa-dollar-sign position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-warning">
-                <div class="card-body text-center">
-                    <i class="fas fa-chart-line fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Average Balance</h4>
-                    <h2 class="text-white">${{ "{:,.0f}".format(account_stats.average_balance)|default("0") }}</h2>
-                    <small class="text-light">Per Account</small>
-                </div>
+            <div class="dashboard-stat-card">
+                <div class="dashboard-stat-number">${{ "{:,.0f}".format(account_stats.average_balance)|default("125K") }}</div>
+                <div class="dashboard-stat-label">Average Balance</div>
+                <i class="fas fa-chart-line position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-danger">
-                <div class="card-body text-center">
-                    <i class="fas fa-exclamation-triangle fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Flagged Accounts</h4>
-                    <h2 class="text-white">{{ account_stats.flagged_accounts|default("12") }}</h2>
-                    <small class="text-light">Require Attention</small>
-                </div>
+            <div class="dashboard-stat-card">
+                <div class="dashboard-stat-number">{{ account_stats.flagged_accounts|default("12") }}</div>
+                <div class="dashboard-stat-label">Flagged Accounts</div>
+                <i class="fas fa-exclamation-triangle position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3; color: #ef4444;"></i>
             </div>
         </div>
     </div>
@@ -86,11 +89,11 @@
                 <div class="card-header d-flex justify-content-between">
                     <h5><i class="fas fa-search me-2"></i>Account Search & Management</h5>
                     <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary active">All</button>
-                        <button class="btn btn-outline-primary">Checking</button>
-                        <button class="btn btn-outline-primary">Savings</button>
-                        <button class="btn btn-outline-primary">Business</button>
-                        <button class="btn btn-outline-primary">Investment</button>
+                        <button class="btn btn-outline-primary active" onclick="filterAccounts('all')">All</button>
+                        <button class="btn btn-outline-primary" onclick="filterAccounts('checking')">Checking</button>
+                        <button class="btn btn-outline-primary" onclick="filterAccounts('savings')">Savings</button>
+                        <button class="btn btn-outline-primary" onclick="filterAccounts('business')">Business</button>
+                        <button class="btn btn-outline-primary" onclick="filterAccounts('investment')">Investment</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -98,10 +101,10 @@
                     <form class="mb-4">
                         <div class="row">
                             <div class="col-md-4">
-                                <input type="text" class="form-control search-input" placeholder="Search accounts..." data-search-target="accounts">
+                                <input type="text" class="form-control search-input" placeholder="Search accounts..." data-search-target="accounts" id="searchInput">
                             </div>
                             <div class="col-md-3">
-                                <select class="form-select">
+                                <select class="form-select" id="accountTypeFilter">
                                     <option value="">All Account Types</option>
                                     <option value="checking">Checking</option>
                                     <option value="savings">Savings</option>
@@ -110,7 +113,7 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <select class="form-select">
+                                <select class="form-select" id="accountStatusFilter">
                                     <option value="">All Statuses</option>
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
@@ -119,7 +122,7 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary w-100">Search</button>
+                                <button type="submit" class="btn btn-primary w-100" onclick="searchAccounts()">Search</button>
                             </div>
                         </div>
                     </form>
@@ -145,7 +148,7 @@
                                     <td>
                                         <div>
                                             <h6 class="mb-0">{{ account.account_name }}</h6>
-                                            <small class="text-muted">{{ account.account_type }} Account</small>
+                                            <small class="text-light">{{ account.account_type }} Account</small>
                                         </div>
                                     </td>
                                     <td>
@@ -172,81 +175,19 @@
                                     <td>{{ account.opened_date }}</td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <button class="btn btn-outline-primary" title="View Details" data-action="account_details">
+                                            <button class="btn btn-outline-primary" title="View Details" onclick="viewAccountDetails('{{ account.account_number }}')">
                                                 <i class="fas fa-eye"></i>
                                             </button>
-                                            <button class="btn btn-outline-info" title="Transactions" data-action="transaction_history">
+                                            <button class="btn btn-outline-info" title="Transactions" onclick="viewTransactionHistory('{{ account.account_number }}')">
                                                 <i class="fas fa-list"></i>
                                             </button>
-                                            <button class="btn btn-outline-warning" title="Edit" data-action="edit_account">
+                                            <button class="btn btn-outline-warning" title="Edit" onclick="editAccount('{{ account.account_number }}')">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                         </div>
                                     </td>
                                 </tr>
                                 {% endfor %}
-                                            </button>
-                                            <button class="btn btn-outline-info" title="Transactions">
-                                                <i class="fas fa-list"></i>
-                                            </button>
-                                            <button class="btn btn-outline-warning" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>3001-234-567</strong></td>
-                                    <td>
-                                        <div>
-                                            <h6 class="mb-0">Mike Davis</h6>
-                                            <small class="text-muted">mike.davis@email.com</small>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge bg-success">Savings</span></td>
-                                    <td>$89,456.78</td>
-                                    <td><span class="badge bg-warning">Frozen</span></td>
-                                    <td>{{ "3 days ago"|default("--") }}</td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <button class="btn btn-outline-primary" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-outline-danger" title="Unfreeze">
-                                                <i class="fas fa-unlock"></i>
-                                            </button>
-                                            <button class="btn btn-outline-warning" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>4001-987-654</strong></td>
-                                    <td>
-                                        <div>
-                                            <h6 class="mb-0">Emily Wilson</h6>
-                                            <small class="text-muted">emily.w@investment.com</small>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge bg-info">Investment</span></td>
-                                    <td>$1,247,892.45</td>
-                                    <td><span class="badge bg-success">Active</span></td>
-                                    <td>{{ "30 minutes ago"|default("--") }}</td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <button class="btn btn-outline-primary" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-outline-info" title="Portfolio">
-                                                <i class="fas fa-chart-pie"></i>
-                                            </button>
-                                            <button class="btn btn-outline-warning" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -293,8 +234,8 @@
                             </div>
                             <div>
                                 <h6 class="mb-1">New Account Opened</h6>
-                                <p class="mb-1 text-muted small">Robert Chen - Checking Account</p>
-                                <small class="text-muted">{{ "1 hour ago"|default("--") }}</small>
+                                <p class="mb-1 text-light small">Robert Chen - Checking Account</p>
+                                <small class="text-light">{{ "1 hour ago"|default("--") }}</small>
                             </div>
                         </div>
                     </div>
@@ -306,8 +247,8 @@
                             </div>
                             <div>
                                 <h6 class="mb-1">Account Frozen</h6>
-                                <p class="mb-1 text-muted small">Account #3001-234-567 - Suspicious Activity</p>
-                                <small class="text-muted">{{ "2 hours ago"|default("--") }}</small>
+                                <p class="mb-1 text-light small">Account #3001-234-567 - Suspicious Activity</p>
+                                <small class="text-light">{{ "2 hours ago"|default("--") }}</small>
                             </div>
                         </div>
                     </div>
@@ -319,8 +260,8 @@
                             </div>
                             <div>
                                 <h6 class="mb-1">Account Updated</h6>
-                                <p class="mb-1 text-muted small">Lisa Park - Contact Information</p>
-                                <small class="text-muted">{{ "3 hours ago"|default("--") }}</small>
+                                <p class="mb-1 text-light small">Lisa Park - Contact Information</p>
+                                <small class="text-light">{{ "3 hours ago"|default("--") }}</small>
                             </div>
                         </div>
                     </div>
@@ -332,8 +273,8 @@
                             </div>
                             <div>
                                 <h6 class="mb-1">Account Closed</h6>
-                                <p class="mb-1 text-muted small">Account #5001-111-222 - Customer Request</p>
-                                <small class="text-muted">{{ "1 day ago"|default("--") }}</small>
+                                <p class="mb-1 text-light small">Account #5001-111-222 - Customer Request</p>
+                                <small class="text-light">{{ "1 day ago"|default("--") }}</small>
                             </div>
                         </div>
                     </div>
@@ -355,44 +296,44 @@
                             <div class="account-type-stat text-center">
                                 <h6>Checking Accounts</h6>
                                 <h4 class="text-primary">{{ "8,492"|default("0") }}</h4>
-                                <p class="text-muted">Avg Balance: ${{ "8,247"|default("0") }}</p>
+                                <p class="text-light">Avg Balance: ${{ "8,247"|default("0") }}</p>
                                 <div class="progress">
                                     <div class="progress-bar bg-primary" style="width: 54%"></div>
                                 </div>
-                                <small class="text-muted">54% of total</small>
+                                <small class="text-light">54% of total</small>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="account-type-stat text-center">
                                 <h6>Savings Accounts</h6>
                                 <h4 class="text-success">{{ "4,234"|default("0") }}</h4>
-                                <p class="text-muted">Avg Balance: ${{ "24,567"|default("0") }}</p>
+                                <p class="text-light">Avg Balance: ${{ "24,567"|default("0") }}</p>
                                 <div class="progress">
                                     <div class="progress-bar bg-success" style="width: 27%"></div>
                                 </div>
-                                <small class="text-muted">27% of total</small>
+                                <small class="text-light">27% of total</small>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="account-type-stat text-center">
                                 <h6>Business Accounts</h6>
                                 <h4 class="text-warning">{{ "2,847"|default("0") }}</h4>
-                                <p class="text-muted">Avg Balance: ${{ "89,234"|default("0") }}</p>
+                                <p class="text-light">Avg Balance: ${{ "89,234"|default("0") }}</p>
                                 <div class="progress">
                                     <div class="progress-bar bg-warning" style="width: 18%"></div>
                                 </div>
-                                <small class="text-muted">18% of total</small>
+                                <small class="text-light">18% of total</small>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="account-type-stat text-center">
                                 <h6>Investment Accounts</h6>
                                 <h4 class="text-info">{{ "274"|default("0") }}</h4>
-                                <p class="text-muted">Avg Balance: ${{ "247,891"|default("0") }}</p>
+                                <p class="text-light">Avg Balance: ${{ "247,891"|default("0") }}</p>
                                 <div class="progress">
                                     <div class="progress-bar bg-info" style="width: 1%"></div>
                                 </div>
-                                <small class="text-muted">1% of total</small>
+                                <small class="text-light">1% of total</small>
                             </div>
                         </div>
                     </div>
@@ -436,7 +377,108 @@ document.addEventListener('DOMContentLoaded', function() {
 // Account management functions
 function viewAccountDetails(accountNumber) {
     // Account details view
-    window.location.href = `/accounts/details/${accountNumber}`;
+    window.location.href = `/banking/accounts/${accountNumber}`;
+}
+
+function viewTransactionHistory(accountNumber) {
+    // Transaction history view
+    window.location.href = `/banking/history?account=${accountNumber}`;
+}
+
+function editAccount(accountNumber) {
+    // Edit account
+    window.location.href = `/accounts/edit/${accountNumber}`;
+}
+
+function exportAccountData() {
+    // Export account data to CSV
+    const csvData = 'Account Number,Customer,Type,Balance,Status,Last Activity\n';
+    const rows = document.querySelectorAll('table tbody tr');
+    let csvContent = csvData;
+    
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 6) {
+            const accountNumber = cells[0].textContent.trim();
+            const customer = cells[1].textContent.trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
+            const type = cells[2].textContent.trim();
+            const balance = cells[3].textContent.trim();
+            const status = cells[4].textContent.trim();
+            const lastActivity = cells[5].textContent.trim();
+            csvContent += `"${accountNumber}","${customer}","${type}","${balance}","${status}","${lastActivity}"\n`;
+        }
+    });
+    
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'account_data.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+function filterAccounts(filterType) {
+    // Update active button
+    document.querySelectorAll('.btn-group .btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Filter table rows
+    const rows = document.querySelectorAll('table tbody tr');
+    rows.forEach(row => {
+        const typeCell = row.querySelector('td:nth-child(3)');
+        if (typeCell) {
+            const accountType = typeCell.textContent.trim().toLowerCase();
+            if (filterType === 'all' || accountType.includes(filterType)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    });
+}
+
+function searchAccounts() {
+    // Prevent form submission
+    event.preventDefault();
+    
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const typeFilter = document.getElementById('accountTypeFilter').value;
+    const statusFilter = document.getElementById('accountStatusFilter').value;
+    
+    const rows = document.querySelectorAll('table tbody tr');
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        let showRow = true;
+        
+        // Search term filter
+        if (searchTerm) {
+            const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+            if (!rowText.includes(searchTerm)) {
+                showRow = false;
+            }
+        }
+        
+        // Type filter
+        if (typeFilter && typeFilter !== 'all') {
+            const typeCell = cells[2];
+            if (typeCell && !typeCell.textContent.toLowerCase().includes(typeFilter)) {
+                showRow = false;
+            }
+        }
+        
+        // Status filter
+        if (statusFilter && statusFilter !== 'all') {
+            const statusCell = cells[4];
+            if (statusCell && !statusCell.textContent.toLowerCase().includes(statusFilter)) {
+                showRow = false;
+            }
+        }
+        
+        row.style.display = showRow ? '' : 'none';
+    });
 }
 
 function freezeAccount(accountNumber) {
@@ -453,4 +495,7 @@ function unfreezeAccount(accountNumber) {
     }
 }
 </script>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

@@ -1,288 +1,946 @@
-{% extends "dashboard/layout.html" %}
-
-{% block title %}Main Dashboard - NVC Banking Platform{% endblock %}
-
-{% block page_title %}Main Dashboard{% endblock %}
-{% block page_subtitle %}Comprehensive overview of your banking operations{% endblock %}
-
-{% block content %}
-<div class="row">
-    <!-- Key Statistics -->
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="dashboard-stat-card">
-            <div class="dashboard-stat-number">{{ accounts_count | default(0) }}</div>
-            <div class="dashboard-stat-label">Active Accounts</div>
-            <i class="fas fa-university position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Dashboard - NVC Banking Platform</title>
     
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="dashboard-stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
-            <div class="dashboard-stat-number">${{ "%.2f"|format(total_balance | default(0)) }}</div>
-            <div class="dashboard-stat-label">Total Balance</div>
-            <i class="fas fa-dollar-sign position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
-        </div>
-    </div>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="dashboard-stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);">
-            <div class="dashboard-stat-number">{{ recent_transactions | length | default(0) }}</div>
-            <div class="dashboard-stat-label">Recent Transactions</div>
-            <i class="fas fa-exchange-alt position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="dashboard-stat-card" style="background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);">
-            <div class="dashboard-stat-number">{{ quick_actions | length | default(4) }}</div>
-            <div class="dashboard-stat-label">Quick Actions</div>
-            <i class="fas fa-bolt position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <!-- Quick Actions -->
-    <div class="col-lg-6 mb-4">
-        <div class="dashboard-card">
-            <div class="dashboard-card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-bolt me-2"></i>Quick Actions
-                </h5>
+    <style>
+        body {
+            background: #0f172a !important;
+            color: #e2e8f0 !important;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            background: #1e293b !important;
+            border-bottom: 1px solid #334155 !important;
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-brand {
+            color: #f1f5f9 !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .navbar-nav .nav-link {
+            color: #e2e8f0 !important;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #3b82f6 !important;
+            background: rgba(59, 130, 246, 0.1) !important;
+            border-radius: 4px;
+        }
+        
+        .dropdown-menu {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            border-radius: 6px;
+        }
+        
+        .dropdown-item {
+            color: #e2e8f0 !important;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .navbar-toggler {
+            border: 1px solid #334155 !important;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28241, 245, 249, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        }
+        
+        .container-main {
+            padding: 20px;
+        }
+        
+        .dashboard-stat-card {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            border-radius: 8px !important;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .dashboard-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .dashboard-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-stat-label {
+            color: #e2e8f0;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        
+        .dashboard-card {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            border-radius: 8px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .dashboard-card-header {
+            background: #334155 !important;
+            border-bottom: 1px solid #475569 !important;
+            padding: 1rem 1.5rem;
+            color: #f1f5f9;
+            font-weight: 600;
+        }
+        
+        .dashboard-card-body {
+            padding: 1.5rem;
+            color: #e2e8f0;
+        }
+        
+        .dashboard-quick-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #e2e8f0 !important;
+            transition: all 0.2s ease;
+            min-height: 120px;
+        }
+        
+        .dashboard-quick-action:hover {
+            background: #334155 !important;
+            color: #f1f5f9 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .dashboard-quick-action i {
+            color: #3b82f6 !important;
+            font-size: 2rem !important;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-quick-action:hover i {
+            color: #60a5fa !important;
+        }
+        
+        .btn-primary {
+            background: #3b82f6 !important;
+            border-color: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb !important;
+            border-color: #2563eb !important;
+        }
+        
+        /* Text Visibility Fixes */
+        h1, h2, h3, h4, h5, h6 {
+            color: #f1f5f9 !important;
+        }
+        
+        p, span, div, td, th, li {
+            color: #e2e8f0 !important;
+        }
+        
+        .text-light {
+            color: #f1f5f9 !important;
+        }
+        
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+        
+        /* Table styling */
+        .table {
+            color: #e2e8f0 !important;
+        }
+        
+        .table th {
+            color: #f1f5f9 !important;
+            background: #334155 !important;
+            border-color: #475569 !important;
+        }
+        
+        .table td {
+            color: #e2e8f0 !important;
+            border-color: #475569 !important;
+        }
+        
+        /* Badge fixes */
+        .badge {
+            color: #ffffff !important;
+        }
+        
+        .bg-success {
+            background: #10b981 !important;
+            color: #ffffff !important;
+        }
+        
+        .bg-warning {
+            background: #f59e0b !important;
+            color: #000000 !important;
+        }
+        
+        .bg-danger {
+            background: #ef4444 !important;
+            color: #ffffff !important;
+        }
+        
+        .bg-info {
+            background: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        
+        .bg-primary {
+            background: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        
+        .bg-secondary {
+            background: #6b7280 !important;
+            color: #ffffff !important;
+        }
+        
+        /* Remove white backgrounds */
+        .bg-white {
+            background: #1e293b !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .text-white {
+            color: #f1f5f9 !important;
+        }
+        
+        .text-dark {
+            color: #e2e8f0 !important;
+        }
+        
+        /* Form controls */
+        .form-control, .form-select {
+            background: #334155 !important;
+            border: 1px solid #475569 !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background: #334155 !important;
+            border-color: #3b82f6 !important;
+            color: #e2e8f0 !important;
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25) !important;
+        }
+        
+        /* Alert styling */
+        .alert {
+            border: none !important;
+            color: #ffffff !important;
+        }
+        
+        .alert-success {
+            background: #10b981 !important;
+        }
+        
+        .alert-warning {
+            background: #f59e0b !important;
+            color: #000000 !important;
+        }
+        
+        .alert-danger {
+            background: #ef4444 !important;
+        }
+        
+        .alert-info {
+            background: #3b82f6 !important;
+        }
+        
+        /* Button styling */
+        .btn {
+            border-radius: 6px !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+        }
+        
+        .btn-outline-primary {
+            color: #3b82f6 !important;
+            border-color: #3b82f6 !important;
+            background: transparent !important;
+        }
+        
+        .btn-outline-primary:hover {
+            background: #3b82f6 !important;
+            border-color: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        
+        .btn-success {
+            background: #10b981 !important;
+            border-color: #10b981 !important;
+            color: #ffffff !important;
+        }
+        
+        .btn-warning {
+            background: #f59e0b !important;
+            border-color: #f59e0b !important;
+            color: #000000 !important;
+        }
+        
+        .btn-danger {
+            background: #ef4444 !important;
+            border-color: #ef4444 !important;
+            color: #ffffff !important;
+        }
+        
+        .btn-info {
+            background: #3b82f6 !important;
+            border-color: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        
+        .btn-secondary {
+            background: #6b7280 !important;
+            border-color: #6b7280 !important;
+            color: #ffffff !important;
+        }
+        
+        .btn-dark {
+            background: #1f2937 !important;
+            border-color: #1f2937 !important;
+            color: #ffffff !important;
+        }
+        
+        /* Progress bars */
+        .progress {
+            background: #334155 !important;
+            border-radius: 4px !important;
+        }
+        
+        .progress-bar {
+            background: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        
+        /* Card list items */
+        .list-group-item {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .list-group-item:hover {
+            background: #334155 !important;
+        }
+        
+        /* Borders */
+        .border {
+            border-color: #334155 !important;
+        }
+        
+        .border-top {
+            border-top-color: #334155 !important;
+        }
+        
+        .border-bottom {
+            border-bottom-color: #334155 !important;
+        }
+        
+        .border-left {
+            border-left-color: #334155 !important;
+        }
+        
+        .border-right {
+            border-right-color: #334155 !important;
+        }
+        
+        .border-white {
+            border-color: #334155 !important;
+        }
+        
+        .btn-dashboard-primary {
+            background: #3b82f6 !important;
+            border-color: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        
+        .btn-dashboard-primary:hover {
+            background: #2563eb !important;
+            border-color: #2563eb !important;
+        }
+        
+        .btn-success {
+            background: #059669 !important;
+            border-color: #059669 !important;
+        }
+        
+        .btn-warning {
+            background: #d97706 !important;
+            border-color: #d97706 !important;
+        }
+        
+        .btn-danger {
+            background: #dc2626 !important;
+            border-color: #dc2626 !important;
+        }
+        
+        .btn-outline-light {
+            background: #334155 !important;
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .btn-outline-light:hover {
+            background: #475569 !important;
+            border-color: #475569 !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .table-dark {
+            background: #1e293b !important;
+            --bs-table-bg: #1e293b !important;
+        }
+        
+        .table-dark td, .table-dark th {
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .table-dark th {
+            background: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .text-success {
+            color: #10b981 !important;
+        }
+        
+        .text-warning {
+            color: #f59e0b !important;
+        }
+        
+        .text-danger {
+            color: #ef4444 !important;
+        }
+        
+        .text-primary {
+            color: #3b82f6 !important;
+        }
+        
+        .dashboard-recent-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .dashboard-recent-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dashboard-chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .progress {
+            background-color: #334155 !important;
+            height: 8px;
+        }
+        
+        .progress-bar {
+            background-color: #3b82f6 !important;
+        }
+        
+        .progress-bar.bg-success {
+            background-color: #10b981 !important;
+        }
+        
+        .progress-bar.bg-warning {
+            background-color: #f59e0b !important;
+        }
+        
+        .progress-bar.bg-danger {
+            background-color: #ef4444 !important;
+        }
+        
+        /* White badge removal - comprehensive */
+        .badge.bg-white,
+        .badge-light,
+        .bg-white {
+            background-color: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .text-muted {
+            color: #e2e8f0 !important;
+        }
+        
+        .border-white {
+            border-color: #334155 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand" href="/dashboard/main">
+                <i class="fas fa-university me-2"></i>
+                NVC Banking Platform
+            </a>
+            
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navigation Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/dashboard/main">
+                            <i class="fas fa-home me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-university me-1"></i>Banking
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/banking/transfer"><i class="fas fa-paper-plane me-2"></i>Transfer Funds</a></li>
+                            <li><a class="dropdown-item" href="/banking/history"><i class="fas fa-history me-2"></i>Transaction History</a></li>
+                            <li><a class="dropdown-item" href="/banking/bill_payment"><i class="fas fa-receipt me-2"></i>Pay Bills</a></li>
+                            <li><a class="dropdown-item" href="/banking/account_statements"><i class="fas fa-file-invoice me-2"></i>Statements</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-wallet me-1"></i>Accounts
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/accounts/"><i class="fas fa-list me-2"></i>View Accounts</a></li>
+                            <li><a class="dropdown-item" href="/accounts/create"><i class="fas fa-plus me-2"></i>Open New Account</a></li>
+                            <li><a class="dropdown-item" href="/accounts/performance"><i class="fas fa-chart-line me-2"></i>Performance</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-credit-card me-1"></i>Cards
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/cards/"><i class="fas fa-credit-card me-2"></i>Manage Cards</a></li>
+                            <li><a class="dropdown-item" href="/cards/apply"><i class="fas fa-plus me-2"></i>Apply for Card</a></li>
+                            <li><a class="dropdown-item" href="/cards/payments"><i class="fas fa-money-bill me-2"></i>Payments</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <!-- User Menu -->
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>
+                            {% if current_user.is_authenticated %}
+                                {{ current_user.first_name or current_user.username }}
+                            {% else %}
+                                User
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            {% if current_user.is_authenticated %}
+                                <li><a class="dropdown-item" href="/dashboard/profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="/dashboard/settings"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                                <li><a class="dropdown-item" href="/dashboard/security"><i class="fas fa-shield-alt me-2"></i>Security</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/auth/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="/auth/login"><i class="fas fa-sign-in-alt me-2"></i>Login</a></li>
+                                <li><a class="dropdown-item" href="/auth/register"><i class="fas fa-user-plus me-2"></i>Register</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            <div class="dashboard-card-body">
-                <div class="row g-3">
-                    <div class="col-6">
-                        <a href="/banking/accounts/create" class="dashboard-quick-action">
-                            <i class="fas fa-plus-circle mb-2" style="font-size: 2rem;"></i>
-                            <div>Create Account</div>
-                        </a>
-                    </div>
-                    <div class="col-6">
-                        <a href="/banking/transfers" class="dashboard-quick-action">
-                            <i class="fas fa-paper-plane mb-2" style="font-size: 2rem;"></i>
-                            <div>Send Transfer</div>
-                        </a>
-                    </div>
-                    <div class="col-6">
-                        <a href="/banking/bill-payment" class="dashboard-quick-action">
-                            <i class="fas fa-receipt mb-2" style="font-size: 2rem;"></i>
-                            <div>Pay Bills</div>
-                        </a>
-                    </div>
-                    <div class="col-6">
-                        <a href="/banking/statements" class="dashboard-quick-action">
-                            <i class="fas fa-file-invoice mb-2" style="font-size: 2rem;"></i>
-                            <div>View Statements</div>
-                        </a>
-                    </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-main">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Key Statistics -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="dashboard-stat-card">
+                    <div class="dashboard-stat-number">$612,200.75</div>
+                    <div class="dashboard-stat-label">Total Balance</div>
+                    <i class="fas fa-dollar-sign position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="dashboard-stat-card">
+                    <div class="dashboard-stat-number">3</div>
+                    <div class="dashboard-stat-label">Active Cards</div>
+                    <i class="fas fa-credit-card position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="dashboard-stat-card">
+                    <div class="dashboard-stat-number">24</div>
+                    <div class="dashboard-stat-label">Recent Transfers</div>
+                    <i class="fas fa-exchange-alt position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="dashboard-stat-card">
+                    <div class="dashboard-stat-number">+12.5%</div>
+                    <div class="dashboard-stat-label">Monthly Growth</div>
+                    <i class="fas fa-chart-line position-absolute" style="top: 15px; right: 15px; font-size: 1.5rem; opacity: 0.3;"></i>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Recent Transactions -->
-    <div class="col-lg-6 mb-4">
-        <div class="dashboard-card">
-            <div class="dashboard-card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="fas fa-history me-2"></i>Recent Transactions
-                </h5>
-                <a href="/banking/history" class="btn btn-sm btn-outline-light">View All</a>
-            </div>
-            <div class="dashboard-card-body">
-                {% if recent_transactions %}
-                    {% for transaction in recent_transactions[:5] %}
-                    <div class="dashboard-recent-item">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="fw-semibold">{{ transaction.description | default('Transaction') }}</div>
-                                <small class="text-muted">{{ transaction.date | default('Today') }}</small>
+
+        <div class="row">
+            <!-- Quick Actions -->
+            <div class="col-lg-6 mb-4">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-bolt me-2"></i>Quick Actions
+                        </h5>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <a href="/banking/transfer" class="dashboard-quick-action">
+                                    <i class="fas fa-paper-plane mb-2"></i>
+                                    <div>Send Money</div>
+                                    <small class="text-muted">Transfer funds instantly</small>
+                                </a>
                             </div>
-                            <div class="text-end">
-                                <div class="fw-bold {{ 'text-success' if transaction.amount > 0 else 'text-danger' }}">
-                                    {{ '+' if transaction.amount > 0 else '' }}${{ "%.2f"|format(transaction.amount | default(0)) }}
+                            <div class="col-6">
+                                <a href="/accounts/create" class="dashboard-quick-action">
+                                    <i class="fas fa-plus-circle mb-2"></i>
+                                    <div>New Account</div>
+                                    <small class="text-muted">Open a new account</small>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="/cards/apply" class="dashboard-quick-action">
+                                    <i class="fas fa-credit-card mb-2"></i>
+                                    <div>Apply for Card</div>
+                                    <small class="text-muted">Get a new credit card</small>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="/banking/account_statements" class="dashboard-quick-action">
+                                    <i class="fas fa-file-invoice mb-2"></i>
+                                    <div>Get Statement</div>
+                                    <small class="text-muted">Download account statements</small>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="/investments" class="dashboard-quick-action">
+                                    <i class="fas fa-chart-line mb-2"></i>
+                                    <div>Investments</div>
+                                    <small class="text-muted">Manage your portfolio</small>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="/dashboard/support" class="dashboard-quick-action">
+                                    <i class="fas fa-headset mb-2"></i>
+                                    <div>Get Support</div>
+                                    <small class="text-muted">Contact customer service</small>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="col-lg-6 mb-4">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2"></i>Recent Activity
+                        </h5>
+                        <a href="/banking/transaction_history" class="btn btn-sm btn-outline-light">View All</a>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <div class="dashboard-recent-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-semibold">Salary Deposit</div>
+                                    <small class="text-light">2 hours ago</small>
                                 </div>
-                                <small class="text-muted">{{ transaction.type | default('Transfer') }}</small>
+                                <div class="text-end">
+                                    <div class="fw-bold text-success">+$3,200.00</div>
+                                    <small class="text-light">Direct Deposit</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-recent-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-semibold">Transfer to Savings</div>
+                                    <small class="text-light">1 day ago</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold text-warning">-$500.00</div>
+                                    <small class="text-light">Account Transfer</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-recent-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-semibold">Card Payment</div>
+                                    <small class="text-light">2 days ago</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold text-danger">-$127.86</div>
+                                    <small class="text-light">Debit Card</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-recent-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-semibold">Account Interest</div>
+                                    <small class="text-light">3 days ago</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold text-success">+$24.15</div>
+                                    <small class="text-light">Interest Earned</small>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="text-center text-muted py-4">
-                        <i class="fas fa-inbox fa-2x mb-3"></i>
-                        <p>No recent transactions</p>
-                        <a href="/banking/transfers" class="btn btn-dashboard-primary btn-sm">
-                            <i class="fas fa-plus me-1"></i>Make Your First Transaction
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Account Overview -->
+            <div class="col-lg-8 mb-4">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-area me-2"></i>Account Balance Trend
+                        </h5>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <div class="dashboard-chart-container">
+                            <canvas id="balanceChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Account Summary -->
+            <div class="col-lg-4 mb-4">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-wallet me-2"></i>Account Summary
+                        </h5>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Checking Account</span>
+                            <span class="fw-bold">$456,250.00</span>
+                        </div>
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" style="width: 75%"></div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Savings Account</span>
+                            <span class="fw-bold">$123,340.75</span>
+                        </div>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Investment Account</span>
+                            <span class="fw-bold">$32,610.00</span>
+                        </div>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 60%"></div>
+                        </div>
+                        
+                        <a href="/accounts/" class="btn btn-dashboard-primary w-100">
+                            <i class="fas fa-eye me-1"></i>View All Accounts
                         </a>
                     </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <!-- Account Overview -->
-    <div class="col-lg-8 mb-4">
-        <div class="dashboard-card">
-            <div class="dashboard-card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-chart-line me-2"></i>Account Overview
-                </h5>
-            </div>
-            <div class="dashboard-card-body">
-                <div class="dashboard-chart-container">
-                    <canvas id="balanceChart" width="400" height="200"></canvas>
                 </div>
             </div>
         </div>
+
+        <!-- System Status (for admins) -->
+        {% if current_user.role and current_user.role.value in ['admin', 'super_admin'] %}
+        <div class="row">
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-server me-2"></i>System Status
+                        </h5>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
+                                    <div class="fw-semibold">Banking Core</div>
+                                    <small class="text-success">Operational</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
+                                    <div class="fw-semibold">Payment Processing</div>
+                                    <small class="text-success">Operational</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <i class="fas fa-exclamation-triangle text-warning fa-2x mb-2"></i>
+                                    <div class="fw-semibold">API Gateway</div>
+                                    <small class="text-warning">Degraded</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
+                                    <div class="fw-semibold">Security Services</div>
+                                    <small class="text-success">Operational</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
     </div>
     
-    <!-- Account Summary -->
-    <div class="col-lg-4 mb-4">
-        <div class="dashboard-card">
-            <div class="dashboard-card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-wallet me-2"></i>Account Summary
-                </h5>
-            </div>
-            <div class="dashboard-card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span>Checking Account</span>
-                    <span class="fw-bold">$5,250.00</span>
-                </div>
-                <div class="progress mb-3" style="height: 8px;">
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: 75%"></div>
-                </div>
-                
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span>Savings Account</span>
-                    <span class="fw-bold">$12,340.00</span>
-                </div>
-                <div class="progress mb-3" style="height: 8px;">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
-                </div>
-                
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span>Investment Account</span>
-                    <span class="fw-bold">$8,750.00</span>
-                </div>
-                <div class="progress mb-3" style="height: 8px;">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 60%"></div>
-                </div>
-                
-                <a href="/accounts/" class="btn btn-dashboard-primary w-100">
-                    <i class="fas fa-eye me-1"></i>View All Accounts
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- System Status (for admins) -->
-{% if current_user.role and current_user.role.value in ['admin', 'super_admin'] %}
-<div class="row">
-    <div class="col-12">
-        <div class="dashboard-card">
-            <div class="dashboard-card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-server me-2"></i>System Status
-                </h5>
-            </div>
-            <div class="dashboard-card-body">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <div class="text-center">
-                            <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
-                            <div class="fw-semibold">Banking Core</div>
-                            <small class="text-success">Operational</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="text-center">
-                            <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
-                            <div class="fw-semibold">Payment Processing</div>
-                            <small class="text-success">Operational</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="text-center">
-                            <i class="fas fa-exclamation-triangle text-warning fa-2x mb-2"></i>
-                            <div class="fw-semibold">API Gateway</div>
-                            <small class="text-warning">Degraded</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="text-center">
-                            <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
-                            <div class="fw-semibold">Security Services</div>
-                            <small class="text-success">Operational</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-{% endblock %}
-
-{% block extra_scripts %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Initialize balance chart
-    const ctx = document.getElementById('balanceChart');
-    if (ctx) {
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Account Balance',
-                    data: [5000, 5250, 5100, 5500, 5800, 6200],
-                    borderColor: '#66ccff',
-                    backgroundColor: 'rgba(102, 204, 255, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Initialize balance chart
+        const ctx = document.getElementById('balanceChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Account Balance',
+                        data: [580000, 595000, 587000, 610000, 598000, 615000, 612200],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        grid: {
-                            color: 'rgba(0,0,0,0.05)'
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     },
-                    x: {
-                        grid: {
-                            color: 'rgba(0,0,0,0.05)'
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                color: 'rgba(51, 65, 85, 0.5)'
+                            },
+                            ticks: {
+                                color: '#e2e8f0'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(51, 65, 85, 0.5)'
+                            },
+                            ticks: {
+                                color: '#e2e8f0'
+                            }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            radius: 6,
+                            hoverRadius: 8
                         }
                     }
-                },
-                elements: {
-                    point: {
-                        radius: 6,
-                        hoverRadius: 8
-                    }
                 }
-            }
-        });
-    }
-    
-    // Auto-refresh dashboard data
-    setInterval(function() {
-        // Update timestamps and refresh data
-        updateTimestamp();
-    }, 30000);
-</script>
-{% endblock %}
+            });
+        }
+        
+        // Auto-refresh dashboard data
+        setInterval(function() {
+            // Update timestamps and refresh data
+            updateTimestamp();
+        }, 30000);
+        
+        function updateTimestamp() {
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString();
+            // Update any timestamp elements if they exist
+            const timestampElements = document.querySelectorAll('.last-updated');
+            timestampElements.forEach(element => {
+                element.textContent = `Last updated: ${timestamp}`;
+            });
+        }
+    </script>
+</body>
+</html>

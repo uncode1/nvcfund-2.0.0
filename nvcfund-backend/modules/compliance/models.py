@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship, validates
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
 import uuid
 
-from ..core.database import Base
+from modules.core.database import Base
 
 class ComplianceRegulationType(Enum):
     """Types of regulatory compliance"""
@@ -83,7 +83,7 @@ class ComplianceFramework(Base):
     
     # Status and ownership
     compliance_status = Column(String(50), default=ComplianceStatus.UNDER_REVIEW.value)
-    compliance_owner = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    compliance_owner = Column(Integer, ForeignKey('users.id'), nullable=False)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -113,7 +113,7 @@ class ComplianceAssessment(Base):
     assessment_period_end = Column(DateTime, nullable=False)
     
     # Assessment team
-    lead_assessor = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    lead_assessor = Column(Integer, ForeignKey('users.id'), nullable=False)
     assessment_team = Column(JSONB)  # List of team members
     external_auditor = Column(String(200))  # External audit firm
     
@@ -202,13 +202,13 @@ class ComplianceViolation(Base):
     regulatory_response = Column(Text)
     
     # Assignment and ownership
-    assigned_to = Column(UUID(as_uuid=True), ForeignKey('users.id'))
-    reported_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    assigned_to = Column(Integer, ForeignKey('users.id'))
+    reported_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     
     # Escalation
     escalated = Column(Boolean, default=False)
     escalation_date = Column(DateTime)
-    escalated_to = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    escalated_to = Column(Integer, ForeignKey('users.id'))
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -231,7 +231,7 @@ class AMLTransaction(Base):
     
     # Transaction identification
     transaction_id = Column(String(100), unique=True, nullable=False)
-    customer_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    customer_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     account_id = Column(String(100), nullable=False)
     
     # Transaction details
@@ -270,7 +270,7 @@ class AMLTransaction(Base):
     # Investigation details
     investigation_required = Column(Boolean, default=False)
     investigation_status = Column(String(50))  # pending, in_progress, completed, closed
-    investigated_by = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    investigated_by = Column(Integer, ForeignKey('users.id'))
     investigation_notes = Column(Text)
     
     # SAR reporting
@@ -326,7 +326,7 @@ class RegulatoryReport(Base):
     data_validation_status = Column(String(50))  # passed, failed, pending
     validation_errors = Column(JSONB)  # List of validation errors
     qa_reviewed = Column(Boolean, default=False)
-    qa_reviewer = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    qa_reviewer = Column(Integer, ForeignKey('users.id'))
     
     # Submission status
     submission_status = Column(String(50), default='draft')  # draft, submitted, accepted, rejected
@@ -344,9 +344,9 @@ class RegulatoryReport(Base):
     original_report_id = Column(UUID(as_uuid=True), ForeignKey('regulatory_reports.id'))
     
     # Preparation and responsibility
-    prepared_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    reviewed_by = Column(UUID(as_uuid=True), ForeignKey('users.id'))
-    approved_by = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    prepared_by = Column(Integer, ForeignKey('users.id'), nullable=False)
+    reviewed_by = Column(Integer, ForeignKey('users.id'))
+    approved_by = Column(Integer, ForeignKey('users.id'))
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -397,7 +397,7 @@ class ComplianceTraining(Base):
     
     # Status and management
     training_status = Column(String(50), default='active')  # active, inactive, archived
-    training_owner = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    training_owner = Column(Integer, ForeignKey('users.id'), nullable=False)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -418,7 +418,7 @@ class TrainingCompletion(Base):
     
     # Completion details
     training_id = Column(UUID(as_uuid=True), ForeignKey('compliance_training.id'), nullable=False)
-    employee_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    employee_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     
     # Completion tracking
     start_date = Column(DateTime, nullable=False)

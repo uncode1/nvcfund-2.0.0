@@ -43,7 +43,7 @@
                     <i class="fas fa-chevron-right nav-chevron"></i>
                 </button>
                 <div class="nav-group-content">
-                    <a class="nav-subitem" href="/banking/accounts/create">Create New Account</a>
+                    <a class="nav-subitem" href="/accounts/create">Create New Account</a>
                     <a class="nav-subitem" href="/accounts/">View All Accounts</a>
                     <a class="nav-subitem" href="/accounts/">Account Statements</a>
                     <a class="nav-subitem" href="/cards_payments/">Manage Cards</a>
@@ -356,7 +356,7 @@
                     <i class="fas fa-chevron-right group-toggle"></i>
                 </div>
                 <div class="sidebar-group-content">
-                    <a class="sidebar-subitem" href="/banking/accounts/create">
+                    <a class="sidebar-subitem" href="/accounts/create">
                         <i class="fas fa-plus-circle"></i>
                         <span>Create New Account</span>
                     </a>
@@ -744,7 +744,7 @@
     --sidebar-bg: linear-gradient(180deg, #0a2447 0%, #1e3c72 100%);
     --sidebar-border: #66ccff;
     --sidebar-text: #e5e7eb;
-    --sidebar-text-muted: #a0a9b8;
+    --sidebar-text-light: #a0a9b8;
     --sidebar-hover: rgba(102, 204, 255, 0.1);
     --sidebar-active: #66ccff;
     --transition-speed: 0.3s;
@@ -855,7 +855,7 @@
 }
 
 .search-input::placeholder {
-    color: var(--sidebar-text-muted);
+    color: var(--sidebar-text-light);
 }
 
 .search-input:focus {
@@ -869,7 +869,7 @@
     left: 0.75rem;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--sidebar-text-muted);
+    color: var(--sidebar-text-light);
     font-size: 0.9rem;
 }
 
@@ -879,7 +879,7 @@
     top: 50%;
     transform: translateY(-50%);
     background: rgba(255, 255, 255, 0.1);
-    color: var(--sidebar-text-muted);
+    color: var(--sidebar-text-light);
     padding: 0.2rem 0.4rem;
     border-radius: 4px;
     font-size: 0.7rem;
@@ -1016,7 +1016,7 @@
     display: flex;
     align-items: center;
     padding: 0.6rem 1rem;
-    color: var(--sidebar-text-muted) !important;
+    color: var(--sidebar-text-light) !important;
     text-decoration: none;
     transition: all 0.2s ease;
     border-left: 3px solid transparent;
@@ -1077,7 +1077,7 @@
 }
 
 .user-role {
-    color: var(--sidebar-text-muted);
+    color: var(--sidebar-text-light);
     font-size: 0.8rem;
 }
 
@@ -1494,7 +1494,7 @@ class EnterpriseSidebar {
             noResults.id = 'searchNoResults';
             noResults.className = 'search-no-results';
             noResults.innerHTML = `
-                <div style="text-align: center; padding: 2rem 1rem; color: var(--sidebar-text-muted);">
+                <div style="text-align: center; padding: 2rem 1rem; color: var(--sidebar-text-light);">
                     <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5;"></i>
                     <div>No results found</div>
                 </div>

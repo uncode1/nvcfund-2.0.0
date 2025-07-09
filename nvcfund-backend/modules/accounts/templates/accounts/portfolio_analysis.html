@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Analysis - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="{{ url_for('static', filename='css/text-contrast.css') }}" rel="stylesheet">
+    <style>
+        body { background: #0f172a; color: #e2e8f0; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif; }
+        .dashboard-stat-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 1.5rem; color: #e2e8f0; }
+        .card { background: #1e293b; border: 1px solid #334155; color: #e2e8f0; }
+        .card-header { background: #1e293b; border-bottom: 1px solid #334155; }
+        .card-body { background: #1e293b; }
+        .bg-primary { background: #3b82f6 !important; }
+        .bg-success { background: #10b981 !important; }
+        .bg-info { background: #06b6d4 !important; }
+        .bg-warning { background: #f59e0b !important; }
+        .bg-danger { background: #ef4444 !important; }
+        .text-white { color: #ffffff !important; }
+        .text-primary { color: #3b82f6 !important; }
+        .text-success { color: #10b981 !important; }
+        .text-info { color: #06b6d4 !important; }
+        .text-warning { color: #f59e0b !important; }
+        .text-light { color: #e2e8f0 !important; }
+        .breadcrumb { background: transparent !important; }
+        .breadcrumb-item a { color: #06b6d4; text-decoration: none; }
+        .breadcrumb-item.active { color: #ffffff; }
+        .stat-icon { font-size: 2rem; opacity: 0.8; }
+        .container-fluid { padding: 20px; }
+        .mb-0 { margin-bottom: 0; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .h1, .h3 { color: #e2e8f0; }
+        .btn-primary { background: #3b82f6; border-color: #3b82f6; }
+        .btn-primary:hover { background: #2563eb; border-color: #2563eb; }
+        .table-dark { background: #1e293b; color: #e2e8f0; }
+        .table-dark th { border-color: #374151; }
+        .table-dark td { border-color: #374151; }
+        .badge { font-size: 0.75rem; }
+        .align-items-center { align-items: center; }
+        .justify-content-between { justify-content: space-between; }
+        .d-flex { display: flex; }
+        .text-center { text-align: center; }
+        .fw-bold { font-weight: 700; }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white mb-0">Portfolio Analysis</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent mb-0">
+                <li class="breadcrumb-item"><a href="{{ url_for('accounts.main_dashboard') }}" class="text-info">Accounts</a></li>
+                <li class="breadcrumb-item active text-white">Portfolio Analysis</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Portfolio Overview -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-light mb-1">Total AUM</h6>
+                        <h3 class="text-success mb-0">$847.2M</h3>
+                        <small class="text-success">+5.7% YTD</small>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-pie text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-light mb-1">Active Portfolios</h6>
+                        <h3 class="text-white mb-0">15,247</h3>
+                        <small class="text-info">Customer portfolios</small>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-briefcase text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-light mb-1">Performance</h6>
+                        <h3 class="text-success mb-0">12.7%</h3>
+                        <small class="text-success">Annual return</small>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-light mb-1">Risk Score</h6>
+                        <h3 class="text-warning mb-0">6.2</h3>
+                        <small class="text-warning">Moderate risk</small>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-alt text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Performance Charts -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="dashboard-stat-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="text-white mb-0">Portfolio Performance Trends</h5>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-info btn-sm">1M</button>
+                        <button type="button" class="btn btn-outline-info btn-sm">3M</button>
+                        <button type="button" class="btn btn-outline-info btn-sm active">6M</button>
+                        <button type="button" class="btn btn-outline-info btn-sm">1Y</button>
+                        <button type="button" class="btn btn-outline-info btn-sm">5Y</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="performanceChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="dashboard-stat-card">
+                <div class="card-header">
+                    <h6 class="text-white mb-0">Asset Allocation</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="allocationChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Analysis Details -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="dashboard-stat-card">
+                <div class="card-header">
+                    <h6 class="text-white mb-0">Top Performing Accounts</h6>
+                </div>
+                <div class="card-body">
+                    <div class="account-item d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="account-icon bg-success me-3">
+                                <i class="fas fa-star text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-white fw-bold">Premium Growth Fund</div>
+                                <div class="text-light small">****3847</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-success fw-bold">+18.9%</div>
+                            <div class="text-light small">$2.4M AUM</div>
+                        </div>
+                    </div>
+                    <div class="account-item d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="account-icon bg-primary me-3">
+                                <i class="fas fa-chart-line text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-white fw-bold">Tech Innovation Portfolio</div>
+                                <div class="text-light small">****5921</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-success fw-bold">+16.2%</div>
+                            <div class="text-light small">$1.8M AUM</div>
+                        </div>
+                    </div>
+                    <div class="account-item d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="account-icon bg-info me-3">
+                                <i class="fas fa-globe text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-white fw-bold">Global Equity Fund</div>
+                                <div class="text-light small">****7364</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-success fw-bold">+14.7%</div>
+                            <div class="text-light small">$3.2M AUM</div>
+                        </div>
+                    </div>
+                    <div class="account-item d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="account-icon bg-warning me-3">
+                                <i class="fas fa-leaf text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-white fw-bold">ESG Sustainable Fund</div>
+                                <div class="text-light small">****9012</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-success fw-bold">+13.4%</div>
+                            <div class="text-light small">$1.5M AUM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="dashboard-stat-card">
+                <div class="card-header">
+                    <h6 class="text-white mb-0">Risk Analysis</h6>
+                </div>
+                <div class="card-body">
+                    <div class="risk-metric mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-light">Portfolio Beta</span>
+                            <span class="text-white fw-bold">1.12</span>
+                        </div>
+                        <div class="progress mt-1" style="height: 4px;">
+                            <div class="progress-bar bg-info" style="width: 78%"></div>
+                        </div>
+                        <small class="text-light">More volatile than market</small>
+                    </div>
+                    <div class="risk-metric mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-light">Sharpe Ratio</span>
+                            <span class="text-success fw-bold">1.85</span>
+                        </div>
+                        <div class="progress mt-1" style="height: 4px;">
+                            <div class="progress-bar bg-success" style="width: 92%"></div>
+                        </div>
+                        <small class="text-light">Excellent risk-adjusted returns</small>
+                    </div>
+                    <div class="risk-metric mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-light">Value at Risk (95%)</span>
+                            <span class="text-warning fw-bold">-2.3%</span>
+                        </div>
+                        <div class="progress mt-1" style="height: 4px;">
+                            <div class="progress-bar bg-warning" style="width: 65%"></div>
+                        </div>
+                        <small class="text-light">Daily VaR estimate</small>
+                    </div>
+                    <div class="risk-metric">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-light">Maximum Drawdown</span>
+                            <span class="text-danger fw-bold">-8.3%</span>
+                        </div>
+                        <div class="progress mt-1" style="height: 4px;">
+                            <div class="progress-bar bg-danger" style="width: 82%"></div>
+                        </div>
+                        <small class="text-light">Peak-to-trough decline</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Portfolio Holdings -->
+    <div class="row">
+        <div class="col-12">
+            <div class="dashboard-stat-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="text-white mb-0">Portfolio Holdings Breakdown</h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-filter me-2"></i>Filter
+                        </button>
+                        <button class="btn btn-primary btn-sm">
+                            <i class="fas fa-download me-2"></i>Export Report
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Asset Class</th>
+                                    <th>Holdings</th>
+                                    <th>Market Value</th>
+                                    <th>Weight</th>
+                                    <th>1D Change</th>
+                                    <th>YTD Performance</th>
+                                    <th>Risk Rating</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="asset-icon bg-primary me-2">
+                                                <i class="fas fa-chart-line text-white"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-white fw-bold">US Equities</div>
+                                                <small class="text-light">Large Cap Growth</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>1,247 securities</td>
+                                    <td class="text-white fw-bold">$423.8M</td>
+                                    <td>50.0%</td>
+                                    <td class="text-success">+0.8%</td>
+                                    <td class="text-success">+15.2%</td>
+                                    <td><span class="badge bg-warning">Medium</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-info" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="asset-icon bg-success me-2">
+                                                <i class="fas fa-certificate text-white"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-white fw-bold">Fixed Income</div>
+                                                <small class="text-light">Government & Corporate</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>847 bonds</td>
+                                    <td class="text-white fw-bold">$254.2M</td>
+                                    <td>30.0%</td>
+                                    <td class="text-success">+0.2%</td>
+                                    <td class="text-success">+6.8%</td>
+                                    <td><span class="badge bg-success">Low</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-info" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="asset-icon bg-info me-2">
+                                                <i class="fas fa-globe text-white"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-white fw-bold">International Equities</div>
+                                                <small class="text-light">Developed Markets</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>543 securities</td>
+                                    <td class="text-white fw-bold">$127.1M</td>
+                                    <td>15.0%</td>
+                                    <td class="text-danger">-0.3%</td>
+                                    <td class="text-success">+11.4%</td>
+                                    <td><span class="badge bg-warning">Medium</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-info" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="asset-icon bg-warning me-2">
+                                                <i class="fas fa-coins text-white"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-white fw-bold">Alternative Investments</div>
+                                                <small class="text-light">REITs & Commodities</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>89 positions</td>
+                                    <td class="text-white fw-bold">$42.1M</td>
+                                    <td>5.0%</td>
+                                    <td class="text-success">+1.2%</td>
+                                    <td class="text-success">+9.7%</td>
+                                    <td><span class="badge bg-danger">High</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-info" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Performance Chart
+    const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(performanceCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Portfolio Return',
+                data: [100, 103.2, 108.7, 106.9, 112.4, 117.8],
+                borderColor: '#28a745',
+                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                fill: true,
+                tension: 0.4
+            }, {
+                label: 'Benchmark (S&P 500)',
+                data: [100, 102.1, 106.3, 104.8, 109.2, 113.5],
+                borderColor: '#007bff',
+                backgroundColor: 'transparent',
+                borderDash: [5, 5]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#e2e8f0'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#e2e8f0'
+                    },
+                    grid: {
+                        color: 'rgba(226, 232, 240, 0.1)'
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: '#e2e8f0',
+                        callback: function(value) {
+                            return value.toFixed(0);
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(226, 232, 240, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Asset Allocation Chart
+    const allocationCtx = document.getElementById('allocationChart').getContext('2d');
+    new Chart(allocationCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['US Equities', 'Fixed Income', 'International', 'Alternatives'],
+            datasets: [{
+                data: [50, 30, 15, 5],
+                backgroundColor: ['#007bff', '#28a745', '#17a2b8', '#ffc107'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#e2e8f0',
+                        padding: 10
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

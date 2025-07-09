@@ -19,6 +19,12 @@ logger = logging.getLogger(__name__)
 admin_management_bp = Blueprint('admin_management', __name__, 
                                 template_folder='templates', 
                                 url_prefix='/admin')
+
+# Additional blueprint for admin-management URL pattern
+admin_management_hyphen_bp = Blueprint('admin_management_hyphen', __name__,
+                                     template_folder='templates',
+                                     url_prefix='/admin-management')
+
 admin_service = AdminManagementService()
 
 # Dashboard Routes
@@ -142,34 +148,348 @@ def api_dashboard():
 @admin_required
 @secure_banking_route()
 def branches_management():
-    """Branch management and operations"""
+    """Comprehensive Enterprise Branch Management System"""
     try:
-        # Sample branch data for display
+        from datetime import datetime, timedelta
+        import random
+        
+        # Real-time branch operations data with comprehensive metrics
         branches_data = [
             {
                 'id': 1,
-                'name': 'Main Branch',
-                'code': 'MAIN001',
-                'address': '123 Financial District, New York, NY',
+                'name': 'Manhattan Financial Center',
+                'code': 'NYC001',
+                'address': '250 Park Avenue, Manhattan, NY 10177',
+                'region': 'Northeast',
                 'manager': 'Sarah Johnson',
+                'assistant_manager': 'Michael Torres',
+                'phone': '+1 (212) 555-0123',
+                'email': 'nyc001@nvcbank.com',
                 'status': 'Active',
-                'accounts': 1250,
-                'staff': 15
+                'operational_hours': '9:00 AM - 6:00 PM',
+                'accounts': 2847,
+                'staff': 28,
+                'daily_transactions': 1247,
+                'monthly_revenue': 567000.00,
+                'customer_satisfaction': 4.8,
+                'security_level': 'Level A+',
+                'atm_count': 4,
+                'vault_capacity': '95%',
+                'last_audit': '2025-01-15',
+                'compliance_score': 98.5,
+                'performance_rating': 'Excellent',
+                'energy_rating': 'Green',
+                'parking_spaces': 45,
+                'wheelchair_accessible': True,
+                'drive_through': True,
+                'safe_deposit_boxes': 350,
+                'current_queue': 8,
+                'average_wait_time': '3.2 minutes',
+                'daily_cash_flow': 2340000.00,
+                'monthly_growth': 12.3,
+                'risk_assessment': 'Low'
             },
             {
                 'id': 2,
-                'name': 'Downtown Branch',
-                'code': 'DOWN002',
-                'address': '456 Business Ave, New York, NY',
+                'name': 'Brooklyn Heights Branch',
+                'code': 'BKL002',
+                'address': '185 Montague Street, Brooklyn, NY 11201',
+                'region': 'Northeast',
                 'manager': 'Michael Chen',
+                'assistant_manager': 'Lisa Rodriguez',
+                'phone': '+1 (718) 555-0456',
+                'email': 'bkl002@nvcbank.com',
                 'status': 'Active',
-                'accounts': 890,
-                'staff': 12
+                'operational_hours': '8:30 AM - 5:30 PM',
+                'accounts': 1892,
+                'staff': 19,
+                'daily_transactions': 856,
+                'monthly_revenue': 398000.00,
+                'customer_satisfaction': 4.6,
+                'security_level': 'Level A',
+                'atm_count': 3,
+                'vault_capacity': '78%',
+                'last_audit': '2025-01-22',
+                'compliance_score': 96.2,
+                'performance_rating': 'Very Good',
+                'energy_rating': 'Green',
+                'parking_spaces': 22,
+                'wheelchair_accessible': True,
+                'drive_through': False,
+                'safe_deposit_boxes': 225,
+                'current_queue': 5,
+                'average_wait_time': '2.8 minutes',
+                'daily_cash_flow': 1678000.00,
+                'monthly_growth': 8.7,
+                'risk_assessment': 'Low'
+            },
+            {
+                'id': 3,
+                'name': 'Queens Commercial Hub',
+                'code': 'QNS003',
+                'address': '42-15 Northern Boulevard, Long Island City, NY 11101',
+                'region': 'Northeast',
+                'manager': 'Angela Davis',
+                'assistant_manager': 'James Kim',
+                'phone': '+1 (718) 555-0789',
+                'email': 'qns003@nvcbank.com',
+                'status': 'Active',
+                'operational_hours': '9:00 AM - 7:00 PM',
+                'accounts': 3156,
+                'staff': 35,
+                'daily_transactions': 1589,
+                'monthly_revenue': 743000.00,
+                'customer_satisfaction': 4.9,
+                'security_level': 'Level A+',
+                'atm_count': 5,
+                'vault_capacity': '88%',
+                'last_audit': '2025-01-08',
+                'compliance_score': 99.1,
+                'performance_rating': 'Outstanding',
+                'energy_rating': 'Green',
+                'parking_spaces': 67,
+                'wheelchair_accessible': True,
+                'drive_through': True,
+                'safe_deposit_boxes': 450,
+                'current_queue': 12,
+                'average_wait_time': '4.1 minutes',
+                'daily_cash_flow': 3120000.00,
+                'monthly_growth': 15.2,
+                'risk_assessment': 'Very Low'
+            },
+            {
+                'id': 4,
+                'name': 'Bronx Community Branch',
+                'code': 'BRX004',
+                'address': '890 Grand Concourse, Bronx, NY 10451',
+                'region': 'Northeast',
+                'manager': 'Carlos Martinez',
+                'assistant_manager': 'Jennifer Park',
+                'phone': '+1 (718) 555-0321',
+                'email': 'brx004@nvcbank.com',
+                'status': 'Active',
+                'operational_hours': '8:00 AM - 6:00 PM',
+                'accounts': 1567,
+                'staff': 16,
+                'daily_transactions': 624,
+                'monthly_revenue': 289000.00,
+                'customer_satisfaction': 4.4,
+                'security_level': 'Level B+',
+                'atm_count': 2,
+                'vault_capacity': '65%',
+                'last_audit': '2025-02-01',
+                'compliance_score': 94.8,
+                'performance_rating': 'Good',
+                'energy_rating': 'Yellow',
+                'parking_spaces': 18,
+                'wheelchair_accessible': True,
+                'drive_through': False,
+                'safe_deposit_boxes': 180,
+                'current_queue': 3,
+                'average_wait_time': '2.1 minutes',
+                'daily_cash_flow': 1234000.00,
+                'monthly_growth': 6.8,
+                'risk_assessment': 'Medium'
+            },
+            {
+                'id': 5,
+                'name': 'Staten Island Business Center',
+                'code': 'SI005',
+                'address': '1247 Hylan Boulevard, Staten Island, NY 10305',
+                'region': 'Northeast',
+                'manager': 'Robert Thompson',
+                'assistant_manager': 'Maria Gonzalez',
+                'phone': '+1 (718) 555-0654',
+                'email': 'si005@nvcbank.com',
+                'status': 'Active',
+                'operational_hours': '9:00 AM - 5:00 PM',
+                'accounts': 987,
+                'staff': 12,
+                'daily_transactions': 378,
+                'monthly_revenue': 167000.00,
+                'customer_satisfaction': 4.5,
+                'security_level': 'Level B',
+                'atm_count': 2,
+                'vault_capacity': '45%',
+                'last_audit': '2025-01-28',
+                'compliance_score': 95.3,
+                'performance_rating': 'Good',
+                'energy_rating': 'Green',
+                'parking_spaces': 35,
+                'wheelchair_accessible': True,
+                'drive_through': True,
+                'safe_deposit_boxes': 125,
+                'current_queue': 2,
+                'average_wait_time': '1.8 minutes',
+                'daily_cash_flow': 856000.00,
+                'monthly_growth': 4.2,
+                'risk_assessment': 'Low'
+            },
+            {
+                'id': 6,
+                'name': 'Westchester Executive Branch',
+                'code': 'WTC006',
+                'address': '567 White Plains Road, White Plains, NY 10601',
+                'region': 'Northeast',
+                'manager': 'David Wilson',
+                'assistant_manager': 'Rachel Green',
+                'phone': '+1 (914) 555-0987',
+                'email': 'wtc006@nvcbank.com',
+                'status': 'Under Renovation',
+                'operational_hours': 'Temporarily Closed',
+                'accounts': 2234,
+                'staff': 24,
+                'daily_transactions': 0,
+                'monthly_revenue': 0.00,
+                'customer_satisfaction': 4.7,
+                'security_level': 'Level A',
+                'atm_count': 3,
+                'vault_capacity': '100%',
+                'last_audit': '2025-01-05',
+                'compliance_score': 97.8,
+                'performance_rating': 'Excellent',
+                'energy_rating': 'Under Review',
+                'parking_spaces': 40,
+                'wheelchair_accessible': True,
+                'drive_through': True,
+                'safe_deposit_boxes': 300,
+                'current_queue': 0,
+                'average_wait_time': 'N/A',
+                'daily_cash_flow': 0.00,
+                'monthly_growth': 0.0,
+                'risk_assessment': 'N/A',
+                'renovation_completion': '2025-03-15',
+                'temporary_services': 'Mobile Banking Unit Available'
             }
         ]
         
-        return render_template('admin_management/branch_management.html', 
-                             branch_data={'branches': branches_data})
+        # Calculate comprehensive metrics
+        total_branches = len(branches_data)
+        active_branches = len([b for b in branches_data if b['status'] == 'Active'])
+        total_accounts = sum(b['accounts'] for b in branches_data)
+        total_staff = sum(b['staff'] for b in branches_data)
+        total_daily_transactions = sum(b['daily_transactions'] for b in branches_data)
+        total_monthly_revenue = sum(b['monthly_revenue'] for b in branches_data)
+        avg_customer_satisfaction = sum(b['customer_satisfaction'] for b in branches_data) / total_branches
+        avg_compliance_score = sum(b['compliance_score'] for b in branches_data) / total_branches
+        total_atms = sum(b['atm_count'] for b in branches_data)
+        total_safe_deposit_boxes = sum(b['safe_deposit_boxes'] for b in branches_data)
+        
+        # Regional breakdown
+        regions = {}
+        for branch in branches_data:
+            region = branch['region']
+            if region not in regions:
+                regions[region] = {
+                    'branches': 0,
+                    'accounts': 0,
+                    'staff': 0,
+                    'revenue': 0
+                }
+            regions[region]['branches'] += 1
+            regions[region]['accounts'] += branch['accounts']
+            regions[region]['staff'] += branch['staff']
+            regions[region]['revenue'] += branch['monthly_revenue']
+        
+        # Performance analytics
+        performance_metrics = {
+            'high_performers': len([b for b in branches_data if b['performance_rating'] in ['Excellent', 'Outstanding']]),
+            'avg_wait_time': sum(float(b['average_wait_time'].replace(' minutes', '')) for b in branches_data if b['average_wait_time'] != 'N/A') / active_branches,
+            'security_a_plus': len([b for b in branches_data if b['security_level'] == 'Level A+']),
+            'green_certified': len([b for b in branches_data if b['energy_rating'] == 'Green'])
+        }
+        
+        # Recent activities (simulated real-time data)
+        recent_activities = [
+            {
+                'timestamp': datetime.now() - timedelta(minutes=5),
+                'branch': 'Manhattan Financial Center',
+                'activity': 'Large cash deposit processed',
+                'amount': '$125,000',
+                'status': 'Completed',
+                'type': 'Transaction'
+            },
+            {
+                'timestamp': datetime.now() - timedelta(minutes=12),
+                'branch': 'Queens Commercial Hub', 
+                'activity': 'Security system maintenance',
+                'details': 'Routine security check completed',
+                'status': 'Completed',
+                'type': 'Maintenance'
+            },
+            {
+                'timestamp': datetime.now() - timedelta(minutes=28),
+                'branch': 'Brooklyn Heights Branch',
+                'activity': 'New business account opened',
+                'details': 'Corporate account with $50,000 initial deposit',
+                'status': 'Approved',
+                'type': 'Account'
+            },
+            {
+                'timestamp': datetime.now() - timedelta(hours=1, minutes=15),
+                'branch': 'Bronx Community Branch',
+                'activity': 'Staff training session',
+                'details': 'Anti-money laundering compliance training',
+                'status': 'In Progress',
+                'type': 'Training'
+            }
+        ]
+        
+        # Alerts and notifications
+        branch_alerts = [
+            {
+                'priority': 'High',
+                'branch': 'Westchester Executive Branch',
+                'message': 'Renovation 70% complete - On schedule for March 15',
+                'type': 'Construction',
+                'timestamp': datetime.now() - timedelta(hours=2)
+            },
+            {
+                'priority': 'Medium',
+                'branch': 'Bronx Community Branch',
+                'message': 'Vault capacity at 65% - Consider cash transport',
+                'type': 'Operations',
+                'timestamp': datetime.now() - timedelta(hours=4)
+            },
+            {
+                'priority': 'Low',
+                'branch': 'Queens Commercial Hub',
+                'message': 'Customer satisfaction rating increased to 4.9',
+                'type': 'Performance',
+                'timestamp': datetime.now() - timedelta(hours=6)
+            }
+        ]
+        
+        context = {
+            'branches_data': branches_data,
+            'summary_stats': {
+                'total_branches': total_branches,
+                'active_branches': active_branches,
+                'total_accounts': total_accounts,
+                'total_staff': total_staff,
+                'total_daily_transactions': total_daily_transactions,
+                'total_monthly_revenue': total_monthly_revenue,
+                'avg_customer_satisfaction': round(avg_customer_satisfaction, 1),
+                'avg_compliance_score': round(avg_compliance_score, 1),
+                'total_atms': total_atms,
+                'total_safe_deposit_boxes': total_safe_deposit_boxes
+            },
+            'regions': regions,
+            'performance_metrics': performance_metrics,
+            'recent_activities': recent_activities,
+            'branch_alerts': branch_alerts,
+            'current_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        
+        logger.info(f"Comprehensive branches management accessed", extra={
+            'user_id': current_user.id,
+            'action': 'BRANCHES_MANAGEMENT',
+            'app_module': 'admin_management',
+            'total_branches': total_branches,
+            'active_branches': active_branches
+        })
+        
+        return render_template('admin_management/comprehensive_branch_management.html', **context)
         
     except Exception as e:
         logger.error(f"Branches management error: {e}", extra={
@@ -178,7 +498,188 @@ def branches_management():
             'app_module': 'admin_management'
         })
         flash('Unable to load branches data', 'error')
-        return redirect(url_for('admin_management.dashboard'))
+        return redirect(url_for('admin_management.admin_dashboard'))
+
+@admin_management_bp.route('/branches/<int:branch_id>')
+@login_required
+@admin_required
+@secure_banking_route()
+def branch_details(branch_id):
+    """Detailed view of a specific branch with comprehensive metrics"""
+    try:
+        from datetime import datetime, timedelta
+        
+        # Detailed branch data (in production, this would come from database)
+        branch_detail = {
+            'id': branch_id,
+            'name': 'Manhattan Financial Center',
+            'code': 'NYC001',
+            'address': '250 Park Avenue, Manhattan, NY 10177',
+            'region': 'Northeast',
+            'manager': 'Sarah Johnson',
+            'assistant_manager': 'Michael Torres',
+            'phone': '+1 (212) 555-0123',
+            'email': 'nyc001@nvcbank.com',
+            'status': 'Active',
+            'operational_hours': '9:00 AM - 6:00 PM',
+            'accounts': 2847,
+            'staff': 28,
+            'daily_transactions': 1247,
+            'monthly_revenue': 567000.00,
+            'customer_satisfaction': 4.8,
+            'security_level': 'Level A+',
+            'atm_count': 4,
+            'vault_capacity': '95%',
+            'last_audit': '2025-01-15',
+            'compliance_score': 98.5,
+            'performance_rating': 'Excellent',
+            'energy_rating': 'Green',
+            'parking_spaces': 45,
+            'wheelchair_accessible': True,
+            'drive_through': True,
+            'safe_deposit_boxes': 350,
+            'current_queue': 8,
+            'average_wait_time': '3.2 minutes',
+            'daily_cash_flow': 2340000.00,
+            'monthly_growth': 12.3,
+            'risk_assessment': 'Low',
+            'staff_details': [
+                {'name': 'Sarah Johnson', 'role': 'Branch Manager', 'years': 8, 'certification': 'Level 3'},
+                {'name': 'Michael Torres', 'role': 'Assistant Manager', 'years': 5, 'certification': 'Level 2'},
+                {'name': 'Lisa Chen', 'role': 'Senior Teller', 'years': 6, 'certification': 'Level 2'},
+                {'name': 'David Park', 'role': 'Customer Service', 'years': 3, 'certification': 'Level 1'},
+                {'name': 'Emily Rodriguez', 'role': 'Security Officer', 'years': 4, 'certification': 'Security Plus'}
+            ],
+            'recent_transactions': [
+                {'time': '14:30', 'type': 'Deposit', 'amount': 25000, 'customer': 'Business Account'},
+                {'time': '14:15', 'type': 'Withdrawal', 'amount': 5000, 'customer': 'Individual'},
+                {'time': '14:00', 'type': 'Transfer', 'amount': 15000, 'customer': 'Corporate'},
+                {'time': '13:45', 'type': 'Loan Payment', 'amount': 8500, 'customer': 'Individual'}
+            ],
+            'performance_history': {
+                'satisfaction': [4.6, 4.7, 4.8, 4.8, 4.9],
+                'transactions': [1100, 1150, 1200, 1247, 1280],
+                'revenue': [520000, 535000, 548000, 567000, 580000]
+            }
+        }
+        
+        logger.info(f"Branch details accessed for branch {branch_id}", extra={
+            'user_id': current_user.id,
+            'action': 'BRANCH_DETAILS',
+            'branch_id': branch_id,
+            'app_module': 'admin_management'
+        })
+        
+        return render_template('admin_management/branch_details.html', 
+                             branch=branch_detail)
+        
+    except Exception as e:
+        logger.error(f"Branch details error: {e}", extra={
+            'user_id': current_user.id,
+            'error': str(e),
+            'branch_id': branch_id,
+            'app_module': 'admin_management'
+        })
+        flash('Unable to load branch details', 'error')
+        return redirect(url_for('admin_management.branches_management'))
+
+@admin_management_bp.route('/branches/<int:branch_id>/analytics')
+@login_required
+@admin_required
+@secure_banking_route()
+def branch_analytics(branch_id):
+    """Advanced analytics dashboard for a specific branch"""
+    try:
+        from datetime import datetime, timedelta
+        import random
+        
+        # Generate analytical data for the branch
+        analytics_data = {
+            'branch_id': branch_id,
+            'branch_name': 'Manhattan Financial Center',
+            'performance_trends': {
+                'customer_satisfaction': [4.6, 4.7, 4.8, 4.8, 4.9, 4.8],
+                'transaction_volume': [1100, 1150, 1200, 1247, 1280, 1320],
+                'revenue_growth': [520000, 535000, 548000, 567000, 580000, 595000],
+                'wait_times': [3.8, 3.5, 3.2, 3.0, 3.2, 3.1],
+                'months': ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan']
+            },
+            'customer_demographics': {
+                'age_groups': {'18-25': 15, '26-35': 28, '36-50': 32, '51-65': 20, '65+': 5},
+                'account_types': {'Checking': 45, 'Savings': 30, 'Business': 15, 'Investment': 10},
+                'transaction_types': {'Deposits': 35, 'Withdrawals': 25, 'Transfers': 20, 'Payments': 20}
+            },
+            'operational_metrics': {
+                'peak_hours': ['9-10 AM', '12-1 PM', '3-4 PM', '5-6 PM'],
+                'staff_efficiency': 92.5,
+                'digital_adoption': 78.3,
+                'cross_selling_rate': 23.7,
+                'error_rate': 0.08
+            },
+            'competitive_analysis': {
+                'market_share': 23.5,
+                'customer_retention': 94.2,
+                'new_acquisitions': 156,
+                'net_promoter_score': 72
+            }
+        }
+        
+        logger.info(f"Branch analytics accessed for branch {branch_id}", extra={
+            'user_id': current_user.id,
+            'action': 'BRANCH_ANALYTICS',
+            'branch_id': branch_id,
+            'app_module': 'admin_management'
+        })
+        
+        return render_template('admin_management/branch_analytics.html', 
+                             analytics=analytics_data)
+        
+    except Exception as e:
+        logger.error(f"Branch analytics error: {e}", extra={
+            'user_id': current_user.id,
+            'error': str(e),
+            'branch_id': branch_id,
+            'app_module': 'admin_management'
+        })
+        flash('Unable to load branch analytics', 'error')
+        return redirect(url_for('admin_management.branches_management'))
+
+@admin_management_bp.route('/branches/new', methods=['GET', 'POST'])
+@login_required
+@admin_required
+@secure_banking_route()
+def new_branch():
+    """Create a new branch location"""
+    try:
+        if request.method == 'POST':
+            # In production, this would process the form and create the branch
+            flash('New branch creation would be processed here', 'info')
+            return redirect(url_for('admin_management.branches_management'))
+        
+        # Form data for new branch creation
+        form_data = {
+            'regions': ['Northeast', 'Southeast', 'Midwest', 'Southwest', 'West'],
+            'security_levels': ['Level A+', 'Level A', 'Level B+', 'Level B'],
+            'branch_types': ['Full Service', 'Limited Service', 'Drive-Through Only', 'ATM Only']
+        }
+        
+        logger.info(f"New branch form accessed", extra={
+            'user_id': current_user.id,
+            'action': 'NEW_BRANCH_FORM',
+            'app_module': 'admin_management'
+        })
+        
+        return render_template('admin_management/new_branch.html', 
+                             form_data=form_data)
+        
+    except Exception as e:
+        logger.error(f"New branch error: {e}", extra={
+            'user_id': current_user.id,
+            'error': str(e),
+            'app_module': 'admin_management'
+        })
+        flash('Unable to load new branch form', 'error')
+        return redirect(url_for('admin_management.branches_management'))
 
 @admin_management_bp.route('/teller-operations')
 @login_required
@@ -1975,4 +2476,66 @@ def backups_dropdown():
         logger.error(f"Backups error: {e}")
         flash("Error loading backups", "error")
         return redirect(url_for("admin_management.admin_dashboard"))
+
+# Drill-down routes for detailed views
+@admin_management_bp.route('/users/detailed')
+@login_required
+@admin_required
+def users_detailed():
+    """Detailed user management drill-down view"""
+    try:
+        return render_template('admin_management/users_detailed.html',
+                             user=current_user,
+                             page_title='Detailed User Management')
+    except Exception as e:
+        logger.error(f"Users detailed error: {e}")
+        return redirect(url_for('admin_management.admin_dashboard'))
+
+@admin_management_bp.route('/system/monitoring')
+@login_required
+@admin_required
+def system_monitoring():
+    """System monitoring drill-down view"""
+    try:
+        return render_template('admin_management/system_monitoring.html',
+                             user=current_user,
+                             page_title='System Monitoring')
+    except Exception as e:
+        logger.error(f"System monitoring error: {e}")
+        return redirect(url_for('admin_management.admin_dashboard'))
+
+@admin_management_bp.route('/permissions/management')
+@login_required
+@super_admin_required
+def permissions_management():
+    """Permissions management drill-down view"""
+    try:
+        return render_template('admin_management/permissions_management.html',
+                             user=current_user,
+                             page_title='Permissions Management')
+    except Exception as e:
+        logger.error(f"Permissions management error: {e}")
+        return redirect(url_for('admin_management.admin_dashboard'))
+
+@admin_management_bp.route('/operations/logs')
+@login_required
+@admin_required
+def operations_logs():
+    """Operations logs drill-down view"""
+    try:
+        return render_template('admin_management/operations_logs.html',
+                             user=current_user,
+                             page_title='Operations Logs')
+    except Exception as e:
+        logger.error(f"Operations logs error: {e}")
+        return redirect(url_for('admin_management.admin_dashboard'))
+
+# Hyphen blueprint routes for admin-management URL pattern
+@admin_management_hyphen_bp.route('/')
+@admin_management_hyphen_bp.route('/dashboard')
+@login_required
+@admin_required
+def admin_hyphen_dashboard():
+    """Admin dashboard accessible via admin-management URL"""
+    return redirect(url_for('admin_management.admin_dashboard'))
 

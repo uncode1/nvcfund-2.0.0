@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship, validates
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
 import uuid
 
-from ..core.database import Base
+from modules.core.database import Base
 
 class SovereignOperationType(Enum):
     """Types of sovereign banking operations"""
@@ -175,8 +175,8 @@ class SovereignDebtTransaction(Base):
     dealer_fee = Column(Numeric(18, 2), default=0.00)
     
     # Authorization and processing
-    authorized_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    processed_by = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    authorized_by = Column(Integer, ForeignKey('users.id'), nullable=False)
+    processed_by = Column(Integer, ForeignKey('users.id'))
     
     # Impact analysis
     debt_to_gdp_impact = Column(Numeric(8, 4))
@@ -289,7 +289,7 @@ class InternationalReserves(Base):
     excess_return = Column(Numeric(8, 6))
     
     # Operational metrics
-    managed_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    managed_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     custodian_banks = Column(JSONB)  # List of custodian banks
     
     # Timestamps
@@ -357,7 +357,7 @@ class CentralBankPolicy(Base):
     dissenting_opinions = Column(Text)
     
     # Implementation details
-    policy_implemented_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    policy_implemented_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     implementation_status = Column(String(20), default='pending')
     
     # Timestamps
@@ -426,7 +426,7 @@ class BankingSupervision(Base):
     management_response = Column(Text)
     
     # Supervisory contact
-    supervised_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    supervised_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     next_examination_date = Column(DateTime)
     
     # Status
@@ -497,7 +497,7 @@ class ForeignExchangeOperation(Base):
     unintended_consequences = Column(Text)
     
     # Authorization and oversight
-    authorized_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    authorized_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     coordination_level = Column(String(50))  # unilateral, coordinated, g7, g20
     
     # Settlement details

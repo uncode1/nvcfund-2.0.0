@@ -1,8 +1,8 @@
-{% extends "dashboard/layout.html" %}
+{% extends "base.html" %}
 
 {% block title %}Cash Flow Management{% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
 <div class="container-fluid mt-4">
     <!-- Header -->
     <div class="row mb-4">
@@ -35,7 +35,7 @@
                     <i class="fas fa-wallet fa-3x text-success mb-3"></i>
                     <h5 class="text-light">Daily Cash Position</h5>
                     <h3 class="text-success">$125.0M</h3>
-                    <small class="text-muted">Current Balance</small>
+                    <small class="text-light">Current Balance</small>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                     <i class="fas fa-arrow-down fa-3x text-info mb-3"></i>
                     <h5 class="text-light">Incoming Funds</h5>
                     <h3 class="text-info">$15.0M</h3>
-                    <small class="text-muted">Today Expected</small>
+                    <small class="text-light">Today Expected</small>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
                     <i class="fas fa-arrow-up fa-3x text-warning mb-3"></i>
                     <h5 class="text-light">Outgoing Funds</h5>
                     <h3 class="text-warning">$12.0M</h3>
-                    <small class="text-muted">Today Scheduled</small>
+                    <small class="text-light">Today Scheduled</small>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
                     <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
                     <h5 class="text-light">Net Cash Flow</h5>
                     <h3 class="text-primary">+$3.0M</h3>
-                    <small class="text-muted">Today Net</small>
+                    <small class="text-light">Today Net</small>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
                             <div class="progress mt-2">
                                 <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
                             </div>
-                            <small class="text-muted">Target: 12.0%</small>
+                            <small class="text-light">Target: 12.0%</small>
                         </div>
                         <div class="col-6">
                             <h6 class="text-info">Funding Requirements</h6>
@@ -96,7 +96,7 @@
                             <div class="progress mt-2">
                                 <div class="progress-bar bg-warning" role="progressbar" style="width: 65%"></div>
                             </div>
-                            <small class="text-muted">Short-term needs</small>
+                            <small class="text-light">Short-term needs</small>
                         </div>
                     </div>
                     <div class="mt-3">

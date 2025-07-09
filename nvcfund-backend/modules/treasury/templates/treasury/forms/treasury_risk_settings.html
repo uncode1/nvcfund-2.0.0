@@ -5,7 +5,7 @@
     </div>
     <div class="card-body">
         <form method="POST" action="{{ url_for('treasury.settings') }}">
-            {{ csrf_token() }}
+            {{ csrf_token }}
             <input type="hidden" name="form_section" value="risk_settings">
             
             <div class="row">
@@ -14,7 +14,7 @@
                         <label for="var_limit">Value at Risk (VaR) Limit (%)</label>
                         <input type="number" class="form-control" id="var_limit" name="var_limit" 
                                value="2.5" step="0.1" min="0" max="10" required>
-                        <small class="form-text text-muted">Maximum daily VaR as percentage of portfolio</small>
+                        <small class="form-text text-light">Maximum daily VaR as percentage of portfolio</small>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -22,7 +22,7 @@
                         <label for="stress_test_threshold">Stress Test Threshold (%)</label>
                         <input type="number" class="form-control" id="stress_test_threshold" name="stress_test_threshold" 
                                value="15.0" step="0.5" min="5" max="50" required>
-                        <small class="form-text text-muted">Maximum loss threshold for stress testing</small>
+                        <small class="form-text text-light">Maximum loss threshold for stress testing</small>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                         <label for="concentration_limit">Concentration Limit (%)</label>
                         <input type="number" class="form-control" id="concentration_limit" name="concentration_limit" 
                                value="10.0" step="0.5" min="1" max="25" required>
-                        <small class="form-text text-muted">Maximum exposure to single counterparty</small>
+                        <small class="form-text text-light">Maximum exposure to single counterparty</small>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -47,7 +47,7 @@
                             <option value="A+">A+</option>
                             <option value="A">A</option>
                         </select>
-                        <small class="form-text text-muted">Minimum acceptable credit rating for investments</small>
+                        <small class="form-text text-light">Minimum acceptable credit rating for investments</small>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                     <label class="form-check-label" for="auto_hedging">
                         Enable Automatic Hedging
                     </label>
-                    <small class="form-text text-muted d-block">Automatically hedge currency and interest rate risks</small>
+                    <small class="form-text text-light d-block">Automatically hedge currency and interest rate risks</small>
                 </div>
             </div>
             

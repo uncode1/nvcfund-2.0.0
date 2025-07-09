@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Details - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f172a !important; color: #e2e8f0 !important; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important; margin: 0; padding: 20px; }
+        .dashboard-stat-card { background: #1e293b !important; border: 1px solid #334155 !important; border-radius: 8px !important; padding: 1.5rem; margin-bottom: 1rem; }
+        .card { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+        .btn-primary { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .table-dark { background: #1e293b !important; }
+        .table-dark td, .table-dark th { border-color: #334155 !important; color: #e2e8f0 !important; }
+        .table { background: #1e293b !important; color: #e2e8f0 !important; }
+        .table th, .table td { border-color: #334155 !important; color: #e2e8f0 !important; }
+        .text-light { color: #e2e8f0 !important; }
+    </style>
+</head>
+<body>
+
+
+<div class="container-fluid">
+    <!-- Account Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0">{{ account.account_type }}</h3>
+                    <span class="badge bg-success fs-6">{{ account.status }}</span>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-light">Account Number</h6>
+                        <p class="fs-5 mb-2 text-light">{{ account.account_number }}</p>
+                        <h6 class="text-light">Routing Number</h6>
+                        <p class="mb-0 text-light">{{ account.routing_number }}</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <h6 class="text-light">Current Balance</h6>
+                        <h2 class="text-success mb-2">${{ "{:,.2f}".format(account.balance) }}</h2>
+                        <h6 class="text-light">Available Balance</h6>
+                        <p class="fs-5 mb-0 text-success">${{ "{:,.2f}".format(account.available_balance) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Details -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="dashboard-stat-card">
+                <h6 class="text-light mb-2">Interest Rate</h6>
+                <h4 class="text-primary">{{ account.interest_rate }}% APY</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-stat-card">
+                <h6 class="text-light mb-2">Account Opened</h6>
+                <h4 class="text-light">{{ account.opened_date }}</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-stat-card">
+                <h6 class="text-light mb-2">Account Type</h6>
+                <h4 class="text-light">{{ account.account_type }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="dashboard-stat-card">
+                <h5 class="mb-3 text-light">Quick Actions</h5>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-primary" onclick="window.location.href='/banking/transfer'">
+                        <i class="fas fa-exchange-alt me-2"></i>Transfer Money
+                    </button>
+                    <button class="btn btn-success" onclick="showDepositModal()">
+                        <i class="fas fa-plus me-2"></i>Deposit
+                    </button>
+                    <button class="btn btn-warning" onclick="showWithdrawModal()">
+                        <i class="fas fa-minus me-2"></i>Withdraw
+                    </button>
+                    <button class="btn btn-info" onclick="window.location.href='/banking/statements'">
+                        <i class="fas fa-file-alt me-2"></i>Get Statement
+                    </button>
+                    <a href="{{ url_for('banking.banking_dashboard') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Banking
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0 text-light">Recent Transactions</h5>
+                    <button class="btn btn-outline-primary btn-sm" id="refresh-transactions">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th class="text-light">Date</th>
+                                <th class="text-light">Description</th>
+                                <th class="text-light">Amount</th>
+                                <th class="text-light">Balance</th>
+                                <th class="text-light">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                            <tr class="text-light">
+                                <td class="text-light">{{ transaction.date }}</td>
+                                <td class="text-light">{{ transaction.description }}</td>
+                                <td class="{% if transaction.type == 'credit' %}text-success{% else %}text-danger{% endif %}">
+                                    {% if transaction.type == 'credit' %}+{% else %}-{% endif %}${{ "{:,.2f}".format(transaction.amount|abs) }}
+                                </td>
+                                <td class="text-light">${{ "{:,.2f}".format(transaction.balance) }}</td>
+                                <td><span class="badge bg-success">Completed</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('banking.transaction_history') }}" class="btn btn-outline-primary">
+                        View All Transactions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('refresh-transactions').addEventListener('click', function() {
+    // Add refresh functionality
+    location.reload();
+});
+
+function showDepositModal() {
+    // Create and show deposit modal
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.id = 'depositModal';
+    modal.innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title text-light">Deposit Funds</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="depositForm">
+                        <div class="mb-3">
+                            <label for="depositAmount" class="form-label text-light">Amount ($)</label>
+                            <input type="number" class="form-control" id="depositAmount" min="0.01" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="depositMethod" class="form-label text-light">Deposit Method</label>
+                            <select class="form-select" id="depositMethod" required>
+                                <option value="">Select method...</option>
+                                <option value="cash">Cash</option>
+                                <option value="check">Check</option>
+                                <option value="transfer">Wire Transfer</option>
+                                <option value="ach">ACH Transfer</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="depositDescription" class="form-label text-light">Description</label>
+                            <textarea class="form-control" id="depositDescription" rows="3" placeholder="Optional deposit description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" onclick="processDeposit()">Confirm Deposit</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    const modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
+    
+    // Remove modal after it's hidden
+    modal.addEventListener('hidden.bs.modal', function() {
+        document.body.removeChild(modal);
+    });
+}
+
+function showWithdrawModal() {
+    // Create and show withdraw modal
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.id = 'withdrawModal';
+    modal.innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title text-light">Withdraw Funds</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="withdrawForm">
+                        <div class="mb-3">
+                            <label for="withdrawAmount" class="form-label text-light">Amount ($)</label>
+                            <input type="number" class="form-control" id="withdrawAmount" min="0.01" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="withdrawMethod" class="form-label text-light">Withdrawal Method</label>
+                            <select class="form-select" id="withdrawMethod" required>
+                                <option value="">Select method...</option>
+                                <option value="cash">Cash</option>
+                                <option value="check">Check</option>
+                                <option value="transfer">Wire Transfer</option>
+                                <option value="ach">ACH Transfer</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="withdrawDescription" class="form-label text-light">Description</label>
+                            <textarea class="form-control" id="withdrawDescription" rows="3" placeholder="Optional withdrawal description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-warning" onclick="processWithdraw()">Confirm Withdrawal</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    const modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
+    
+    // Remove modal after it's hidden
+    modal.addEventListener('hidden.bs.modal', function() {
+        document.body.removeChild(modal);
+    });
+}
+
+function processDeposit() {
+    const amount = document.getElementById('depositAmount').value;
+    const method = document.getElementById('depositMethod').value;
+    const description = document.getElementById('depositDescription').value;
+    
+    if (!amount || !method) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    // Here you would normally send the data to the server
+    // For now, we'll just show a success message
+    alert(`Deposit of $${amount} via ${method} has been processed successfully!`);
+    
+    // Close the modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('depositModal'));
+    modal.hide();
+    
+    // Optionally refresh the page to show updated balance
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
+
+function processWithdraw() {
+    const amount = document.getElementById('withdrawAmount').value;
+    const method = document.getElementById('withdrawMethod').value;
+    const description = document.getElementById('withdrawDescription').value;
+    
+    if (!amount || !method) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    // Here you would normally send the data to the server
+    // For now, we'll just show a success message
+    alert(`Withdrawal of $${amount} via ${method} has been processed successfully!`);
+    
+    // Close the modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('withdrawModal'));
+    modal.hide();
+    
+    // Optionally refresh the page to show updated balance
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

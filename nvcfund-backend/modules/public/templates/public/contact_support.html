@@ -8,7 +8,7 @@
         <div class="col-lg-8 mx-auto">
             <div class="text-center mb-5">
                 <h1 class="display-4 text-primary">Contact Support</h1>
-                <p class="lead text-muted">Get help from our expert support team</p>
+                <p class="lead text-light">Get help from our expert support team</p>
             </div>
 
             <!-- Support Options -->
@@ -52,7 +52,7 @@
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ url_for('public.submit_contact') }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">

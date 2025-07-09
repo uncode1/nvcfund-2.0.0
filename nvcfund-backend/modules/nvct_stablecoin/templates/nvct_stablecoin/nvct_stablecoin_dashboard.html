@@ -1,6 +1,10 @@
-{% extends "banking/enterprise_layout.html" %}
+{% extends "base.html" %}
 
 {% block title %}NVCT Stablecoin Operations - NVC Banking Platform{% endblock %}
+
+{% block extra_css %}
+<link href="{{ url_for('static', filename='css/text_contrast_fix.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block page_title %}NVCT Stablecoin Operations{% endblock %}
 {% block page_subtitle %}$30 Trillion Stablecoin with $56.7T Asset Backing (189% Over-Collateralization){% endblock %}
@@ -83,20 +87,25 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-primary">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title">Current Price</h6>
-                            <h4>${{ dashboard_data.current_price }}</h4>
-                            <small>USD Parity Target</small>
+            <a href="{{ url_for('nvct_stablecoin.analytics') }}" class="text-decoration-none">
+                <div class="card text-white bg-primary dashboard-stat-card hover-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Current Price</h6>
+                                <h4>${{ dashboard_data.current_price }}</h4>
+                                <small>USD Parity Target</small>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-dollar-sign fa-2x"></i>
+                            </div>
                         </div>
-                        <div class="align-self-center">
-                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        <div class="mt-2">
+                            <small class="text-light"><i class="fas fa-arrow-right me-1"></i>Price Analytics</small>
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -165,7 +174,7 @@
                         <div class="progress mt-1">
                             <div class="progress-bar bg-success" style="width: 100%"></div>
                         </div>
-                        <small class="text-muted">Contract: 0x369baE...D576</small>
+                        <small class="text-light">Contract: 0x369baE...D576</small>
                     </div>
                     
                     <div class="mb-3">
@@ -176,7 +185,7 @@
                         <div class="progress mt-1">
                             <div class="progress-bar bg-warning" style="width: 95%"></div>
                         </div>
-                        <small class="text-muted">ETA: 2-3 weeks</small>
+                        <small class="text-light">ETA: 2-3 weeks</small>
                     </div>
                     
                     <div class="mb-3">
@@ -187,7 +196,7 @@
                         <div class="progress mt-1">
                             <div class="progress-bar bg-warning" style="width: 90%"></div>
                         </div>
-                        <small class="text-muted">ETA: 3-4 weeks</small>
+                        <small class="text-light">ETA: 3-4 weeks</small>
                     </div>
                     
                     <div class="mb-3">
@@ -198,7 +207,7 @@
                         <div class="progress mt-1">
                             <div class="progress-bar bg-secondary" style="width: 60%"></div>
                         </div>
-                        <small class="text-muted">ETA: Q4 2025</small>
+                        <small class="text-light">ETA: Q4 2025</small>
                     </div>
                 </div>
             </div>
@@ -215,11 +224,11 @@
                     <div class="row text-center">
                         <div class="col-6 border-end">
                             <h4 class="text-primary">{{ '{:,}'.format(dashboard_data.supply_metrics.total_issued|int) }}</h4>
-                            <small class="text-muted">Circulating Supply<br>5T NVCT</small>
+                            <small class="text-light">Circulating Supply<br>5T NVCT</small>
                         </div>
                         <div class="col-6">
                             <h4 class="text-success">{{ '{:,}'.format(25000000000000|int) }}</h4>
-                            <small class="text-muted">Reserved Supply<br>25T NVCT</small>
+                            <small class="text-light">Reserved Supply<br>25T NVCT</small>
                         </div>
                     </div>
                     
@@ -258,22 +267,22 @@
                         <div class="col-md-3 text-center border-end">
                             <h6 class="text-primary">US Treasury Bonds</h6>
                             <h4>$20T</h4>
-                            <small class="text-muted">35.3% • 4.1% Yield</small>
+                            <small class="text-light">35.3% • 4.1% Yield</small>
                         </div>
                         <div class="col-md-3 text-center border-end">
                             <h6 class="text-success">Corporate Bonds</h6>
                             <h4>$12T</h4>
-                            <small class="text-muted">21.2% • 5.2% Yield</small>
+                            <small class="text-light">21.2% • 5.2% Yield</small>
                         </div>
                         <div class="col-md-3 text-center border-end">
                             <h6 class="text-info">Sovereign Debt</h6>
                             <h4>$10T</h4>
-                            <small class="text-muted">17.6% • 3.8% Yield</small>
+                            <small class="text-light">17.6% • 3.8% Yield</small>
                         </div>
                         <div class="col-md-3 text-center">
                             <h6 class="text-warning">Other Assets</h6>
                             <h4>$14.7T</h4>
-                            <small class="text-muted">25.9% • Mixed Yield</small>
+                            <small class="text-light">25.9% • Mixed Yield</small>
                         </div>
                     </div>
                     
@@ -282,23 +291,23 @@
                     <div class="row text-center">
                         <div class="col-md-2">
                             <strong>Real Estate:</strong><br>
-                            <span class="text-muted">$6T (10.6%)</span>
+                            <span class="text-light">$6T (10.6%)</span>
                         </div>
                         <div class="col-md-2">
                             <strong>Gold:</strong><br>
-                            <span class="text-muted">$4T (7.1%)</span>
+                            <span class="text-light">$4T (7.1%)</span>
                         </div>
                         <div class="col-md-2">
                             <strong>Equities:</strong><br>
-                            <span class="text-muted">$3T (5.3%)</span>
+                            <span class="text-light">$3T (5.3%)</span>
                         </div>
                         <div class="col-md-2">
                             <strong>Cash:</strong><br>
-                            <span class="text-muted">$1.7T (3.0%)</span>
+                            <span class="text-light">$1.7T (3.0%)</span>
                         </div>
                         <div class="col-md-2">
                             <strong>VAR (95%):</strong><br>
-                            <span class="text-muted">$450B</span>
+                            <span class="text-light">$450B</span>
                         </div>
                         <div class="col-md-2">
                             <strong>Credit Rating:</strong><br>

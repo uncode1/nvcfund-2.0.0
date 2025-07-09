@@ -1,8 +1,39 @@
-{% extends "dashboard/layout.html" %}
-
-{% block title %}Settlement Networks - Sovereign Banking{% endblock %}
-
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settlement Networks - Sovereign Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #0f172a; color: #e2e8f0; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif; }
+        .card { background: #1e293b; border: 1px solid #334155; color: #e2e8f0; }
+        .card-header { background: #1e293b; border-bottom: 1px solid #334155; }
+        .card-body { background: #1e293b; }
+        .bg-gradient-primary { background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); }
+        .bg-primary { background: #3b82f6 !important; }
+        .bg-success { background: #10b981 !important; }
+        .bg-info { background: #06b6d4 !important; }
+        .bg-warning { background: #f59e0b !important; }
+        .bg-danger { background: #ef4444 !important; }
+        .text-white { color: #ffffff !important; }
+        .text-light { color: #f8fafc !important; }
+        .btn-light { background: #f8fafc; border: 1px solid #e2e8f0; color: #1e293b; }
+        .btn-light:hover { background: #e2e8f0; border-color: #cbd5e1; }
+        .btn-primary { background: #3b82f6; border-color: #3b82f6; }
+        .btn-primary:hover { background: #2563eb; border-color: #2563eb; }
+        .table-dark { background: #1e293b; color: #e2e8f0; }
+        .table-dark th { border-color: #374151; }
+        .table-dark td { border-color: #374151; }
+        .bg-light { background: #f8fafc !important; }
+        .bg-opacity-20 { background-color: rgba(255, 255, 255, 0.2) !important; }
+        .border-0 { border: 0 !important; }
+        .main-content { padding: 20px; }
+        .container-fluid { padding: 0; }
+    </style>
+</head>
+<body>
 <div class="main-content">
     <div class="container-fluid">
         <!-- Header -->
@@ -158,7 +189,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h6 class="text-muted">Volume Distribution</h6>
+                                <h6 class="text-light">Volume Distribution</h6>
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between">
                                         <span>FedWire (USD)</span>
@@ -188,7 +219,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <h6 class="text-muted">Regional Performance</h6>
+                                <h6 class="text-light">Regional Performance</h6>
                                 <div class="table-responsive">
                                     <table class="table table-sm">
                                         <tbody>
@@ -254,12 +285,12 @@
                     <div class="card-body">
                         <div class="row text-center">
                             <div class="col-6">
-                                <small class="text-muted">FedWire</small>
+                                <small class="text-light">FedWire</small>
                                 <div class="fw-bold">24/7</div>
                                 <span class="badge bg-success">Active</span>
                             </div>
                             <div class="col-6">
-                                <small class="text-muted">TARGET2</small>
+                                <small class="text-light">TARGET2</small>
                                 <div class="fw-bold">07:00-18:00</div>
                                 <span class="badge bg-success">Active</span>
                             </div>
@@ -267,12 +298,12 @@
                         <hr>
                         <div class="row text-center">
                             <div class="col-6">
-                                <small class="text-muted">CHAPS</small>
+                                <small class="text-light">CHAPS</small>
                                 <div class="fw-bold">06:00-18:00</div>
                                 <span class="badge bg-success">Active</span>
                             </div>
                             <div class="col-6">
-                                <small class="text-muted">BOJNET</small>
+                                <small class="text-light">BOJNET</small>
                                 <div class="fw-bold">09:00-15:00</div>
                                 <span class="badge bg-warning">Maintenance</span>
                             </div>
@@ -332,4 +363,6 @@
     background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
 }
 </style>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

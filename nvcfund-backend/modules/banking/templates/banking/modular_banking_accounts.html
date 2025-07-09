@@ -1,17 +1,23 @@
-{% extends "banking/enterprise_layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking Accounts - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f172a !important; color: #e2e8f0 !important; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important; margin: 0; padding: 20px; }
+        .dashboard-stat-card { background: #1e293b !important; border: 1px solid #334155 !important; border-radius: 8px !important; padding: 1.5rem; margin-bottom: 1rem; }
+        .card { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+        .btn-primary { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .table-dark { background: #1e293b !important; }
+        .table-dark td, .table-dark th { border-color: #334155 !important; color: #e2e8f0 !important; }
+    </style>
+</head>
+<body>
 
-{% block title %}Account Management - NVC Banking Platform{% endblock %}
 
-{% block page_title %}Account Management{% endblock %}
-{% block page_subtitle %}Manage your banking accounts and services{% endblock %}
-
-{% block page_actions %}
-<a href="{{ url_for('banking.create_account') }}" class="btn btn-banking-primary">
-    <i class="fas fa-plus me-2"></i>Open New Account
-</a>
-{% endblock %}
-
-{% block content %}
 <div class="banking-container">
     <!-- Quick Action Bar -->
     <div class="banking-card mb-4">
@@ -24,7 +30,7 @@
                         </div>
                         <div class="banking-action-content">
                             <h6 class="mb-1">Open Account</h6>
-                            <small class="text-muted">New checking, savings, or business</small>
+                            <small class="text-light">New checking, savings, or business</small>
                         </div>
                     </a>
                 </div>
@@ -35,7 +41,7 @@
                         </div>
                         <div class="banking-action-content">
                             <h6 class="mb-1">Transfer Money</h6>
-                            <small class="text-muted">Between accounts & external</small>
+                            <small class="text-light">Between accounts & external</small>
                         </div>
                     </a>
                 </div>
@@ -46,7 +52,7 @@
                         </div>
                         <div class="banking-action-content">
                             <h6 class="mb-1">Apply for Card</h6>
-                            <small class="text-muted">Debit, credit, or prepaid</small>
+                            <small class="text-light">Debit, credit, or prepaid</small>
                         </div>
                     </a>
                 </div>
@@ -57,7 +63,7 @@
                         </div>
                         <div class="banking-action-content">
                             <h6 class="mb-1">View Statements</h6>
-                            <small class="text-muted">Monthly & quarterly</small>
+                            <small class="text-light">Monthly & quarterly</small>
                         </div>
                     </a>
                 </div>
@@ -86,7 +92,7 @@
                             </div>
                             <div>
                                 <h6 class="mb-0">{{ account.account_type or 'Savings' }}</h6>
-                                <small class="text-muted">{{ account.currency or 'USD' }} Account</small>
+                                <small class="text-light">{{ account.currency or 'USD' }} Account</small>
                             </div>
                         </div>
                         <span class="banking-badge banking-badge-{{ 'success' if account.status == 'Active' else 'warning' }}">
@@ -153,7 +159,7 @@
                             <i class="fas fa-wallet"></i>
                         </div>
                         <h4 class="mb-3">No Accounts Found</h4>
-                        <p class="text-muted mb-4">You don't have any banking accounts yet. Open your first account to get started with our comprehensive banking services.</p>
+                        <p class="text-light mb-4">You don't have any banking accounts yet. Open your first account to get started with our comprehensive banking services.</p>
                         <a href="{{ url_for('banking.create_account') }}" class="btn btn-banking-primary btn-lg">
                             <i class="fas fa-plus me-2"></i>Open Your First Account
                         </a>
@@ -463,4 +469,7 @@
     }
 }
 </style>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

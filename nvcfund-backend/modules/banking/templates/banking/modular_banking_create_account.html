@@ -1,17 +1,23 @@
-{% extends "banking/layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f172a !important; color: #e2e8f0 !important; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important; margin: 0; padding: 20px; }
+        .dashboard-stat-card { background: #1e293b !important; border: 1px solid #334155 !important; border-radius: 8px !important; padding: 1.5rem; margin-bottom: 1rem; }
+        .card { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+        .btn-primary { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .table-dark { background: #1e293b !important; }
+        .table-dark td, .table-dark th { border-color: #334155 !important; color: #e2e8f0 !important; }
+    </style>
+</head>
+<body>
 
-{% block title %}Create New Account - NVC Banking Platform{% endblock %}
 
-{% block page_title %}Create New Account{% endblock %}
-{% block page_subtitle %}Open a new banking account with competitive rates and benefits{% endblock %}
-
-{% block page_actions %}
-<a href="{{ url_for('banking.accounts') }}" class="btn btn-banking-outline">
-    <i class="fas fa-arrow-left me-2"></i>Back to Accounts
-</a>
-{% endblock %}
-
-{% block content %}
 <div class="banking-container">
     <!-- Enhanced Progress Indicator -->
     <div class="progress-container mb-4">
@@ -54,7 +60,7 @@
                 </div>
                 <div class="banking-card-body">
                     <form method="POST" action="{{ url_for('banking.create_account') }}" class="enhanced-form needs-validation" novalidate>
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
                         <!-- Enhanced Account Type Selection -->
                         <div class="form-section">
                             <h6 class="form-section-title">
@@ -297,22 +303,22 @@
                         <div class="account-type-item" data-type="Checking">
                             <h6><i class="fas fa-university me-2"></i>Checking</h6>
                             <p>Perfect for daily transactions and bill payments</p>
-                            <small class="text-muted">• No minimum balance • Free online banking</small>
+                            <small class="text-light">• No minimum balance • Free online banking</small>
                         </div>
                         <div class="account-type-item" data-type="Savings">
                             <h6><i class="fas fa-piggy-bank me-2"></i>Savings</h6>
                             <p>Grow your money with competitive interest rates</p>
-                            <small class="text-muted">• High yield • Compound interest</small>
+                            <small class="text-light">• High yield • Compound interest</small>
                         </div>
                         <div class="account-type-item" data-type="Business">
                             <h6><i class="fas fa-briefcase me-2"></i>Business</h6>
                             <p>Comprehensive banking solutions for businesses</p>
-                            <small class="text-muted">• Business tools • Merchant services</small>
+                            <small class="text-light">• Business tools • Merchant services</small>
                         </div>
                         <div class="account-type-item" data-type="Premium">
                             <h6><i class="fas fa-crown me-2"></i>Premium</h6>
                             <p>Exclusive benefits and personalized service</p>
-                            <small class="text-muted">• VIP support • Premium rewards</small>
+                            <small class="text-light">• VIP support • Premium rewards</small>
                         </div>
                     </div>
                 </div>
@@ -752,9 +758,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 500);
 });
 </script>
-{% endblock %}
 
-{% block extra_styles %}
+<!-- Additional Styles -->
 <style>
 /* Professional Form Styles */
 .banking-container {
@@ -1073,9 +1078,8 @@ document.addEventListener('DOMContentLoaded', function() {
     to { transform: rotate(360deg); }
 }
 </style>
-{% endblock %}
 
-{% block extra_scripts %}
+
 <script>
 // Form Enhancement JavaScript
 document.addEventListener('DOMContentLoaded', function() {
@@ -1173,4 +1177,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

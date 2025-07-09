@@ -5,7 +5,7 @@
     </div>
     <div class="card-body">
         <form method="POST" action="{{ url_for('banking.withdrawal') }}">
-            {{ csrf_token() }}
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
             <input type="hidden" name="form_type" value="withdrawal">
             
             <div class="row">
@@ -44,7 +44,7 @@
                             <input type="number" class="form-control" id="amount" name="amount" 
                                    step="0.01" min="0.01" max="25000" required placeholder="0.00">
                         </div>
-                        <small class="form-text text-muted">Daily withdrawal limit: $25,000</small>
+                        <small class="form-text text-light">Daily withdrawal limit: $25,000</small>
                     </div>
                 </div>
                 <div class="col-md-6">

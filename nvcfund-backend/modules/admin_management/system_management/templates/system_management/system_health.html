@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Health - NVC Banking Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #0f172a; color: #e2e8f0; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif; }
+        .system-health {
+            background: linear-gradient(135deg, #581c87 0%, #7c3aed 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            padding: 20px;
+        }
+        .health-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .card { background: #1e293b; border: 1px solid #334155; color: #e2e8f0; }
+        .card-header { background: #1e293b; border-bottom: 1px solid #334155; }
+        .card-body { background: #1e293b; }
+        .bg-primary { background: #3b82f6 !important; }
+        .bg-success { background: #10b981 !important; }
+        .bg-info { background: #06b6d4 !important; }
+        .bg-warning { background: #f59e0b !important; }
+        .bg-danger { background: #ef4444 !important; }
+        .text-white { color: #ffffff !important; }
+        .text-white-50 { color: rgba(255, 255, 255, 0.5) !important; }
+        .text-light { color: #f8fafc !important; }
+        .text-light { color: #e2e8f0 !important; }
+        .h1 { font-size: 2rem; }
+        .h3 { font-size: 1.75rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .mb-0 { margin-bottom: 0; }
+        .me-1 { margin-right: 0.25rem; }
+        .me-2 { margin-right: 0.5rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .table-dark { background: #1e293b; color: #e2e8f0; }
+        .table-dark th { border-color: #374151; }
+        .table-dark td { border-color: #374151; }
+        .badge { font-size: 0.75rem; }
+        .progress { background: #374151; height: 6px; }
+        .progress-bar { background: #3b82f6; }
+        .btn-primary { background: #3b82f6; border-color: #3b82f6; }
+        .btn-primary:hover { background: #2563eb; border-color: #2563eb; }
+    </style>
+</head>
+<body>
+<div class="system-health">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-heartbeat"></i> System Health</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="health-card">
+                <h3>{{ health_data.cpu_usage or '0' }}%</h3>
+                <p>CPU Usage</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="health-card">
+                <h3>{{ health_data.memory_usage or '0' }}%</h3>
+                <p>Memory Usage</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="health-card">
+                <h3>{{ health_data.disk_usage or '0' }}%</h3>
+                <p>Disk Usage</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="health-card">
+                <h3>{{ health_data.uptime or '0' }}h</h3>
+                <p>System Uptime</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <h2>System Status</h2>
+            {% for service in health_data.services or [] %}
+            <div class="health-card">
+                <h5>{{ service.name }}</h5>
+                <p>Status: {{ service.status }}</p>
+                <small>Last Check: {{ service.last_check }}</small>
+            </div>
+            {% else %}
+            <div class="health-card">
+                <h5>All Systems Operational</h5>
+                <p>No issues detected with system services.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

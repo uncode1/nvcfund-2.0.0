@@ -1,8 +1,23 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regulatory Reporting - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f172a !important; color: #e2e8f0 !important; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important; margin: 0; padding: 20px; }
+        .card { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+        .btn-primary { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .table-dark { background: #1e293b !important; }
+        .table-dark td, .table-dark th { border-color: #334155 !important; color: #e2e8f0 !important; }
+        .bg-gradient-primary { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; }
+    </style>
+</head>
+<body>
 
-{% block title %}Regulatory Reporting - NVC Banking Platform{% endblock %}
 
-{% block content %}
 <div class="container-fluid py-4">
     <!-- Compliance Header -->
     <div class="row mb-4">
@@ -293,7 +308,7 @@
                             <div class="timeline-marker bg-danger"></div>
                             <div class="timeline-content">
                                 <h6>Call Report (RC)</h6>
-                                <p class="text-muted small">Due: {{ "July 30, 2025"|default("TBD") }}</p>
+                                <p class="text-light small">Due: {{ "July 30, 2025"|default("TBD") }}</p>
                                 <span class="badge bg-danger">Critical</span>
                             </div>
                         </div>
@@ -301,7 +316,7 @@
                             <div class="timeline-marker bg-warning"></div>
                             <div class="timeline-content">
                                 <h6>CRA Performance Evaluation</h6>
-                                <p class="text-muted small">Due: {{ "August 15, 2025"|default("TBD") }}</p>
+                                <p class="text-light small">Due: {{ "August 15, 2025"|default("TBD") }}</p>
                                 <span class="badge bg-warning">Important</span>
                             </div>
                         </div>
@@ -309,7 +324,7 @@
                             <div class="timeline-marker bg-info"></div>
                             <div class="timeline-content">
                                 <h6>HMDA Report</h6>
-                                <p class="text-muted small">Due: {{ "September 1, 2025"|default("TBD") }}</p>
+                                <p class="text-light small">Due: {{ "September 1, 2025"|default("TBD") }}</p>
                                 <span class="badge bg-info">Scheduled</span>
                             </div>
                         </div>
@@ -317,7 +332,7 @@
                             <div class="timeline-marker bg-success"></div>
                             <div class="timeline-content">
                                 <h6>BSA/AML Report</h6>
-                                <p class="text-muted small">Due: {{ "September 30, 2025"|default("TBD") }}</p>
+                                <p class="text-light small">Due: {{ "September 30, 2025"|default("TBD") }}</p>
                                 <span class="badge bg-success">Prepared</span>
                             </div>
                         </div>
@@ -336,24 +351,24 @@
                             <span><strong>Federal Reserve</strong></span>
                             <span class="badge bg-success">Passed</span>
                         </div>
-                        <small class="text-muted">Safety & Soundness Exam</small>
-                        <small class="text-muted d-block">{{ "June 15, 2025"|default("TBD") }}</small>
+                        <small class="text-light">Safety & Soundness Exam</small>
+                        <small class="text-light d-block">{{ "June 15, 2025"|default("TBD") }}</small>
                     </div>
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <span><strong>FDIC</strong></span>
                             <span class="badge bg-success">Satisfactory</span>
                         </div>
-                        <small class="text-muted">CRA Examination</small>
-                        <small class="text-muted d-block">{{ "May 20, 2025"|default("TBD") }}</small>
+                        <small class="text-light">CRA Examination</small>
+                        <small class="text-light d-block">{{ "May 20, 2025"|default("TBD") }}</small>
                     </div>
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <span><strong>OCC</strong></span>
                             <span class="badge bg-warning">Needs Improvement</span>
                         </div>
-                        <small class="text-muted">IT Risk Assessment</small>
-                        <small class="text-muted d-block">{{ "April 10, 2025"|default("TBD") }}</small>
+                        <small class="text-light">IT Risk Assessment</small>
+                        <small class="text-light d-block">{{ "April 10, 2025"|default("TBD") }}</small>
                     </div>
                 </div>
             </div>
@@ -447,4 +462,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Regulatory reporting dashboard loaded');
 });
 </script>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

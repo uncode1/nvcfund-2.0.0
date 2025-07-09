@@ -30,13 +30,13 @@ class RoleNavigationService:
                 'navbar_template': 'super_admin_navbar.html',
                 'layout_template': 'admin_layout.html',
                 'navigation_items': {
-                    'Security Center': {
+                    'Admin Security': {
                         'icon': 'fas fa-shield-alt',
                         'dropdown': [
-                            {'name': 'Security Dashboard', 'url': 'security_center.security_dashboard'},
-                            {'name': 'Threat Intelligence', 'url': 'security_center.threats_detailed_analysis'},
-                            {'name': 'Incident Management', 'url': 'security_center.incidents_management'},
-                            {'name': 'Vulnerability Assessment', 'url': 'security_center.vulnerabilities_assessment'},
+                            {'name': 'Admin Dashboard', 'url': 'admin_management.admin_dashboard'},
+                            {'name': 'System Health', 'url': 'system_management.system_dashboard'},
+                            {'name': 'Log Viewer', 'url': 'admin_management.admin_logs'},
+                            {'name': 'User Sessions', 'url': 'admin_management.admin_sessions'},
                             {'name': 'Compliance Monitoring', 'url': 'security_center.compliance_monitoring'},
                         ]
                     },
@@ -86,12 +86,12 @@ class RoleNavigationService:
                 'navbar_template': 'admin_navbar.html',
                 'layout_template': 'admin_layout.html',
                 'navigation_items': {
-                    'Security Center': {
+                    'Security Management': {
                         'icon': 'fas fa-shield-alt',
                         'dropdown': [
-                            {'name': 'Security Dashboard', 'url': 'security_center.security_dashboard'},
-                            {'name': 'Threat Intelligence', 'url': 'security_center.threats_detailed_analysis'},
-                            {'name': 'Incident Management', 'url': 'security_center.incidents_management'},
+                            {'name': 'Admin Dashboard', 'url': 'admin_management.admin_dashboard'},
+                            {'name': 'System Monitoring', 'url': 'system_management.system_dashboard'},
+                            {'name': 'Audit Logs', 'url': 'admin_management.admin_logs'},
                         ]
                     },
                     'System Management': {
@@ -112,6 +112,13 @@ class RoleNavigationService:
                         'icon': 'fas fa-balance-scale',
                         'dropdown': [
                             {'name': 'Compliance Dashboard', 'url': 'compliance.compliance_dashboard'},
+                        ]
+                    },
+                    'API Vault': {
+                        'icon': 'fas fa-shield-alt',
+                        'dropdown': [
+                            {'name': 'Vault Dashboard', 'url': 'api_vault.vault_dashboard'},
+                            {'name': 'Cryptocurrency Trading', 'url': 'binance.binance_dashboard'},
                         ]
                     }
                 }

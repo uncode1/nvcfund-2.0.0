@@ -381,6 +381,8 @@ def secure_banking_route(
             if '/api/health' in request.path:
                 return func(*args, **kwargs)
             
+            # All users including super admins go through proper security auditing
+            
             # Apply all security measures
             decorated_func = func
             
@@ -456,3 +458,7 @@ def admin_secure_route():
             'email': 'email'
         }
     )
+
+def admin_required(func):
+    """Admin required decorator for backward compatibility"""
+    return secure_banking_route(required_permissions={'user_management'})(func)

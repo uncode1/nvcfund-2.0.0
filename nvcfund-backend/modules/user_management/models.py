@@ -15,7 +15,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 import uuid
 
-from ..core.extensions import db
+from modules.core.extensions import db
 from ..auth.models import UserRole  # Import UserRole from authoritative source
 
 class AccountType(Enum):
@@ -39,7 +39,7 @@ class UserProfile(db.Model):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     
     # User identification
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False, unique=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, unique=True)
     username = Column(String(80), unique=True, nullable=False, index=True)
     email = Column(String(120), unique=True, nullable=False, index=True)
     
@@ -152,7 +152,7 @@ class UserDocument(db.Model):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     
     # User association
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     
     # Document information
     document_type = Column(String(50), nullable=False)  # passport, driver_license, utility_bill, etc.
@@ -196,7 +196,7 @@ class UserSession(db.Model):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     
     # User association
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     
     # Session information
     session_id = Column(String(255), unique=True, nullable=False, index=True)
@@ -246,7 +246,7 @@ class UserPreference(db.Model):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     
     # User association
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False, unique=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, unique=True)
     
     # Display preferences
     theme = Column(String(20), default='light')  # light, dark, auto
@@ -310,7 +310,7 @@ class SupportTicket(db.Model):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     
     # User association
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     
     # Ticket information
     ticket_number = Column(String(20), unique=True, nullable=False, index=True)
@@ -321,7 +321,7 @@ class SupportTicket(db.Model):
     
     # Status tracking
     status = Column(String(20), default='open')  # open, in_progress, resolved, closed
-    assigned_agent_id = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    assigned_agent_id = Column(Integer, ForeignKey('users.id'))
     
     # Resolution information
     resolution = Column(Text)

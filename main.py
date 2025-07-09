@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python3
 """
-NVC Fund Banking Platform
+NVC Banking Platform - Development Entry Point
 Production-ready banking and financial services platform
 """
 
@@ -13,8 +13,6 @@ from pathlib import Path
 backend_path = Path(__file__).parent / 'nvcfund-backend'
 sys.path.insert(0, str(backend_path))
 
-print("Starting NVC Banking Platform with Pure Modular Architecture...")
-
 try:
     from app_factory import create_app
 
@@ -22,17 +20,11 @@ try:
     app = create_app()
 
     if __name__ == '__main__':
-        print("Starting NVC Fund Banking Platform...")
+        print("Starting NVC Banking Platform...")
         print(f"Environment: {'Production' if not app.debug else 'Development'}")
+        print("For production deployment, use: gunicorn --config gunicorn.conf.py main:app")
 
-        # Additional startup logging
-        try:
-            from app.utils.logger import logger
-            logger.log_api("Application startup initiated", startup=True)
-        except Exception as e:
-            print(f"Could not log startup: {e}")
-
-        # Run the application
+        # Run the application (development only)
         app.run(
             host='0.0.0.0',
             port=int(os.environ.get('PORT', 5000)),

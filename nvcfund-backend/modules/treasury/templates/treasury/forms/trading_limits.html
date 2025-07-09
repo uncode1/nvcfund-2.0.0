@@ -5,7 +5,7 @@
     </div>
     <div class="card-body">
         <form method="POST" action="{{ url_for('treasury.settings') }}">
-            {{ csrf_token() }}
+            {{ csrf_token }}
             <input type="hidden" name="form_section" value="trading_limits">
             
             <div class="row">
@@ -14,7 +14,7 @@
                         <label for="daily_trading_limit">Daily Trading Limit ($M)</label>
                         <input type="number" class="form-control" id="daily_trading_limit" name="daily_trading_limit" 
                                value="100.0" step="1.0" min="1" max="1000" required>
-                        <small class="form-text text-muted">Maximum daily trading volume in millions USD</small>
+                        <small class="form-text text-light">Maximum daily trading volume in millions USD</small>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -22,7 +22,7 @@
                         <label for="position_limit">Single Position Limit ($M)</label>
                         <input type="number" class="form-control" id="position_limit" name="position_limit" 
                                value="25.0" step="1.0" min="1" max="250" required>
-                        <small class="form-text text-muted">Maximum single position size in millions USD</small>
+                        <small class="form-text text-light">Maximum single position size in millions USD</small>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                         <label for="stop_loss_threshold">Stop Loss Threshold (%)</label>
                         <input type="number" class="form-control" id="stop_loss_threshold" name="stop_loss_threshold" 
                                value="5.0" step="0.1" min="1" max="20" required>
-                        <small class="form-text text-muted">Automatic stop loss trigger percentage</small>
+                        <small class="form-text text-light">Automatic stop loss trigger percentage</small>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -41,7 +41,7 @@
                         <label for="sector_concentration">Max Sector Concentration (%)</label>
                         <input type="number" class="form-control" id="sector_concentration" name="sector_concentration" 
                                value="15.0" step="1.0" min="5" max="50" required>
-                        <small class="form-text text-muted">Maximum exposure to any single sector</small>
+                        <small class="form-text text-light">Maximum exposure to any single sector</small>
                     </div>
                 </div>
             </div>

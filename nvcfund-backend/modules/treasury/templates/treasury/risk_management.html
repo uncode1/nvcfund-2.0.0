@@ -1,8 +1,8 @@
-{% extends "dashboard/layout.html" %}
+{% extends "base.html" %}
 
 {% block title %}Treasury Risk Management{% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
 <div class="container-fluid mt-4">
     <!-- Header -->
     <div class="row mb-4">
@@ -35,7 +35,7 @@
                     <i class="fas fa-chart-line fa-3x text-warning mb-3"></i>
                     <h5 class="text-light">Overall Risk Score</h5>
                     <h3 class="text-warning">85.5</h3>
-                    <small class="text-muted">Acceptable Range</small>
+                    <small class="text-light">Acceptable Range</small>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                     <i class="fas fa-exclamation-triangle fa-3x text-info mb-3"></i>
                     <h5 class="text-light">Active Incidents</h5>
                     <h3 class="text-info">2</h3>
-                    <small class="text-muted">This Month</small>
+                    <small class="text-light">This Month</small>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
                     <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
                     <h5 class="text-light">Mitigation Status</h5>
                     <h3 class="text-success">Active</h3>
-                    <small class="text-muted">All Systems</small>
+                    <small class="text-light">All Systems</small>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
                     <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
                     <h5 class="text-light">Compliance Level</h5>
                     <h3 class="text-primary">98.5%</h3>
-                    <small class="text-muted">Regulatory</small>
+                    <small class="text-light">Regulatory</small>
                 </div>
             </div>
         </div>
@@ -84,26 +84,26 @@
                     <div class="mb-3">
                         <h6 class="text-danger">Total Exposure</h6>
                         <h4 class="text-warning">$750.0M</h4>
-                        <small class="text-muted">Portfolio value</small>
+                        <small class="text-light">Portfolio value</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-danger">Average Credit Rating</h6>
                         <h4 class="text-info">BBB+</h4>
-                        <small class="text-muted">Investment grade</small>
+                        <small class="text-light">Investment grade</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-danger">NPL Ratio</h6>
                         <div class="progress">
                             <div class="progress-bar bg-success" role="progressbar" style="width: 20%"></div>
                         </div>
-                        <small class="text-muted">0.8% (Target: <2%)</small>
+                        <small class="text-light">0.8% (Target: <2%)</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-danger">Concentration Risk</h6>
                         <div class="progress">
                             <div class="progress-bar bg-warning" role="progressbar" style="width: 75%"></div>
                         </div>
-                        <small class="text-muted">15.2% (Limit: 20%)</small>
+                        <small class="text-light">15.2% (Limit: 20%)</small>
                     </div>
                 </div>
             </div>
@@ -119,26 +119,26 @@
                     <div class="mb-3">
                         <h6 class="text-warning">Value at Risk (1-day)</h6>
                         <h4 class="text-danger">$2.5M</h4>
-                        <small class="text-muted">99% confidence</small>
+                        <small class="text-light">99% confidence</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-warning">Expected Shortfall</h6>
                         <h4 class="text-info">$3.2M</h4>
-                        <small class="text-muted">Conditional VaR</small>
+                        <small class="text-light">Conditional VaR</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-warning">Interest Rate Risk</h6>
                         <div class="progress">
                             <div class="progress-bar bg-warning" role="progressbar" style="width: 65%"></div>
                         </div>
-                        <small class="text-muted">Moderate exposure</small>
+                        <small class="text-light">Moderate exposure</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-warning">FX Risk (Daily VaR)</h6>
                         <div class="progress">
                             <div class="progress-bar bg-info" role="progressbar" style="width: 45%"></div>
                         </div>
-                        <small class="text-muted">$650K / $1M limit</small>
+                        <small class="text-light">$650K / $1M limit</small>
                     </div>
                 </div>
             </div>
@@ -154,26 +154,26 @@
                     <div class="mb-3">
                         <h6 class="text-info">System Availability</h6>
                         <h4 class="text-success">99.8%</h4>
-                        <small class="text-muted">This month</small>
+                        <small class="text-light">This month</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-info">Process Efficiency</h6>
                         <h4 class="text-primary">94.2%</h4>
-                        <small class="text-muted">STP rate</small>
+                        <small class="text-light">STP rate</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-info">Security Score</h6>
                         <div class="progress">
                             <div class="progress-bar bg-success" role="progressbar" style="width: 95%"></div>
                         </div>
-                        <small class="text-muted">High security level</small>
+                        <small class="text-light">High security level</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-info">Compliance Score</h6>
                         <div class="progress">
                             <div class="progress-bar bg-success" role="progressbar" style="width: 98%"></div>
                         </div>
-                        <small class="text-muted">Regulatory compliance</small>
+                        <small class="text-light">Regulatory compliance</small>
                     </div>
                 </div>
             </div>

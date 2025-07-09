@@ -21,7 +21,7 @@ logging.basicConfig(
 
 # Import the application
 try:
-    from app import create_app
+    from app_factory import create_app
     
     # Create the application instance
     application = create_app(os.getenv('FLASK_ENV', 'production'))

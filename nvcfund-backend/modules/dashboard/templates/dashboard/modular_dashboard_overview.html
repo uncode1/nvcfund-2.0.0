@@ -1,159 +1,648 @@
-{% extends "base.html" %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dashboard Overview - NVC Banking Platform</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <style>
+            body {
+                background: #0f172a; /* Slate 900 */
+                color: #e2e8f0; /* Slate 200 */
+                font-family: "Inter", sans-serif; /* A modern font common in dashboards */
+            }
+            .card {
+                background: #1e293b; /* Slate 800 */
+                border: 1px solid #334155; /* Slate 700 */
+                color: #e2e8f0; /* Slate 200 */
+                border-radius: 0.5rem; /* Slightly rounded corners */
+            }
 
-{% block title %}Dashboard Overview - NVC Banking Platform{% endblock %}
+            /* Custom Card Styles for Dashboard Overview */
+            .dashboard-stat-card {
+                background: #1e293b; /* Slate 800 */
+                border: 1px solid #334155; /* Slate 700 */
+                border-radius: 0.5rem;
+                transition:
+                    transform 0.2s ease-in-out,
+                    box-shadow 0.2s ease-in-out;
+            }
+            .dashboard-stat-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            }
 
-{% block content %}
-<div class="main-content">
-    <div class="container-fluid">
-        <!-- Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card bg-gradient-dark">
-                    <div class="card-header border-0">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h1 class="card-title text-white mb-0">
-                                    <i class="fas fa-chart-bar mr-2"></i>Account Overview
-                                </h1>
-                                <p class="card-description text-light mb-0">Comprehensive account summary for {{ username }}</p>
-                            </div>
-                            <div class="col-auto">
-                                <a href="{{ url_for('dashboard.overview') }}" class="btn btn-light">
-                                    <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            /* Specific background colors from design */
+            .bg-gradient-dark {
+                background: linear-gradient(
+                    135deg,
+                    #1e293b,
+                    #334155
+                ); /* Dark gradient for header card */
+            }
+            .bg-primary {
+                background: #3b82f6 !important;
+            } /* Blue 500 */
+            .bg-success {
+                background: #10b981 !important;
+            } /* Emerald 500 */
+            .bg-warning {
+                background: #f59e0b !important;
+            } /* Amber 500 */
+            .bg-info {
+                background: #0ea5e9 !important;
+            } /* Sky 500 */
 
-        <!-- Overview Stats -->
-        <div class="row mb-4">
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <div class="card bg-primary">
-                    <div class="card-body text-center">
-                        <i class="fas fa-university fa-3x text-white-50 mb-3"></i>
-                        <h4 class="text-white">Total Accounts</h4>
-                        <h2 class="text-white">{{ total_accounts }}</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <div class="card bg-success">
-                    <div class="card-body text-center">
-                        <i class="fas fa-dollar-sign fa-3x text-white-50 mb-3"></i>
-                        <h4 class="text-white">Total Balance</h4>
-                        <h2 class="text-white">${{ "%.2f"|format(total_balance) }}</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <div class="card bg-warning">
-                    <div class="card-body text-center">
-                        <i class="fas fa-shopping-cart fa-3x text-white-50 mb-3"></i>
-                        <h4 class="text-white">Monthly Spending</h4>
-                        <h2 class="text-white">${{ "%.2f"|format(monthly_spending) }}</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                <div class="card bg-info">
-                    <div class="card-body text-center">
-                        <i class="fas fa-piggy-bank fa-3x text-white-50 mb-3"></i>
-                        <h4 class="text-white">Savings Rate</h4>
-                        <h2 class="text-white">{{ savings_rate }}%</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
+            /* Text colors */
+            .text-white {
+                color: #ffffff !important;
+            }
+            .text-light {
+                color: #f8f9fa !important;
+            } /* Used for descriptions, secondary text */
+            .text-white-50 {
+                color: rgba(255, 255, 255, 0.5) !important;
+            } /* For subtle icons */
 
-        <!-- Account Details -->
-        <div class="row">
-            <div class="col-lg-8 mb-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title mb-0">
-                            <i class="fas fa-chart-line mr-2"></i>Account Performance
-                        </h4>
+            /* Specific for 'Statement Ready' bar */
+            .statement-ready-bar {
+                background-color: #1e293b; /* A dark shade for the bar */
+                border: 1px solid #334155;
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                margin-bottom: 1.5rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .statement-ready-bar .btn-download {
+                background-color: #0f172a; /* Even darker, almost black, for the button */
+                border: 1px solid #334155;
+                color: #e2e8f0;
+                padding: 0.5rem 1rem;
+                border-radius: 0.3rem;
+                font-size: 0.9rem;
+                transition:
+                    background-color 0.2s,
+                    border-color 0.2s;
+            }
+            .statement-ready-bar .btn-download:hover {
+                background-color: #334155;
+                border-color: #475569;
+            }
+
+            /* Quick Actions Grid */
+            .quick-actions-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 1rem; /* Space between cards */
+            }
+            .action-card {
+                background: #1e293b; /* Slate 800 */
+                border: 1px solid #334155; /* Slate 700 */
+                border-radius: 0.5rem;
+                padding: 1.5rem;
+                text-align: center;
+                cursor: pointer;
+                transition:
+                    transform 0.2s ease-in-out,
+                    box-shadow 0.2s ease-in-out,
+                    background-color 0.2s;
+            }
+            .action-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+                background-color: #2a384c; /* Slightly lighter on hover */
+            }
+            .action-card i {
+                font-size: 2.5rem;
+                color: #3b82f6; /* Primary blue for icons */
+                margin-bottom: 0.75rem;
+            }
+            .action-card h6 {
+                color: #ffffff;
+                font-weight: 600;
+                margin-bottom: 0.25rem;
+            }
+            .action-card small {
+                color: #94a3b8; /* Slate 400 for subtitle */
+            }
+
+            /* Table Styling (Account Overview) */
+            .table-dark-custom {
+                background-color: #1e293b; /* Card background */
+                color: #e2e8f0;
+            }
+            .table-dark-custom thead {
+                background-color: #334155; /* Darker header for contrast */
+                color: #ffffff;
+            }
+            .table-dark-custom th,
+            .table-dark-custom td {
+                border-color: #334155; /* Border matches card border */
+                vertical-align: middle; /* Center content vertically */
+            }
+            .table-hover-custom tbody tr:hover {
+                background-color: #2a384c; /* Highlight row on hover */
+            }
+            .badge-active {
+                background-color: #10b981; /* Emerald 500 */
+                color: #ffffff;
+                padding: 0.3em 0.6em;
+                border-radius: 0.25rem;
+                font-size: 0.75em;
+                font-weight: 500;
+            }
+            .table-action-link {
+                color: #0ea5e9; /* Sky 500 for view link */
+                text-decoration: none;
+                font-weight: 500;
+            }
+            .table-action-link:hover {
+                text-decoration: underline;
+                color: #3b82f6; /* Lighter blue on hover */
+            }
+
+            /* Recent Activity */
+            .activity-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.75rem 0;
+                border-bottom: 1px solid #334155; /* Separator */
+            }
+            .activity-item:last-child {
+                border-bottom: none; /* No border for the last item */
+            }
+            .activity-description {
+                flex-grow: 1; /* Allows description to take available space */
+                color: #e2e8f0;
+                font-weight: 500;
+            }
+            .activity-timestamp {
+                font-size: 0.85rem;
+                color: #94a3b8; /* Slate 400 */
+                margin-left: 1rem; /* Space from amount */
+                white-space: nowrap; /* Prevent wrapping */
+            }
+            .activity-amount {
+                font-weight: 600;
+                font-size: 1.1rem;
+                min-width: 90px; /* Ensure consistent width for amounts */
+                text-align: right;
+            }
+            .amount-positive {
+                color: #10b981; /* Emerald 500 */
+            }
+            .amount-negative {
+                color: #ef4444; /* Red 500 */
+            }
+
+            /* Utility classes */
+            .mr-2 {
+                margin-right: 0.5rem !important;
+            }
+            .mb-3 {
+                margin-bottom: 1rem !important;
+            }
+            .mb-4 {
+                margin-bottom: 1.5rem !important;
+            }
+            .mb-0 {
+                margin-bottom: 0 !important;
+            }
+            .text-center {
+                text-align: center !important;
+            }
+            .d-flex {
+                display: flex !important;
+            }
+            .justify-content-between {
+                justify-content: space-between !important;
+            }
+            .align-items-center {
+                align-items: center !important;
+            }
+            .p-3 {
+                padding: 1rem !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main-content p-4">
+            {# Added padding to main content #}
+            <div class="container-fluid">
+                <div class="statement-ready-bar">
+                    <div>
+                        <span class="text-white font-weight-bold"
+                            >Statement Ready</span
+                        >
+                        <p class="text-light mb-0" style="font-size: 0.9rem">
+                            Your monthly statement is now available for download
+                        </p>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="border-left border-primary pl-3">
-                                    <h5 class="text-primary mb-1">Current Month</h5>
-                                    <p class="mb-0">Balance Growth: <span class="text-success">+2.3%</span></p>
-                                    <p class="mb-0">Transactions: <span class="text-info">47 transactions</span></p>
+                    <button class="btn btn-download">Download</button>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card bg-gradient-dark">
+                            <div class="card-header border-0">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h1 class="card-title text-white mb-0">
+                                            <i class="fas fa-chart-bar mr-2"></i
+                                            >Account Overview
+                                        </h1>
+                                        <p
+                                            class="card-description text-light mb-0"
+                                        >
+                                            Comprehensive account summary for {{
+                                            username if username else 'User' }}
+                                        </p>
+                                    </div>
+                                    <div class="col-auto">
+                                        {# Changed btn-light to btn-outline-info
+                                        #}
+                                        <a
+                                            href="{{ url_for('dashboard.overview') }}"
+                                            class="btn btn-outline-info"
+                                        >
+                                            <i
+                                                class="fas fa-arrow-left mr-2"
+                                            ></i
+                                            >Back to Dashboard
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="border-left border-success pl-3">
-                                    <h5 class="text-success mb-1">Previous Month</h5>
-                                    <p class="mb-0">Balance Growth: <span class="text-success">+1.8%</span></p>
-                                    <p class="mb-0">Transactions: <span class="text-info">52 transactions</span></p>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="text-center">
-                            <h6 class="text-muted mb-3">Account Health Score</h6>
-                            <div class="progress mb-3" style="height: 20px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 85%">
-                                    <span class="text-white font-weight-bold">85% Excellent</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4 mb-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-bullseye mr-2"></i>Financial Goals
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <h6>Emergency Fund</h6>
-                            <div class="progress mb-2">
-                                <div class="progress-bar bg-primary" style="width: 75%"></div>
-                            </div>
-                            <small class="text-muted">$7,500 of $10,000 goal</small>
-                        </div>
-                        <div class="mb-4">
-                            <h6>Vacation Savings</h6>
-                            <div class="progress mb-2">
-                                <div class="progress-bar bg-success" style="width: 60%"></div>
-                            </div>
-                            <small class="text-muted">$3,000 of $5,000 goal</small>
-                        </div>
-                        <div class="mb-4">
-                            <h6>Investment Portfolio</h6>
-                            <div class="progress mb-2">
-                                <div class="progress-bar bg-warning" style="width: 40%"></div>
-                            </div>
-                            <small class="text-muted">$8,000 of $20,000 goal</small>
-                        </div>
-                        <div class="text-center">
-                            <a href="/contact" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-plus mr-1"></i>Add New Goal
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        {% if error_message %}
-        <div class="row">
-            <div class="col-12">
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>{{ error_message }}
+                <div class="row mb-4">
+                    <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                        <div class="dashboard-stat-card">
+                            {# Changed card bg-primary to dashboard-stat-card #}
+                            <div class="card-body text-center">
+                                <i
+                                    class="fas fa-dollar-sign fa-3x text-white-50 mb-3"
+                                ></i>
+                                {# Icon added #}
+                                <h4 class="text-white">TOTAL BALANCE</h4>
+                                {# Capitalized #}
+                                <h2 class="text-white">
+                                    ${{ "%.2f"|format(total_balance) if
+                                    total_balance is not none else '0.00' }}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                        <div class="dashboard-stat-card">
+                            {# Changed card bg-success to dashboard-stat-card #}
+                            <div class="card-body text-center">
+                                <i
+                                    class="fas fa-credit-card fa-3x text-white-50 mb-3"
+                                ></i>
+                                {# Icon added #}
+                                <h4 class="text-white">ACTIVE CARDS</h4>
+                                {# Capitalized #}
+                                <h2 class="text-white">
+                                    {{ total_accounts if total_accounts is not
+                                    none else '0' }}
+                                </h2>
+                                {# Assuming total_accounts represents active
+                                cards here #}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                        <div class="dashboard-stat-card">
+                            {# Changed card bg-warning to dashboard-stat-card #}
+                            <div class="card-body text-center">
+                                <i
+                                    class="fas fa-exchange-alt fa-3x text-white-50 mb-3"
+                                ></i>
+                                {# Icon added #}
+                                <h4 class="text-white">RECENT TRANSFERS</h4>
+                                {# Capitalized #}
+                                <h2 class="text-white">
+                                    {{ monthly_spending if monthly_spending is
+                                    not none else '0' }}
+                                </h2>
+                                {# Reusing monthly_spending for recent transfers
+                                #}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                        <div class="dashboard-stat-card">
+                            {# Changed card bg-info to dashboard-stat-card #}
+                            <div class="card-body text-center">
+                                <i
+                                    class="fas fa-chart-line fa-3x text-white-50 mb-3"
+                                ></i>
+                                {# Icon added #}
+                                <h4 class="text-white">MONTHLY GROWTH</h4>
+                                {# Capitalized #}
+                                <h2 class="text-success">
+                                    {{ savings_rate if savings_rate is not none
+                                    else '0' }}%
+                                </h2>
+                                {# Changed text to success for positive growth
+                                #}
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <h4 class="text-white mb-3">Quick Actions</h4>
+                <div class="quick-actions-grid mb-4">
+                    <a href="#" class="action-card">
+                        <i class="fas fa-paper-plane"></i>
+                        <h6>Send Money</h6>
+                        <small>Transfer funds instantly</small>
+                    </a>
+                    <a href="#" class="action-card">
+                        <i class="fas fa-plus-circle"></i>
+                        <h6>New Account</h6>
+                        <small>Open a new account</small>
+                    </a>
+                    <a href="#" class="action-card">
+                        <i class="fas fa-credit-card"></i>
+                        <h6>Apply for Card</h6>
+                        <small>Get a new payment card</small>
+                    </a>
+                    <a href="#" class="action-card">
+                        <i class="fas fa-file-alt"></i>
+                        <h6>Get Statement</h6>
+                        <small>Download statements</small>
+                    </a>
+                    <a href="#" class="action-card">
+                        <i class="fas fa-chart-pie"></i>
+                        <h6>Investments</h6>
+                        <small>View portfolio</small>
+                    </a>
+                    <a href="#" class="action-card">
+                        <i class="fas fa-life-ring"></i>
+                        <h6>Get Support</h6>
+                        <small>Contact customer service</small>
+                    </a>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-8 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0">
+                                    <i class="fas fa-university mr-2"></i
+                                    >Account Overview
+                                </h4>
+                            </div>
+                            <div class="card-body p-0">
+                                {# Removed padding from body to let table handle
+                                it #}
+                                <div class="table-responsive">
+                                    <table
+                                        class="table table-dark-custom table-hover-custom mb-0"
+                                    >
+                                        <thead>
+                                            <tr>
+                                                <th>ACCOUNT</th>
+                                                <th>TYPE</th>
+                                                <th>BALANCE</th>
+                                                <th>STATUS</th>
+                                                <th>ACTIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {# Example dynamic data rendering #}
+                                            {% if accounts %} {% for account in
+                                            accounts %}
+                                            <tr>
+                                                <td>
+                                                    {{ account.account_number }}
+                                                </td>
+                                                <td>{{ account.type }}</td>
+                                                <td>
+                                                    ${{
+                                                    "%.2f"|format(account.balance)
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-active"
+                                                        >{{ account.status
+                                                        }}</span
+                                                    >
+                                                </td>
+                                                <td>
+                                                    <a
+                                                        href="#"
+                                                        class="table-action-link"
+                                                        >View</a
+                                                    >
+                                                </td>
+                                            </tr>
+                                            {% endfor %} {% else %}
+                                            <tr>
+                                                <td
+                                                    colspan="5"
+                                                    class="text-center text-muted py-4"
+                                                >
+                                                    No accounts found.
+                                                </td>
+                                            </tr>
+                                            {% endif %} {# Hardcoded example
+                                            accounts if 'accounts' variable is
+                                            empty or not passed #} {% if not
+                                            accounts %}
+                                            <tr>
+                                                <td>SAV-007-000001</td>
+                                                <td>Savings</td>
+                                                <td>$456,250.30</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-active"
+                                                        >Active</span
+                                                    >
+                                                </td>
+                                                <td>
+                                                    <a
+                                                        href="#"
+                                                        class="table-action-link"
+                                                        >View</a
+                                                    >
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>CHK-001-000002</td>
+                                                <td>Checking</td>
+                                                <td>$155,950.25</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-active"
+                                                        >Active</span
+                                                    >
+                                                </td>
+                                                <td>
+                                                    <a
+                                                        href="#"
+                                                        class="table-action-link"
+                                                        >View</a
+                                                    >
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-history mr-2"></i>Recent
+                                    Activity {# Changed icon to history #}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                {# Example dynamic data rendering #} {% if
+                                recent_activities %} {% for activity in
+                                recent_activities %}
+                                <div class="activity-item">
+                                    <div>
+                                        <div class="activity-description">
+                                            {{ activity.description }}
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="d-flex flex-column align-items-end"
+                                    >
+                                        <div
+                                            class="activity-amount {% if activity.amount > 0 %}amount-positive{% else %}amount-negative{% endif %}"
+                                        >
+                                            {{
+                                            "${:,.2f}".format(activity.amount|abs)
+                                            }}
+                                        </div>
+                                        <div class="activity-timestamp">
+                                            {{ activity.time_ago }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %} {% else %}
+                                <p class="text-center text-muted py-4">
+                                    No recent activity.
+                                </p>
+                                {% endif %} {# Hardcoded example activities if
+                                'recent_activities' is empty or not passed #} {%
+                                if not recent_activities %}
+                                <div class="activity-item">
+                                    <div>
+                                        <div class="activity-description">
+                                            Salary Deposit
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="d-flex flex-column align-items-end"
+                                    >
+                                        <div
+                                            class="activity-amount amount-positive"
+                                        >
+                                            +$3,500.00
+                                        </div>
+                                        <div class="activity-timestamp">
+                                            2 hours ago
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div>
+                                        <div class="activity-description">
+                                            Transfer to Savings
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="d-flex flex-column align-items-end"
+                                    >
+                                        <div
+                                            class="activity-amount amount-negative"
+                                        >
+                                            -$500.00
+                                        </div>
+                                        <div class="activity-timestamp">
+                                            1 day ago
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div>
+                                        <div class="activity-description">
+                                            Card Payment
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="d-flex flex-column align-items-end"
+                                    >
+                                        <div
+                                            class="activity-amount amount-negative"
+                                        >
+                                            -$127.85
+                                        </div>
+                                        <div class="activity-timestamp">
+                                            2 days ago
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div>
+                                        <div class="activity-description">
+                                            Account Interest
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="d-flex flex-column align-items-end"
+                                    >
+                                        <div
+                                            class="activity-amount amount-positive"
+                                        >
+                                            +$42.15
+                                        </div>
+                                        <div class="activity-timestamp">
+                                            1 week ago
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if error_message %}
+                <div class="row mt-4">
+                    {# Added margin top for separation #}
+                    <div class="col-12">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>{{
+                            error_message }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
-        {% endif %}
-    </div>
-</div>
-{% endblock %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

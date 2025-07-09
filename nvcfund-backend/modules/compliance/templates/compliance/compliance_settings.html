@@ -1,23 +1,342 @@
-{% extends "dashboard/layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compliance Settings - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f172a !important; color: #e2e8f0 !important; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important; margin: 0; padding: 20px; }
+        .card { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+        .btn-primary { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .form-control, .form-select { background: #334155 !important; border: 1px solid #475569 !important; color: #e2e8f0 !important; }
+        .form-control:focus, .form-select:focus { border-color: #3b82f6 !important; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important; }
+        .form-check-input:checked { background-color: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .table-dark { background: #1e293b !important; }
+        .table-dark td, .table-dark th { border-color: #334155 !important; color: #e2e8f0 !important; }
+    </style>
+</head>
+<body>
 
-{% block title %}Compliance & Risk Settings{% endblock %}
 
-{% block content %}
 <div class="container-fluid mt-4">
-    <div class="row">
+    <!-- Page Header -->
+    <div class="row mb-4">
         <div class="col-12">
-            <div class="card bg-dark border-warning">
-                <div class="card-header bg-gradient text-white">
+            <div class="card">
+                <div class="card-header">
                     <h3 class="mb-0">
                         <i class="fas fa-cog me-2"></i>Compliance & Risk Settings
                     </h3>
+                    <p class="text-light mb-0">Configure compliance parameters and risk management settings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Compliance Configuration -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>Compliance Configuration
+                    </h5>
                 </div>
                 <div class="card-body">
-                    <h5 class="text-light">Configure Compliance & Risk parameters</h5>
-                    <p class="text-muted">Manage system settings and operational parameters.</p>
+                    <form id="complianceForm">
+                        <div class="mb-3">
+                            <label class="form-label">AML/KYC Threshold</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" value="10000" min="1000" max="100000">
+                            </div>
+                            <small class="text-light">Minimum transaction amount for enhanced monitoring</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Risk Assessment Frequency</label>
+                            <select class="form-select">
+                                <option value="daily">Daily</option>
+                                <option value="weekly" selected>Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Auto-Report Generation</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">Enable automated compliance reports</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Regulatory Alerts</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">Real-time regulatory notifications</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Configuration
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Management Settings -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Risk Management Settings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="riskForm">
+                        <div class="mb-3">
+                            <label class="form-label">Risk Tolerance Level</label>
+                            <select class="form-select">
+                                <option value="conservative">Conservative</option>
+                                <option value="moderate" selected>Moderate</option>
+                                <option value="aggressive">Aggressive</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Credit Risk Limit (%)</label>
+                            <input type="range" class="form-range" min="1" max="20" value="10" id="creditRiskSlider">
+                            <div class="d-flex justify-content-between">
+                                <small>1%</small>
+                                <small id="creditRiskValue">10%</small>
+                                <small>20%</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Market Risk Monitoring</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">Enable real-time market risk analysis</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Operational Risk Alerts</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">Immediate operational risk notifications</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save me-2"></i>Update Risk Settings
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Regulatory Framework Settings -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-gavel me-2"></i>Regulatory Framework Settings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0">GDPR Compliance</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Data Protection</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Privacy Rights</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Consent Management</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0">PCI DSS</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Data Security</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Network Security</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Access Control</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-warning">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6 class="mb-0">SOX Compliance</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Financial Controls</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Audit Requirements</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label">Quarterly Reviews</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">Basel III</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Capital Requirements</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Liquidity Coverage</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                        <label class="form-check-label">Leverage Ratio</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Settings -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bell me-2"></i>Notification Settings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Email Notifications</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked>
+                            <label class="form-check-label">High-priority alerts</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked>
+                            <label class="form-check-label">Daily compliance reports</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox">
+                            <label class="form-check-label">Weekly summaries</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">SMS Notifications</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked>
+                            <label class="form-check-label">Critical violations only</label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i>Save Notification Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integration Settings -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-plug me-2"></i>Integration Settings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">External Systems</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked>
+                            <label class="form-check-label">SWIFT Network Integration</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked>
+                            <label class="form-check-label">Federal Reserve Integration</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked>
+                            <label class="form-check-label">Regulatory Reporting APIs</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Data Synchronization</label>
+                        <select class="form-select">
+                            <option value="realtime" selected>Real-time</option>
+                            <option value="hourly">Hourly</option>
+                            <option value="daily">Daily</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-info">
+                        <i class="fas fa-sync me-2"></i>Update Integration Settings
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Update credit risk slider value
+    const creditRiskSlider = document.getElementById('creditRiskSlider');
+    const creditRiskValue = document.getElementById('creditRiskValue');
+    
+    creditRiskSlider.addEventListener('input', function() {
+        creditRiskValue.textContent = this.value + '%';
+    });
+    
+    // Form submission handlers
+    document.getElementById('complianceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Compliance configuration saved successfully!');
+    });
+    
+    document.getElementById('riskForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Risk management settings updated successfully!');
+    });
+});
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

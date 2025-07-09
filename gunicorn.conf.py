@@ -24,11 +24,11 @@ graceful_timeout = 30
 # Restart workers after this many seconds to prevent memory leaks
 max_worker_age = 3600
 
-# Logging
+# Logging configuration
 loglevel = "info"
+# Use standard output for logs (can be overridden by environment variables)
 accesslog = "-"
 errorlog = "-"
-access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(D)s'
 
 # Process naming
 proc_name = "nvc_banking_platform"

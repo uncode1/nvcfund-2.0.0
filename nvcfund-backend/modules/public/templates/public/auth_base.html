@@ -194,7 +194,7 @@
                                 <li><a class="dropdown-item" href="/profile"><i class="fas fa-user-edit me-1"></i> My Profile</a></li>
                                 <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog me-1"></i> Settings</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><span class="dropdown-item-text text-muted">
+                                <li><span class="dropdown-item-text text-light">
                                     <small><i class="fas fa-shield-alt me-1"></i> Role: {{ current_user.role.value if current_user.role else 'USER' }}</small>
                                 </span></li>
                                 <li><hr class="dropdown-divider"></li>
@@ -350,7 +350,7 @@
                                         </div>
                                         <div class="chat-bubble" style="background: #374151; padding: 12px; border-radius: 12px; max-width: 70%;">
                                             <p class="mb-1 text-white">Hello! I'm here to help you with NVC Banking Platform. How can I assist you today?</p>
-                                            <small class="text-muted">${new Date().toLocaleTimeString()}</small>
+                                            <small class="text-light">${new Date().toLocaleTimeString()}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -365,7 +365,7 @@
                             </div>
                         </div>
                         <div class="modal-footer" style="background: #374151; border-top: 1px solid #4b5563;">
-                            <small class="text-muted">
+                            <small class="text-light">
                                 <i class="fas fa-shield-alt me-1"></i>
                                 Secure chat - Your conversations are encrypted
                             </small>
@@ -424,7 +424,7 @@
                         </div>
                         <div class="chat-bubble" style="background: #374151; padding: 12px; border-radius: 12px; max-width: 70%;">
                             <p class="mb-1 text-white">Thank you for your message. A support representative will be with you shortly. In the meantime, you can explore our <a href="/public/faq" class="text-primary">FAQ section</a> or <a href="/public/user-guide" class="text-primary">User Guide</a>.</p>
-                            <small class="text-muted">${new Date().toLocaleTimeString()}</small>
+                            <small class="text-light">${new Date().toLocaleTimeString()}</small>
                         </div>
                     </div>
                 `;

@@ -2,71 +2,75 @@
 
 {% block title %}Incident Response - Security Center{% endblock %}
 
-{% block content %}
-<div class="container-fluid">
-    <div class="row">
+{% block dashboard_content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Incident Response Dashboard</h3>
+                    <h1 class="h2 text-light mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Incident Response
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incident Response Dashboard -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-shield-alt me-2"></i>Active Incidents</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-warning"><i class="fas fa-exclamation-circle"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Open Incidents</span>
-                                    <span class="info-box-number">{{ incident_data.open_incidents }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-success"><i class="fas fa-check-circle"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Resolved Today</span>
-                                    <span class="info-box-number">{{ incident_data.resolved_today }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-info"><i class="fas fa-clock"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Avg Response Time</span>
-                                    <span class="info-box-number">{{ incident_data.avg_response_time }}</span>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Type</th>
+                                    <th>Severity</th>
+                                    <th>Status</th>
+                                    <th>Reported</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>INC-2025-001</td>
+                                    <td>Suspicious Login</td>
+                                    <td><span class="badge bg-warning">Medium</span></td>
+                                    <td><span class="badge bg-primary">Investigating</span></td>
+                                    <td>2 hours ago</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <h4>Recent Incidents</h4>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Type</th>
-                                        <th>Severity</th>
-                                        <th>Status</th>
-                                        <th>Time</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for incident in incident_data.recent_incidents %}
-                                    <tr>
-                                        <td>{{ incident.id }}</td>
-                                        <td>{{ incident.type }}</td>
-                                        <td><span class="badge badge-{{ 'danger' if incident.severity == 'High' else 'warning' if incident.severity == 'Medium' else 'info' }}">{{ incident.severity }}</span></td>
-                                        <td><span class="badge badge-{{ 'warning' if incident.status == 'Active' else 'info' if incident.status == 'Investigating' else 'success' }}">{{ incident.status }}</span></td>
-                                        <td>{{ incident.time }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-tachometer-alt me-2"></i>Response Metrics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Average Response Time</label>
+                        <div class="h4 text-success">12 minutes</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Open Incidents</label>
+                        <div class="h4 text-warning">3</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Resolved Today</label>
+                        <div class="h4 text-info">15</div>
                     </div>
                 </div>
             </div>

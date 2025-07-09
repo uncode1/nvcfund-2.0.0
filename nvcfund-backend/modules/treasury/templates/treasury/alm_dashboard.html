@@ -1,8 +1,8 @@
-{% extends "dashboard/layout.html" %}
+{% extends "base.html" %}
 
 {% block title %}Asset Liability Management{% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
 <div class="container-fluid mt-4">
     <!-- Header -->
     <div class="row mb-4">
@@ -35,7 +35,7 @@
                     <i class="fas fa-clock fa-3x text-info mb-3"></i>
                     <h5 class="text-light">Duration Gap</h5>
                     <h3 class="text-info">2.3 years</h3>
-                    <small class="text-muted">Assets - Liabilities</small>
+                    <small class="text-light">Assets - Liabilities</small>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                     <i class="fas fa-percentage fa-3x text-success mb-3"></i>
                     <h5 class="text-light">Net Interest Margin</h5>
                     <h3 class="text-success">3.25%</h3>
-                    <small class="text-muted">Current NIM</small>
+                    <small class="text-light">Current NIM</small>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
                     <i class="fas fa-money-bill fa-3x text-warning mb-3"></i>
                     <h5 class="text-light">Cost of Funds</h5>
                     <h3 class="text-warning">1.75%</h3>
-                    <small class="text-muted">Weighted Average</small>
+                    <small class="text-light">Weighted Average</small>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
                     <i class="fas fa-chart-line fa-3x text-danger mb-3"></i>
                     <h5 class="text-light">Duration Assets</h5>
                     <h3 class="text-primary">4.2 years</h3>
-                    <small class="text-muted">Portfolio Duration</small>
+                    <small class="text-light">Portfolio Duration</small>
                 </div>
             </div>
         </div>
@@ -140,21 +140,21 @@
                         <div class="progress">
                             <div class="progress-bar bg-warning" role="progressbar" style="width: 65%"></div>
                         </div>
-                        <small class="text-muted">Moderate Risk Level</small>
+                        <small class="text-light">Moderate Risk Level</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-info">Liquidity Risk</h6>
                         <div class="progress">
                             <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
                         </div>
-                        <small class="text-muted">Low Risk Level</small>
+                        <small class="text-light">Low Risk Level</small>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-info">Credit Risk</h6>
                         <div class="progress">
                             <div class="progress-bar bg-info" role="progressbar" style="width: 75%"></div>
                         </div>
-                        <small class="text-muted">Acceptable Level</small>
+                        <small class="text-light">Acceptable Level</small>
                     </div>
                     <div class="mt-3">
                         <span class="badge bg-success me-2">Duration: Balanced</span>

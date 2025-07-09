@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block title %}Products Management - Main Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-box-open me-2"></i>Products Management Dashboard
+                        </h6>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-plus me-1"></i>Add Product
+                            </button>
+                            <button class="btn btn-sm btn-outline-success">
+                                <i class="fas fa-sync me-1"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-light mb-0">Centralized management for all banking products and integrations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overview Statistics -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Products</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_products }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-box-open fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Active Products</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ active_products }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Daily Transactions</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ daily_transactions | int | round | string }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exchange-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Product Uptime</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ product_uptime }}%</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-heartbeat fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Categories Grid -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Product Categories</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for category in product_categories %}
+                        <div class="col-lg-6 col-md-12 mb-4">
+                            <div class="card shadow h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="m-0 font-weight-bold text-{{ category.color }}">
+                                        <i class="{{ category.icon }} me-2"></i>{{ category.name }}
+                                    </h6>
+                                    <div class="d-flex gap-2">
+                                        <span class="badge badge-{{ category.color }}">{{ category.active }}/{{ category.count }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-light mb-3">{{ category.description }}</p>
+                                    
+                                    <div class="row text-center mb-3">
+                                        <div class="col-6">
+                                            <strong>{{ category.count }}</strong>
+                                            <small class="text-light d-block">Total Products</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <strong>{{ category.active }}</strong>
+                                            <small class="text-light d-block">Active Products</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <small class="text-light">Modules:</small>
+                                        <div class="mt-1">
+                                            {% for module in category.modules %}
+                                            <span class="badge badge-outline-{{ category.color }} me-1">{{ module }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                                            <div class="progress-bar bg-{{ category.color }}" 
+                                                 style="width: {{ (category.active / category.count * 100) | round(1) }}%"></div>
+                                        </div>
+                                        <a href="{{ category.url }}" class="btn btn-sm btn-{{ category.color }}">
+                                            <i class="fas fa-arrow-right me-1"></i>View Category
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Product Activity</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Activity</th>
+                                    <th>Status</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Cards & Payments</td>
+                                    <td><span class="badge badge-primary">Banking</span></td>
+                                    <td>Transaction processing update</td>
+                                    <td><span class="badge badge-success">Success</span></td>
+                                    <td>2 min ago</td>
+                                </tr>
+                                <tr>
+                                    <td>NVCT Stablecoin</td>
+                                    <td><span class="badge badge-info">Digital</span></td>
+                                    <td>Smart contract deployment</td>
+                                    <td><span class="badge badge-success">Success</span></td>
+                                    <td>5 min ago</td>
+                                </tr>
+                                <tr>
+                                    <td>Trading Platform</td>
+                                    <td><span class="badge badge-success">Investment</span></td>
+                                    <td>Market data synchronization</td>
+                                    <td><span class="badge badge-warning">Processing</span></td>
+                                    <td>8 min ago</td>
+                                </tr>
+                                <tr>
+                                    <td>Insurance Services</td>
+                                    <td><span class="badge badge-warning">Insurance</span></td>
+                                    <td>Policy renewal batch</td>
+                                    <td><span class="badge badge-success">Success</span></td>
+                                    <td>12 min ago</td>
+                                </tr>
+                                <tr>
+                                    <td>Smart Contracts</td>
+                                    <td><span class="badge badge-dark">Blockchain</span></td>
+                                    <td>Gas optimization update</td>
+                                    <td><span class="badge badge-success">Success</span></td>
+                                    <td>15 min ago</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

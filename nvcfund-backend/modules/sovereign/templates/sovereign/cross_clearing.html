@@ -1,8 +1,39 @@
-{% extends "dashboard/layout.html" %}
-
-{% block title %}Cross-Clearing Operations - Sovereign Banking{% endblock %}
-
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Clearing Operations - Sovereign Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #0f172a; color: #e2e8f0; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif; }
+        .card { background: #1e293b; border: 1px solid #334155; color: #e2e8f0; }
+        .card-header { background: #1e293b; border-bottom: 1px solid #334155; }
+        .card-body { background: #1e293b; }
+        .bg-gradient-warning { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .bg-primary { background: #3b82f6 !important; }
+        .bg-success { background: #10b981 !important; }
+        .bg-info { background: #06b6d4 !important; }
+        .bg-warning { background: #f59e0b !important; }
+        .bg-danger { background: #ef4444 !important; }
+        .text-white { color: #ffffff !important; }
+        .text-light { color: #f8fafc !important; }
+        .btn-light { background: #f8fafc; border: 1px solid #e2e8f0; color: #1e293b; }
+        .btn-light:hover { background: #e2e8f0; border-color: #cbd5e1; }
+        .btn-primary { background: #3b82f6; border-color: #3b82f6; }
+        .btn-primary:hover { background: #2563eb; border-color: #2563eb; }
+        .table-dark { background: #1e293b; color: #e2e8f0; }
+        .table-dark th { border-color: #374151; }
+        .table-dark td { border-color: #374151; }
+        .bg-light { background: #f8fafc !important; }
+        .bg-opacity-20 { background-color: rgba(255, 255, 255, 0.2) !important; }
+        .border-0 { border: 0 !important; }
+        .main-content { padding: 20px; }
+        .container-fluid { padding: 0; }
+    </style>
+</head>
+<body>
 <div class="main-content">
     <div class="container-fluid">
         <!-- Header -->
@@ -150,7 +181,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h6 class="text-muted">Major Networks</h6>
+                                <h6 class="text-light">Major Networks</h6>
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between">
                                         <span>SWIFT Network</span>
@@ -180,7 +211,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <h6 class="text-muted">Regional Networks</h6>
+                                <h6 class="text-light">Regional Networks</h6>
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between">
                                         <span>Asia-Pacific</span>
@@ -247,12 +278,12 @@
                     <div class="card-body">
                         <div class="row text-center">
                             <div class="col-6">
-                                <small class="text-muted">Next USD</small>
+                                <small class="text-light">Next USD</small>
                                 <div class="fw-bold">14:30 UTC</div>
                                 <span class="badge bg-success">Open</span>
                             </div>
                             <div class="col-6">
-                                <small class="text-muted">Next EUR</small>
+                                <small class="text-light">Next EUR</small>
                                 <div class="fw-bold">16:00 CET</div>
                                 <span class="badge bg-info">Pending</span>
                             </div>
@@ -260,12 +291,12 @@
                         <hr>
                         <div class="row text-center">
                             <div class="col-6">
-                                <small class="text-muted">Next JPY</small>
+                                <small class="text-light">Next JPY</small>
                                 <div class="fw-bold">09:00 JST</div>
                                 <span class="badge bg-warning">Tomorrow</span>
                             </div>
                             <div class="col-6">
-                                <small class="text-muted">Next GBP</small>
+                                <small class="text-light">Next GBP</small>
                                 <div class="fw-bold">15:30 GMT</div>
                                 <span class="badge bg-success">Open</span>
                             </div>
@@ -299,4 +330,6 @@
     background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
 }
 </style>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

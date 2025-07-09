@@ -1,121 +1,101 @@
 # NVC Banking Platform Documentation
 
-Welcome to the comprehensive documentation for the NVC Banking Platform - an enterprise-grade digital banking system with advanced financial services and blockchain integration.
+Welcome to the comprehensive documentation for the NVC Banking Platform - an enterprise-grade digital banking solution with advanced security, compliance, and regulatory features.
 
-## Documentation Overview
+## 📁 Documentation Structure
 
-This documentation provides complete guidance for developers, system administrators, and deployment engineers working with the NVC Banking Platform.
+### 🚀 [Deployment](deployment/)
+Production deployment guides and infrastructure setup
+- **AWS_DEPLOYMENT_GUIDE.md** - Complete AWS cloud deployment guide
+- **PRODUCTION_DEPLOYMENT.md** - Standard production deployment procedures
+- **DEPLOYMENT_CHECKLIST.md** - Pre-deployment verification checklist
 
-### Available Documentation
+### 🔧 [Operations](operations/)
+Operational procedures and maintenance guides
+- **OPERATIONS_RUNBOOK.md** - Daily/weekly/monthly operational procedures
+- **INCIDENT_RESPONSE.md** - Incident management and response procedures
+- **PACKAGE_UPDATE_STRATEGY.md** - Safe package update procedures
+- **PACKAGE_UPDATE_SYSTEM.md** - Automated package management system
+- **SAFE_CICD_UPDATE_STRATEGY.md** - CI/CD deployment strategies
 
-#### 📋 [Developer Guide](./DEVELOPER_GUIDE.md)
-Comprehensive development documentation including:
-- System architecture and modular design
-- Development environment setup
-- Authentication and security implementation
-- API documentation and usage
-- Frontend development with React
-- Testing procedures and best practices
-- Banking-grade password complexity requirements
+### 👥 [User Guides](user-guides/)
+End-user documentation and interface guides
+- **USER_MANUAL.md** - Comprehensive user manual for all roles
+- **VISUAL_USER_GUIDE.md** - Step-by-step visual interface guide
+- **VISUAL_INTERFACE_GUIDE.md** - Interface component descriptions
+- **LIVE_WEB_INTERFACES.md** - Live interface documentation
+- **LIVE_INTERFACE_SUMMARY.md** - Interface feature summary
 
-#### ☁️ [AWS Deployment Guide](./AWS_DEPLOYMENT_GUIDE.md)
-Production deployment guide for AWS infrastructure:
-- Complete AWS architecture setup
-- EC2 deployment with Ubuntu and Nginx
-- RDS PostgreSQL configuration
-- S3 and CloudFront frontend deployment
-- AWS Secrets Manager integration
-- Monitoring, scaling, and performance optimization
-- Security hardening and compliance
+### 💻 [Development](development/)
+Developer resources and technical guides
+- **DEVELOPER_GUIDE.md** - Complete development documentation
+- **CRITICAL_ISSUES_SUMMARY.md** - Known issues and solutions
 
-## Quick Start Links
+### 🔒 [Security](security/)
+Security frameworks and implementation guides
+- **DATA_SECURITY_GUIDE.md** - Data protection and encryption guide
+- **SECURITY_POLICY_COMPLIANCE.md** - Master security policy framework
+
+### 📋 [Compliance](compliance/)
+Regulatory compliance policies and procedures
+- **compliance-policies/** - Complete regulatory compliance documentation suite
+  - Banking regulations (Basel III, Dodd-Frank, MiFID II)
+  - Risk management (operational, credit, liquidity)
+  - Data governance and privacy (GDPR)
+  - Technology policies (change management, vendor management)
+  - Specialized compliance (cryptocurrency, sanctions)
+
+## 🎯 Quick Start Guides
 
 ### For Developers
-- [Setting up Development Environment](./DEVELOPER_GUIDE.md#development-environment-setup)
-- [Understanding Modular Architecture](./DEVELOPER_GUIDE.md#modular-architecture)
-- [Authentication System](./DEVELOPER_GUIDE.md#authentication--security)
-- [API Documentation](./DEVELOPER_GUIDE.md#api-documentation)
+1. Start with [Development/DEVELOPER_GUIDE.md](development/DEVELOPER_GUIDE.md)
+2. Review [Security/DATA_SECURITY_GUIDE.md](security/DATA_SECURITY_GUIDE.md)
+3. Follow [Deployment/DEPLOYMENT_CHECKLIST.md](deployment/DEPLOYMENT_CHECKLIST.md)
 
-### For DevOps Engineers
-- [AWS Infrastructure Setup](./AWS_DEPLOYMENT_GUIDE.md#infrastructure-setup)
-- [Database Deployment](./AWS_DEPLOYMENT_GUIDE.md#database-setup-rds-postgresql)
-- [Backend Deployment](./AWS_DEPLOYMENT_GUIDE.md#backend-deployment-ec2--nginx)
-- [Frontend Deployment](./AWS_DEPLOYMENT_GUIDE.md#frontend-deployment-s3--cloudfront)
-- [Security Configuration](./AWS_DEPLOYMENT_GUIDE.md#security--secrets-management)
+### For Operations Teams
+1. Begin with [Operations/OPERATIONS_RUNBOOK.md](operations/OPERATIONS_RUNBOOK.md)
+2. Familiarize with [Operations/INCIDENT_RESPONSE.md](operations/INCIDENT_RESPONSE.md)
+3. Review [Deployment/PRODUCTION_DEPLOYMENT.md](deployment/PRODUCTION_DEPLOYMENT.md)
 
-## Platform Overview
+### For End Users
+1. Read [User Guides/USER_MANUAL.md](user-guides/USER_MANUAL.md)
+2. Follow [User Guides/VISUAL_USER_GUIDE.md](user-guides/VISUAL_USER_GUIDE.md)
+3. Reference [User Guides/LIVE_WEB_INTERFACES.md](user-guides/LIVE_WEB_INTERFACES.md)
 
-### Key Features
-- **🏦 Sovereign Banking Operations**: Complete central banking capabilities
-- **💰 Treasury Management**: Advanced treasury operations and liquidity management
-- **🔄 Cross-Clearing & Settlement**: Multi-currency settlement networks
-- **📊 Regulatory Compliance**: Built-in compliance frameworks
-- **⛓️ Blockchain Integration**: Full Ethereum/smart contract support
-- **📈 Real-time Analytics**: Advanced financial analytics and reporting
-- **🔐 Multi-Role Authentication**: Banking-grade security with RBAC
+### For Compliance Teams
+1. Start with [Security/SECURITY_POLICY_COMPLIANCE.md](security/SECURITY_POLICY_COMPLIANCE.md)
+2. Review [Compliance/compliance-policies/README.md](compliance/compliance-policies/README.md)
+3. Access specific policies in [Compliance/compliance-policies/](compliance/compliance-policies/)
 
-### Technology Stack
-- **Backend**: Flask 3.0+ with pure modular architecture (34+ modules)
-- **Frontend**: React 18.3+ with modern hooks and context API
-- **Database**: PostgreSQL 15+ with SQLAlchemy ORM
-- **Security**: Banking-grade password complexity, JWT, CSRF protection
-- **Real-time**: SocketIO for WebSocket connections
-- **Infrastructure**: AWS (EC2, RDS, S3, CloudFront, Secrets Manager)
+## 🏗️ Platform Architecture
 
-### Architecture Highlights
-- **Pure Modular Design**: 34+ self-contained financial service modules
-- **Banking-Grade Security**: Enhanced password complexity and RBAC
-- **Enterprise Logging**: Comprehensive audit trails and monitoring
-- **Scalable Infrastructure**: Auto-scaling groups and load balancers
-- **High Availability**: Multi-AZ deployment with failover support
+The NVC Banking Platform is built with:
+- **Frontend**: React 18.3.1 with Bootstrap 5.3.7
+- **Backend**: Flask with modular blueprint architecture
+- **Database**: PostgreSQL with SQLAlchemy ORM
+- **Security**: Banking-grade encryption and compliance frameworks
+- **Deployment**: Multi-environment support (development, staging, production)
 
-## Security & Compliance
+## 🔐 Security & Compliance
 
-### Enhanced Password Requirements
-The platform enforces banking-grade password complexity:
-- Minimum 12 characters with mixed case, numbers, and special characters
-- Blocks common patterns and consecutive sequences
-- Prevents repeated characters and enforces uniqueness
-- Real-time validation and audit logging
+The platform maintains compliance with:
+- **Banking Regulations**: Basel III, Dodd-Frank, MiFID II
+- **Data Protection**: GDPR, PCI DSS, SOX
+- **Security Standards**: ISMS (ISO 27001), BCMS (ISO 22301)
+- **Financial Compliance**: AML/KYC, BSA, economic sanctions
 
-### Test Credentials (Development Only)
-```
-Super Admin:
-Username: uncode
-Password: Zx9Wq2@#ComplexCeo
+## 📞 Support & Maintenance
 
-Standard User:
-Username: regular_user
-Password: Ky5Rp8!$StandardUsr9
+- **Issue Reporting**: See [Development/CRITICAL_ISSUES_SUMMARY.md](development/CRITICAL_ISSUES_SUMMARY.md)
+- **Incident Response**: Follow [Operations/INCIDENT_RESPONSE.md](operations/INCIDENT_RESPONSE.md)
+- **Operational Support**: Reference [Operations/OPERATIONS_RUNBOOK.md](operations/OPERATIONS_RUNBOOK.md)
 
-Demo User:
-Username: demo_user
-Password: Nz4Wq7@&SecureDmoTst
-```
+## 📈 Continuous Improvement
 
-## Support and Maintenance
-
-### Getting Help
-1. Check the troubleshooting sections in each guide
-2. Review the system logs and monitoring dashboards
-3. Consult the API documentation for endpoint-specific issues
-4. Contact the development team for platform-specific questions
-
-### Contributing
-1. Follow the development guidelines in the Developer Guide
-2. Ensure all tests pass before submitting changes
-3. Update documentation for any architectural changes
-4. Maintain the modular architecture principles
-
-### Updates and Versioning
-- Documentation is versioned alongside the platform
-- Check for updates when upgrading the platform
-- Review security advisories for critical updates
-- Follow the deployment procedures for production updates
+This documentation is actively maintained and updated. For the latest changes and updates, refer to individual document headers and the project's change log in the main repository.
 
 ---
 
-**Note**: This documentation is for the production-ready NVC Banking Platform. Ensure all security measures are properly implemented before deploying to production environments.
-
-Last Updated: July 6, 2025
-Platform Version: v1.0.0
+**Last Updated**: July 2025  
+**Documentation Version**: 1.0  
+**Platform Version**: NVC Banking Platform v2.0

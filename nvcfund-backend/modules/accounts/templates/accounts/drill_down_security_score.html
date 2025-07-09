@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Score Analysis - NVC Banking</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            background: #0f172a !important;
+            color: #e2e8f0 !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+        .card {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        .table-dark {
+            background: #1e293b !important;
+            --bs-table-bg: #1e293b !important;
+        }
+        .table-dark td, .table-dark th {
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        .text-light { color: #e2e8f0 !important; }
+        
+        /* Badge contrast fixes */
+        .badge.bg-success { color: #ffffff !important; }
+        .badge.bg-warning { color: #000000 !important; }
+        .badge.bg-danger { color: #ffffff !important; }
+        .badge.bg-info { color: #000000 !important; }
+        .badge.bg-primary { color: #ffffff !important; }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-light">Security Score Analysis</h1>
+                    <p class="text-light">Comprehensive security metrics and threat monitoring</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('accounts.main_dashboard') }}" class="btn btn-outline-light">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-dark border-secondary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p class="text-light mb-1">Overall Score</p>
+                            <h4 class="mb-0 text-light">96.8%</h4>
+                            <small class="text-success">+0.3% improvement</small>
+                        </div>
+                        <div class="text-success">
+                            <i class="fas fa-shield-alt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-dark border-secondary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p class="text-light mb-1">MFA Adoption</p>
+                            <h4 class="mb-0 text-light">89.2%</h4>
+                            <small class="text-success">+2.1% increase</small>
+                        </div>
+                        <div class="text-primary">
+                            <i class="fas fa-mobile-alt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-dark border-secondary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p class="text-light mb-1">Failed Logins</p>
+                            <h4 class="mb-0 text-light">42</h4>
+                            <small class="text-success">-12.8% reduction</small>
+                        </div>
+                        <div class="text-warning">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-dark border-secondary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p class="text-light mb-1">Fraud Rate</p>
+                            <h4 class="mb-0 text-light">0.08%</h4>
+                            <small class="text-success">-0.02% reduction</small>
+                        </div>
+                        <div class="text-danger">
+                            <i class="fas fa-ban fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Metrics Breakdown -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header">
+                    <h5 class="mb-0 text-light">Security Metrics Breakdown</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Security Metric</th>
+                                    <th>Current Value</th>
+                                    <th>Target</th>
+                                    <th>Change</th>
+                                    <th>Status</th>
+                                    <th>Risk Level</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-shield-alt text-success"></i>
+                                        Overall Security Score
+                                    </td>
+                                    <td>96.8%</td>
+                                    <td>95.0%</td>
+                                    <td><span class="text-success">+0.3%</span></td>
+                                    <td><span class="badge bg-success">Excellent</span></td>
+                                    <td><span class="badge bg-success">Low</span></td>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-mobile-alt text-primary"></i>
+                                        MFA Adoption Rate
+                                    </td>
+                                    <td>89.2%</td>
+                                    <td>90.0%</td>
+                                    <td><span class="text-success">+2.1%</span></td>
+                                    <td><span class="badge bg-warning">Good</span></td>
+                                    <td><span class="badge bg-warning">Medium</span></td>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                                        Failed Login Attempts
+                                    </td>
+                                    <td>42</td>
+                                    <td>&lt; 50</td>
+                                    <td><span class="text-success">-12.8%</span></td>
+                                    <td><span class="badge bg-success">Good</span></td>
+                                    <td><span class="badge bg-success">Low</span></td>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-lock text-info"></i>
+                                        Account Lockouts
+                                    </td>
+                                    <td>3</td>
+                                    <td>&lt; 5</td>
+                                    <td><span class="text-success">-25.0%</span></td>
+                                    <td><span class="badge bg-success">Excellent</span></td>
+                                    <td><span class="badge bg-success">Low</span></td>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-search text-secondary"></i>
+                                        Suspicious Activity
+                                    </td>
+                                    <td>7</td>
+                                    <td>&lt; 10</td>
+                                    <td><span class="text-success">-18.2%</span></td>
+                                    <td><span class="badge bg-success">Good</span></td>
+                                    <td><span class="badge bg-success">Low</span></td>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-ban text-danger"></i>
+                                        Fraud Detection Rate
+                                    </td>
+                                    <td>99.7%</td>
+                                    <td>99.5%</td>
+                                    <td><span class="text-success">+0.1%</span></td>
+                                    <td><span class="badge bg-success">Excellent</span></td>
+                                    <td><span class="badge bg-success">Low</span></td>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Security Events -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header">
+                    <h5 class="mb-0 text-light">Recent Security Events</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Event ID</th>
+                                    <th>Type</th>
+                                    <th>Severity</th>
+                                    <th>User/Account</th>
+                                    <th>Description</th>
+                                    <th>Timestamp</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="text-primary">
+                                            SEC001234
+                                        </a>
+                                    </td>
+                                    <td>Login Attempt</td>
+                                    <td><span class="badge bg-warning">Medium</span></td>
+                                    <td>john.smith@email.com</td>
+                                    <td>Multiple failed login attempts from new location</td>
+                                    <td>2025-07-09 14:23:15</td>
+                                    <td><span class="badge bg-warning">Monitoring</span></td>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="text-primary">
+                                            SEC001235
+                                        </a>
+                                    </td>
+                                    <td>Suspicious Transaction</td>
+                                    <td><span class="badge bg-danger">High</span></td>
+                                    <td>ACC001847</td>
+                                    <td>Large transfer to high-risk country</td>
+                                    <td>2025-07-09 13:45:22</td>
+                                    <td><span class="badge bg-success">Resolved</span></td>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="text-primary">
+                                            SEC001236
+                                        </a>
+                                    </td>
+                                    <td>MFA Bypass</td>
+                                    <td><span class="badge bg-danger">High</span></td>
+                                    <td>sarah.johnson@email.com</td>
+                                    <td>Attempted MFA bypass detected</td>
+                                    <td>2025-07-09 12:18:33</td>
+                                    <td><span class="badge bg-danger">Investigating</span></td>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="text-primary">
+                                            SEC001237
+                                        </a>
+                                    </td>
+                                    <td>Password Change</td>
+                                    <td><span class="badge bg-success">Low</span></td>
+                                    <td>michael.brown@email.com</td>
+                                    <td>Password changed from unrecognized device</td>
+                                    <td>2025-07-09 11:29:44</td>
+                                    <td><span class="badge bg-success">Resolved</span></td>
+                                    <td>
+                                        <a href="{{ url_for('accounts.overview') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

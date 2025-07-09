@@ -268,7 +268,7 @@
                     <div class="account-type-card" onclick="showForm('USER')">
                         <i class="fas fa-user fa-2x"></i>
                         <h6>Individual Account</h6>
-                        <p class="small text-muted">Personal banking services</p>
+                        <p class="small text-light">Personal banking services</p>
                         <ul class="list-unstyled small">
                             <li>✓ Personal banking</li>
                             <li>✓ Digital payments</li>
@@ -279,7 +279,7 @@
                     <div class="account-type-card" onclick="showForm('BUSINESS_USER')">
                         <i class="fas fa-building fa-2x"></i>
                         <h6>Business Client</h6>
-                        <p class="small text-muted">Commercial banking services</p>
+                        <p class="small text-light">Commercial banking services</p>
                         <ul class="list-unstyled small">
                             <li>✓ Business banking</li>
                             <li>✓ Merchant services</li>
@@ -290,7 +290,7 @@
                     <div class="account-type-card" onclick="showForm('PARTNER')">
                         <i class="fas fa-handshake fa-2x"></i>
                         <h6>Partner Program</h6>
-                        <p class="small text-muted">Enhanced banking partnership</p>
+                        <p class="small text-light">Enhanced banking partnership</p>
                         <ul class="list-unstyled small">
                             <li>✓ Premium services</li>
                             <li>✓ Service access</li>
@@ -319,7 +319,7 @@
                 </div>
                 
                 <form method="POST" action="{{ url_for('auth.register') }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
                     <input type="hidden" name="account_type" value="USER">
                 
                 <!-- Personal Information -->
@@ -434,23 +434,23 @@
                 <div class="form-nav-footer mt-4 p-3 text-center" style="background: #f8f9fa; border-radius: 8px; border-top: 3px solid #0a2447;">
                     <div class="row">
                         <div class="col-md-4">
-                            <small class="text-muted">
+                            <small class="text-light">
                                 <i class="fas fa-shield-alt text-primary"></i> Secure Registration
                             </small>
                         </div>
                         <div class="col-md-4">
-                            <small class="text-muted">
+                            <small class="text-light">
                                 <i class="fas fa-clock text-primary"></i> 24/7 Support
                             </small>
                         </div>
                         <div class="col-md-4">
-                            <small class="text-muted">
+                            <small class="text-light">
                                 <i class="fas fa-lock text-primary"></i> Bank-Grade Security
                             </small>
                         </div>
                     </div>
                     <hr class="my-2">
-                    <small class="text-muted">
+                    <small class="text-light">
                         Already have an account? 
                         <a href="{{ url_for('auth.login') }}" class="text-primary">Sign In</a>
                     </small>
@@ -475,7 +475,7 @@
                 </div>
                 
                 <form method="POST" action="{{ url_for('auth.register') }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
                     <input type="hidden" name="account_type" value="BUSINESS_USER">
                 
                 <!-- Business Information -->
@@ -601,23 +601,23 @@
                 <div class="form-nav-footer mt-4 p-3 text-center" style="background: #f8f9fa; border-radius: 8px; border-top: 3px solid #0a2447;">
                     <div class="row">
                         <div class="col-md-4">
-                            <small class="text-muted">
+                            <small class="text-light">
                                 <i class="fas fa-chart-line text-primary"></i> Business Solutions
                             </small>
                         </div>
                         <div class="col-md-4">
-                            <small class="text-muted">
+                            <small class="text-light">
                                 <i class="fas fa-users text-primary"></i> Dedicated Support
                             </small>
                         </div>
                         <div class="col-md-4">
-                            <small class="text-muted">
+                            <small class="text-light">
                                 <i class="fas fa-shield-alt text-primary"></i> Enterprise Security
                             </small>
                         </div>
                     </div>
                     <hr class="my-2">
-                    <small class="text-muted">
+                    <small class="text-light">
                         Already have an account? 
                         <a href="{{ url_for('auth.login') }}" class="text-primary">Sign In</a>
                     </small>
@@ -642,7 +642,7 @@
                 </div>
                 
                 <form method="POST" action="{{ url_for('auth.register') }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
                     <input type="hidden" name="account_type" value="PARTNER">
                 
                 <!-- Organization Information -->
@@ -784,23 +784,23 @@
                 <div class="form-nav-footer mt-4 p-3 text-center" style="background: #f8f9fa; border-radius: 8px; border-top: 3px solid #0a2447;">
                     <div class="row">
                         <div class="col-md-4">
-                            <small class="text-muted">
+                            <small class="text-light">
                                 <i class="fas fa-crown text-primary"></i> Premium Partnership
                             </small>
                         </div>
                         <div class="col-md-4">
-                            <small class="text-muted">
+                            <small class="text-light">
                                 <i class="fas fa-handshake text-primary"></i> Strategic Alliance
                             </small>
                         </div>
                         <div class="col-md-4">
-                            <small class="text-muted">
+                            <small class="text-light">
                                 <i class="fas fa-rocket text-primary"></i> Enterprise Solutions
                             </small>
                         </div>
                     </div>
                     <hr class="my-2">
-                    <small class="text-muted">
+                    <small class="text-light">
                         Already have an account? 
                         <a href="{{ url_for('auth.login') }}" class="text-primary">Sign In</a>
                     </small>

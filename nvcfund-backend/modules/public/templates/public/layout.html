@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>{% block title %}NVC Banking Platform{% endblock %}</title>
 
     <!-- Bootstrap CSS -->
@@ -56,7 +56,7 @@
         }
 
         /* Override any existing text color classes */
-        .text-dark, .text-black, .text-secondary, .text-muted {
+        .text-dark, .text-black, .text-secondary, .text-light {
             color: #e5e7eb !important;
         }
 
@@ -141,9 +141,10 @@
         }
 
         .main-content {
-            margin-top: 2rem;
+            margin-top: 70px; /* Account for fixed navbar */
             padding: 2rem 0;
             color: #e5e7eb !important;
+            min-height: calc(100vh - 70px);
         }
 
         /* Conservative institutional banking colors */
@@ -155,12 +156,7 @@
         }
 
         .main-content {
-            background-color: #2d2d2d;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            margin: 20px 0;
-            padding: 30px;
-            border: 1px solid #404040;
+            background-color: transparent;
             width: 100%;
             max-width: 100%;
         }
@@ -697,7 +693,7 @@
         }
 
         /* Fix any remaining light text on light backgrounds */
-        .text-muted {
+        .text-light {
             color: #9ca3af !important;
         }
 
@@ -1401,10 +1397,99 @@
 
     
     {% block extra_styles %}{% endblock %}
+    <style>
+        /* Fixed navbar padding for public routes */
+        body {
+            padding-top: 70px !important;
+        }
+    </style>
 </head>
 <body>
-    <!-- Professional Banking Header -->
-    {% include 'public/navbars/enhanced_navbar.html' %}
+    <!-- Professional Banking Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNavbar">
+        <div class="container-fluid">
+            <!-- Professional Brand -->
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="fas fa-university me-2 text-warning"></i>
+                <div>
+                    <span class="fw-bold">NVC Banking</span>
+                    <small class="d-block text-light" style="font-size: 0.7rem;">Digital Banking Platform</small>
+                </div>
+            </a>
+            
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <!-- Home -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    
+                    <!-- About -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">
+                            <i class="fas fa-info-circle me-1"></i>About
+                        </a>
+                    </li>
+                    
+                    <!-- Documentation -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="docsDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-book me-1"></i>Documentation
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header"><i class="fas fa-file-alt me-1"></i>User Guides</h6></li>
+                            <li><a class="dropdown-item" href="/user-guide"><i class="fas fa-user me-1"></i>User Manual</a></li>
+                            <li><a class="dropdown-item" href="/getting-started"><i class="fas fa-play-circle me-1"></i>Getting Started</a></li>
+                            <li><a class="dropdown-item" href="/faq"><i class="fas fa-question-circle me-1"></i>FAQ</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header"><i class="fas fa-cog me-1"></i>Technical</h6></li>
+                            <li><a class="dropdown-item" href="/documentation"><i class="fas fa-code me-1"></i>Documentation Center</a></li>
+                            <li><a class="dropdown-item" href="/api-documentation"><i class="fas fa-plug me-1"></i>API Documentation</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header"><i class="fas fa-university me-1"></i>Platform</h6></li>
+                            <li><a class="dropdown-item" href="/whitepaper"><i class="fas fa-scroll me-1"></i>NVCT Whitepaper</a></li>
+                        </ul>
+                    </li>
+                    
+
+                    <!-- Contact -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">
+                            <i class="fas fa-envelope me-1"></i>Contact
+                        </a>
+                    </li>
+                    
+                    <!-- Live Chat -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/chat/live">
+                            <i class="fas fa-comments me-1"></i>Live Chat
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Right Side Navigation -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-primary me-2" href="/auth/login">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary" href="/auth/register">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <!-- Main Content Container -->
     <main class="main-content">
@@ -1417,7 +1502,7 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h5 class="fw-bold text-warning">NVC Banking Platform</h5>
-                    <p class="text-muted">Secure, intelligent financial services powered by blockchain technology.</p>
+                    <p class="text-light">Secure, intelligent financial services powered by blockchain technology.</p>
                     <div class="d-flex">
                         <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
                         <a href="#" class="text-light me-3"><i class="fab fa-linkedin"></i></a>
@@ -1459,10 +1544,10 @@
             <hr class="my-4" style="border-color: #66ccff;">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <p class="mb-0 text-muted">&copy; 2025 NVC Banking Platform. All rights reserved.</p>
+                    <p class="mb-0 text-light">&copy; 2025 NVC Banking Platform. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="mb-0 text-muted">Secure • Compliant • Innovative</p>
+                    <p class="mb-0 text-light">Secure • Compliant • Innovative</p>
                 </div>
             </div>
         </div>
@@ -1490,7 +1575,7 @@
                             <div class="d-flex align-items-center">
                                 <i class="fas fa-robot text-primary me-2"></i>
                                 <strong>NVC Support</strong>
-                                <small class="text-muted ms-2">Just now</small>
+                                <small class="text-light ms-2">Just now</small>
                             </div>
                             <p class="mb-0 mt-1">Welcome to NVC Banking live support! How can we assist you today?</p>
                         </div>
@@ -1525,7 +1610,7 @@
                 userMessage.className = 'message user-message mb-3 text-end';
                 userMessage.innerHTML = `
                     <div class="d-flex align-items-center justify-content-end">
-                        <small class="text-muted me-2">Just now</small>
+                        <small class="text-light me-2">Just now</small>
                         <strong>You</strong>
                         <i class="fas fa-user text-success ms-2"></i>
                     </div>
@@ -1545,7 +1630,7 @@
                         <div class="d-flex align-items-center">
                             <i class="fas fa-robot text-primary me-2"></i>
                             <strong>NVC Support</strong>
-                            <small class="text-muted ms-2">Just now</small>
+                            <small class="text-light ms-2">Just now</small>
                         </div>
                         <p class="mb-0 mt-1">Thank you for your message. Our team will review your inquiry and respond shortly.</p>
                     `;

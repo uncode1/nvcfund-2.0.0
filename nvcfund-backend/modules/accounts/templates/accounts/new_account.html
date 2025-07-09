@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Account - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f172a !important; color: #e2e8f0 !important; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important; margin: 0; padding: 20px; }
+        .dashboard-stat-card { background: #1e293b !important; border: 1px solid #334155 !important; border-radius: 8px !important; padding: 1.5rem; margin-bottom: 1rem; }
+        .card { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+        .btn-primary { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .table-dark { background: #1e293b !important; }
+        .table-dark td, .table-dark th { border-color: #334155 !important; color: #e2e8f0 !important; }
+    </style>
+</head>
+<body>
+
+
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h1 class="h2 text-light mb-2">
+                                <i class="fas fa-university me-2"></i>Create New Banking Account
+                            </h1>
+                            <p class="text-light mb-0">Complete account opening with KYC compliance and regulatory requirements</p>
+                        </div>
+                        <div class="col-auto">
+                            <a href="{{ url_for('accounts.overview') }}" class="btn btn-outline-light btn-sm">
+                                <i class="fas fa-arrow-left me-1"></i>Back to Overview
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multi-Step Account Creation Form -->
+    <div class="row">
+        <div class="col-lg-9 mb-4">
+            <!-- Progress Indicator -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="progress-container">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="step-indicator active" data-step="1">
+                                        <i class="fas fa-user-circle"></i> Customer Info
+                                    </span>
+                                    <span class="step-indicator" data-step="2">
+                                        <i class="fas fa-university"></i> Account Setup
+                                    </span>
+                                    <span class="step-indicator" data-step="3">
+                                        <i class="fas fa-shield-alt"></i> Verification
+                                    </span>
+                                    <span class="step-indicator" data-step="4">
+                                        <i class="fas fa-check-circle"></i> Review
+                                    </span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 25%" id="stepProgress"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="newAccountForm" data-validate="true" method="POST">
+                <!-- Step 1: Customer Information -->
+                <div class="card mb-4 form-step active" id="step1">
+                    <div class="card-header">
+                        <h5><i class="fas fa-user-plus me-2"></i>Customer Information</h5>
+                        <small class="text-light">Required for KYC compliance and account verification</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Personal Information -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="first_name" class="form-label">First Name *</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" required 
+                                           placeholder="Enter customer's first name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="last_name" class="form-label">Last Name *</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" required 
+                                           placeholder="Enter customer's last name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="date_of_birth" class="form-label">Date of Birth *</label>
+                                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="ssn" class="form-label">Social Security Number *</label>
+                                    <input type="text" class="form-control" id="ssn" name="ssn" required 
+                                           placeholder="XXX-XX-XXXX" pattern="^\d{3}-\d{2}-\d{4}$" maxlength="11">
+                                    <div class="form-text">Format: XXX-XX-XXXX</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" class="form-control" id="email" name="email" required 
+                                           placeholder="customer@example.com">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone Number *</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required 
+                                           placeholder="(XXX) XXX-XXXX" pattern="^\(\d{3}\) \d{3}-\d{4}$">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Address Information -->
+                        <h6 class="mt-4 mb-3"><i class="fas fa-map-marker-alt me-2"></i>Address Information</h6>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="street_address" class="form-label">Street Address *</label>
+                                    <input type="text" class="form-control" id="street_address" name="street_address" required 
+                                           placeholder="123 Main Street">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="apt_unit" class="form-label">Apt/Unit</label>
+                                    <input type="text" class="form-control" id="apt_unit" name="apt_unit" 
+                                           placeholder="Apt 4B">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="city" class="form-label">City *</label>
+                                    <input type="text" class="form-control" id="city" name="city" required 
+                                           placeholder="New York">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="state" class="form-label">State *</label>
+                                    <select class="form-select" id="state" name="state" required>
+                                        <option value="">Select State</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="CA">California</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="NY">New York</option>
+                                        <option value="TX">Texas</option>
+                                        <!-- Add all US states -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="zip_code" class="form-label">ZIP Code *</label>
+                                    <input type="text" class="form-control" id="zip_code" name="zip_code" required 
+                                           placeholder="12345" pattern="^\d{5}(-\d{4})?$" maxlength="10">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" onclick="nextStep(1)">
+                                Next: Account Setup <i class="fas fa-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Account Setup -->
+                <div class="card mb-4 form-step" id="step2">
+                    <div class="card-header">
+                        <h5><i class="fas fa-university me-2"></i>Account Configuration</h5>
+                        <small class="text-light">Select account type and features</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="account_name" class="form-label">Account Name *</label>
+                                    <input type="text" class="form-control" id="account_name" name="account_name" required 
+                                           placeholder="Enter descriptive account name">
+                                    <div class="form-text">This name will appear on statements and account documents</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="account_type" class="form-label">Account Type *</label>
+                                    <select class="form-select" id="account_type" name="account_type" required>
+                                        <option value="">Select Account Type</option>
+                                        <option value="checking">Personal Checking</option>
+                                        <option value="savings">Personal Savings</option>
+                                        <option value="business_checking">Business Checking</option>
+                                        <option value="business_savings">Business Savings</option>
+                                        <option value="money_market">Money Market</option>
+                                        <option value="investment">Investment Account</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Features -->
+                        <h6 class="mt-4 mb-3"><i class="fas fa-cogs me-2"></i>Account Features</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="initial_deposit" class="form-label">Initial Deposit *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="initial_deposit" name="initial_deposit" 
+                                               min="25" step="0.01" placeholder="25.00" required>
+                                    </div>
+                                    <div class="form-text">Minimum $25.00 required for account opening</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="overdraft_protection" class="form-label">Overdraft Protection</label>
+                                    <select class="form-select" id="overdraft_protection" name="overdraft_protection">
+                                        <option value="none">No Overdraft Protection</option>
+                                        <option value="savings_transfer">Transfer from Savings</option>
+                                        <option value="line_of_credit">Line of Credit</option>
+                                        <option value="credit_card">Credit Card Backup</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="debit_card" name="debit_card" value="true">
+                                    <label class="form-check-label" for="debit_card">
+                                        Request Debit Card
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="online_banking" name="online_banking" value="true" checked>
+                                    <label class="form-check-label" for="online_banking">
+                                        Enable Online Banking
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary" onclick="previousStep(2)">
+                                <i class="fas fa-arrow-left me-1"></i> Previous
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep(2)">
+                                Next: Verification <i class="fas fa-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Identity Verification -->
+                <div class="card mb-4 form-step" id="step3">
+                    <div class="card-header">
+                        <h5><i class="fas fa-shield-alt me-2"></i>Identity Verification</h5>
+                        <small class="text-light">Required by federal banking regulations (KYC/AML compliance)</small>
+                    </div>
+                    <div class="card-body">
+                        <!-- Employment Information -->
+                        <h6 class="mb-3"><i class="fas fa-briefcase me-2"></i>Employment Information</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="employment_status" class="form-label">Employment Status *</label>
+                                    <select class="form-select" id="employment_status" name="employment_status" required>
+                                        <option value="">Select Status</option>
+                                        <option value="employed">Employed Full-Time</option>
+                                        <option value="part_time">Employed Part-Time</option>
+                                        <option value="self_employed">Self-Employed</option>
+                                        <option value="unemployed">Unemployed</option>
+                                        <option value="retired">Retired</option>
+                                        <option value="student">Student</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="annual_income" class="form-label">Annual Income *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="annual_income" name="annual_income" 
+                                               min="0" step="1000" placeholder="50000" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="employer_name" class="form-label">Employer Name</label>
+                                    <input type="text" class="form-control" id="employer_name" name="employer_name" 
+                                           placeholder="Company Name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="years_employed" class="form-label">Years Employed</label>
+                                    <input type="number" class="form-control" id="years_employed" name="years_employed" 
+                                           min="0" max="50" placeholder="2">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Source of Funds -->
+                        <h6 class="mt-4 mb-3"><i class="fas fa-money-check-alt me-2"></i>Source of Funds</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="funding_source" class="form-label">Primary Funding Source *</label>
+                                    <select class="form-select" id="funding_source" name="funding_source" required>
+                                        <option value="">Select Source</option>
+                                        <option value="employment">Employment Income</option>
+                                        <option value="business">Business Income</option>
+                                        <option value="investments">Investment Returns</option>
+                                        <option value="retirement">Retirement Benefits</option>
+                                        <option value="inheritance">Inheritance</option>
+                                        <option value="gift">Gift from Family</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="expected_monthly_deposits" class="form-label">Expected Monthly Deposits</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="expected_monthly_deposits" 
+                                               name="expected_monthly_deposits" min="0" step="100" placeholder="2000">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Government ID -->
+                        <h6 class="mt-4 mb-3"><i class="fas fa-id-card me-2"></i>Government Identification</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_type" class="form-label">ID Type *</label>
+                                    <select class="form-select" id="id_type" name="id_type" required>
+                                        <option value="">Select ID Type</option>
+                                        <option value="drivers_license">Driver's License</option>
+                                        <option value="state_id">State ID Card</option>
+                                        <option value="passport">US Passport</option>
+                                        <option value="military_id">Military ID</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_number" class="form-label">ID Number *</label>
+                                    <input type="text" class="form-control" id="id_number" name="id_number" required 
+                                           placeholder="Enter ID number">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_state" class="form-label">Issuing State *</label>
+                                    <select class="form-select" id="id_state" name="id_state" required>
+                                        <option value="">Select State</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="CA">California</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="NY">New York</option>
+                                        <option value="TX">Texas</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_expiration" class="form-label">Expiration Date *</label>
+                                    <input type="date" class="form-control" id="id_expiration" name="id_expiration" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary" onclick="previousStep(3)">
+                                <i class="fas fa-arrow-left me-1"></i> Previous
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep(3)">
+                                Next: Review <i class="fas fa-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Review and Submit -->
+                <div class="card mb-4 form-step" id="step4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-check-circle me-2"></i>Review and Submit</h5>
+                        <small class="text-light">Please review all information before submitting</small>
+                    </div>
+                    <div class="card-body">
+                        <!-- Review Summary -->
+                        <div id="reviewSummary">
+                            <!-- Content will be populated by JavaScript -->
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="mt-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms_agreement" name="terms_agreement" required>
+                                <label class="form-check-label" for="terms_agreement">
+                                    I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a> 
+                                    and <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a>
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="patriot_act" name="patriot_act" required>
+                                <label class="form-check-label" for="patriot_act">
+                                    I acknowledge compliance with the USA PATRIOT Act requirements
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="electronic_consent" name="electronic_consent" required>
+                                <label class="form-check-label" for="electronic_consent">
+                                    I consent to receive electronic communications and statements
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary" onclick="previousStep(4)">
+                                <i class="fas fa-arrow-left me-1"></i> Previous
+                            </button>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-university me-1"></i> Open Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sidebar Information -->
+        <div class="col-lg-3 mb-4">
+            <!-- Account Type Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-info-circle me-2"></i>Account Types</h5>
+                </div>
+                <div class="card-body">
+                    <div class="account-type-info mb-3">
+                        <h6 class="text-primary">Checking Account</h6>
+                        <p class="text-light small">Daily transactions, ATM access, debit card included. No monthly fees with $100 minimum balance.</p>
+                    </div>
+                    <div class="account-type-info mb-3">
+                        <h6 class="text-success">Savings Account</h6>
+                        <p class="text-light small">High-yield savings with 1.5% APY. $25 minimum deposit. Limited to 6 withdrawals per month.</p>
+                    </div>
+                    <div class="account-type-info mb-3">
+                        <h6 class="text-warning">Business Account</h6>
+                        <p class="text-light small">Business banking with merchant services, ACH transfers, and business credit cards. $500 minimum opening deposit.</p>
+                    </div>
+                    <div class="account-type-info mb-3">
+                        <h6 class="text-info">Investment Account</h6>
+                        <p class="text-light small">Investment portfolio management with stocks, bonds, and mutual funds. $1,000 minimum deposit.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Requirements Checklist -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5><i class="fas fa-clipboard-check me-2"></i>Requirements</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Valid government-issued ID
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Social Security Number
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Proof of address (utility bill)
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Initial deposit amount
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Age 18 or older
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS for Multi-Step Form -->
+<style>
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+}
+
+.step-indicator {
+    color: #6c757d;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: all 0.3s;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.step-indicator.active {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.step-indicator.completed {
+    background-color: #198754;
+    color: white;
+}
+
+.progress-container {
+    max-width: 100%;
+}
+
+.account-type-info h6 {
+    margin-bottom: 0.25rem;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+#reviewSummary {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    min-height: 150px;
+}
+
+.review-section {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.review-section:last-child {
+    border-bottom: none;
+}
+
+.validation-error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.validation-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+</style>
+
+<!-- JavaScript for Multi-Step Form Functionality -->
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+
+// Step navigation functions
+function nextStep(step) {
+    if (validateStep(step)) {
+        hideStep(step);
+        showStep(step + 1);
+        updateProgress(step + 1);
+        updateStepIndicators(step + 1);
+    }
+}
+
+function previousStep(step) {
+    hideStep(step);
+    showStep(step - 1);
+    updateProgress(step - 1);
+    updateStepIndicators(step - 1);
+}
+
+function showStep(step) {
+    document.getElementById('step' + step).classList.add('active');
+    currentStep = step;
+    
+    // Update review summary when reaching final step
+    if (step === 4) {
+        updateReviewSummary();
+    }
+}
+
+function hideStep(step) {
+    document.getElementById('step' + step).classList.remove('active');
+}
+
+function updateProgress(step) {
+    const progressPercent = (step / totalSteps) * 100;
+    document.getElementById('stepProgress').style.width = progressPercent + '%';
+}
+
+function updateStepIndicators(activeStep) {
+    for (let i = 1; i <= totalSteps; i++) {
+        const indicator = document.querySelector(`[data-step="${i}"]`);
+        indicator.classList.remove('active', 'completed');
+        
+        if (i === activeStep) {
+            indicator.classList.add('active');
+        } else if (i < activeStep) {
+            indicator.classList.add('completed');
+        }
+    }
+}
+
+// Form validation
+function validateStep(step) {
+    const stepElement = document.getElementById('step' + step);
+    const requiredFields = stepElement.querySelectorAll('[required]');
+    let isValid = true;
+
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.classList.add('validation-error');
+            showValidationMessage(field, 'This field is required');
+            isValid = false;
+        } else {
+            field.classList.remove('validation-error');
+            hideValidationMessage(field);
+            
+            // Additional validation
+            if (field.type === 'email' && !validateEmail(field.value)) {
+                field.classList.add('validation-error');
+                showValidationMessage(field, 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            if (field.name === 'ssn' && !validateSSN(field.value)) {
+                field.classList.add('validation-error');
+                showValidationMessage(field, 'Please enter a valid SSN (XXX-XX-XXXX)');
+                isValid = false;
+            }
+            
+            if (field.name === 'initial_deposit' && parseFloat(field.value) < 25) {
+                field.classList.add('validation-error');
+                showValidationMessage(field, 'Minimum deposit is $25.00');
+                isValid = false;
+            }
+        }
+    });
+
+    return isValid;
+}
+
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function validateSSN(ssn) {
+    const ssnRegex = /^\d{3}-\d{2}-\d{4}$/;
+    return ssnRegex.test(ssn);
+}
+
+function showValidationMessage(field, message) {
+    hideValidationMessage(field);
+    const messageElement = document.createElement('div');
+    messageElement.className = 'validation-message';
+    messageElement.textContent = message;
+    field.parentNode.appendChild(messageElement);
+}
+
+function hideValidationMessage(field) {
+    const existingMessage = field.parentNode.querySelector('.validation-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+}
+
+// SSN formatting
+function setupSSNFormatting() {
+    const ssnField = document.getElementById('ssn');
+    if (ssnField) {
+        ssnField.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length >= 6) {
+                value = value.substring(0,3) + '-' + value.substring(3,5) + '-' + value.substring(5,9);
+            } else if (value.length >= 4) {
+                value = value.substring(0,3) + '-' + value.substring(3,5);
+            }
+            this.value = value;
+        });
+    }
+}
+
+// Phone formatting
+function setupPhoneFormatting() {
+    const phoneField = document.getElementById('phone');
+    if (phoneField) {
+        phoneField.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length >= 7) {
+                value = '(' + value.substring(0,3) + ') ' + value.substring(3,6) + '-' + value.substring(6,10);
+            } else if (value.length >= 4) {
+                value = '(' + value.substring(0,3) + ') ' + value.substring(3,6);
+            } else if (value.length >= 1) {
+                value = '(' + value;
+            }
+            this.value = value;
+        });
+    }
+}
+
+// Review summary generation
+function updateReviewSummary() {
+    const summary = document.getElementById('reviewSummary');
+    const formData = new FormData(document.getElementById('newAccountForm'));
+    
+    let html = '';
+    
+    // Customer Information
+    html += '<div class="review-section">';
+    html += '<h6><i class="fas fa-user me-2"></i>Customer Information</h6>';
+    html += `<p><strong>Name:</strong> ${formData.get('first_name')} ${formData.get('last_name')}</p>`;
+    html += `<p><strong>Email:</strong> ${formData.get('email')}</p>`;
+    html += `<p><strong>Phone:</strong> ${formData.get('phone')}</p>`;
+    html += `<p><strong>Address:</strong> ${formData.get('street_address')}, ${formData.get('city')}, ${formData.get('state')} ${formData.get('zip_code')}</p>`;
+    html += '</div>';
+    
+    // Account Information
+    html += '<div class="review-section">';
+    html += '<h6><i class="fas fa-university me-2"></i>Account Information</h6>';
+    html += `<p><strong>Account Name:</strong> ${formData.get('account_name')}</p>`;
+    html += `<p><strong>Account Type:</strong> ${getAccountTypeLabel(formData.get('account_type'))}</p>`;
+    html += `<p><strong>Initial Deposit:</strong> $${parseFloat(formData.get('initial_deposit') || 0).toFixed(2)}</p>`;
+    html += '</div>';
+    
+    summary.innerHTML = html;
+}
+
+function getAccountTypeLabel(value) {
+    const labels = {
+        'checking': 'Personal Checking',
+        'savings': 'Personal Savings',
+        'business_checking': 'Business Checking',
+        'business_savings': 'Business Savings',
+        'money_market': 'Money Market',
+        'investment': 'Investment Account'
+    };
+    return labels[value] || value;
+}
+
+// Form submission
+function setupFormSubmission() {
+    const form = document.getElementById('newAccountForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Final validation
+            if (!validateStep(4)) {
+                return;
+            }
+            
+            // Check required checkboxes
+            const requiredCheckboxes = ['terms_agreement', 'patriot_act', 'electronic_consent'];
+            let allChecked = true;
+            
+            requiredCheckboxes.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox && !checkbox.checked) {
+                    checkbox.classList.add('validation-error');
+                    allChecked = false;
+                } else if (checkbox) {
+                    checkbox.classList.remove('validation-error');
+                }
+            });
+            
+            if (!allChecked) {
+                alert('Please accept all required terms and conditions.');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Creating Account...';
+            submitBtn.disabled = true;
+            
+            // Submit form
+            setTimeout(() => {
+                this.submit();
+            }, 1000);
+        });
+    }
+}
+
+// Initialize form
+document.addEventListener('DOMContentLoaded', function() {
+    updateProgress(1);
+    updateStepIndicators(1);
+    setupSSNFormatting();
+    setupPhoneFormatting();
+    setupFormSubmission();
+});
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

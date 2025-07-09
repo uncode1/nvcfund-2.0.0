@@ -31,6 +31,7 @@ def main_dashboard():
         flash('Service temporarily unavailable', 'error')
         return redirect(url_for('dashboard.dashboard_home'))
 
+@treasury_bp.route('/dashboard')
 @treasury_bp.route('/overview')
 @login_required  
 def overview():
@@ -154,6 +155,59 @@ def settings():
         flash('Service temporarily unavailable', 'error')
         return redirect(url_for('dashboard.dashboard_home'))
 
+# Drill-down routes for detailed views
+@treasury_bp.route('/cash-flow/analysis')
+@login_required
+def cash_flow_analysis():
+    """Cash flow analysis drill-down view"""
+    try:
+        return render_template('treasury/cash_flow_analysis.html',
+                             user=current_user,
+                             page_title='Cash Flow Analysis')
+    except Exception as e:
+        error_service.log_error("CASH_FLOW_ANALYSIS_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('treasury.main_dashboard'))
+
+@treasury_bp.route('/liquidity/management')
+@login_required
+def liquidity_management():
+    """Liquidity management drill-down view"""
+    try:
+        return render_template('treasury/liquidity_management.html',
+                             user=current_user,
+                             page_title='Liquidity Management')
+    except Exception as e:
+        error_service.log_error("LIQUIDITY_MANAGEMENT_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('treasury.main_dashboard'))
+
+@treasury_bp.route('/investment/portfolio')
+@login_required
+def investment_portfolio():
+    """Investment portfolio drill-down view"""
+    try:
+        return render_template('treasury/investment_portfolio.html',
+                             user=current_user,
+                             page_title='Investment Portfolio')
+    except Exception as e:
+        error_service.log_error("INVESTMENT_PORTFOLIO_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('treasury.main_dashboard'))
+
+@treasury_bp.route('/risk/assessment')
+@login_required
+def risk_assessment():
+    """Risk assessment drill-down view"""
+    try:
+        return render_template('treasury/risk_assessment.html',
+                             user=current_user,
+                             page_title='Risk Assessment')
+    except Exception as e:
+        error_service.log_error("RISK_ASSESSMENT_ERROR", str(e), {"user_id": current_user.id})
+        flash('Service temporarily unavailable', 'error')
+        return redirect(url_for('treasury.main_dashboard'))
+
 # Module health check
 @treasury_bp.route('/api/health')
 def health_check():
@@ -162,5 +216,5 @@ def health_check():
         "status": "healthy",
         "app_module": "Treasury Operations",
         "version": "1.0.0",
-        "routes_active": 25
+        "routes_active": 29
     })

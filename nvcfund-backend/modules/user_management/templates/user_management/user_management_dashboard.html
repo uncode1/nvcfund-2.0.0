@@ -2,6 +2,10 @@
 
 {% block title %}User Management - NVC Banking Platform{% endblock %}
 
+{% block extra_css %}
+<link href="{{ url_for('static', filename='css/text_contrast_fix.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid py-4">
     <!-- User Management Header -->
@@ -32,47 +36,67 @@
         </div>
     </div>
 
-    <!-- User Statistics -->
+    <!-- User Statistics - Now Clickable for Drill-Down -->
     <div class="row mb-4">
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-primary">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Total Users</h4>
-                    <h2 class="text-white">{{ "15,847"|default("0") }}</h2>
-                    <small class="text-light">Active Accounts</small>
+            <a href="{{ url_for('user_management.list_users') }}" class="text-decoration-none">
+                <div class="card bg-primary dashboard-stat-card hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-3x text-white-50 mb-3"></i>
+                        <h4 class="text-white">Total Users</h4>
+                        <h2 class="text-white">{{ "15,847"|default("0") }}</h2>
+                        <small class="text-light">Active Accounts</small>
+                        <div class="mt-2">
+                            <small class="text-light"><i class="fas fa-arrow-right me-1"></i>Manage Users</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-success">
-                <div class="card-body text-center">
-                    <i class="fas fa-user-check fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Online Now</h4>
-                    <h2 class="text-white">{{ "1,247"|default("0") }}</h2>
-                    <small class="text-light">Active Sessions</small>
+            <a href="{{ url_for('user_management.role_management') }}" class="text-decoration-none">
+                <div class="card bg-success dashboard-stat-card hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-check fa-3x text-white-50 mb-3"></i>
+                        <h4 class="text-white">Online Now</h4>
+                        <h2 class="text-white">{{ "1,247"|default("0") }}</h2>
+                        <small class="text-light">Active Sessions</small>
+                        <div class="mt-2">
+                            <small class="text-light"><i class="fas fa-arrow-right me-1"></i>Role Management</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-warning">
-                <div class="card-body text-center">
-                    <i class="fas fa-user-clock fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Pending</h4>
-                    <h2 class="text-white">{{ "47"|default("0") }}</h2>
-                    <small class="text-light">Awaiting Approval</small>
+            <a href="{{ url_for('user_management.permissions_management') }}" class="text-decoration-none">
+                <div class="card bg-warning dashboard-stat-card hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-clock fa-3x text-white-50 mb-3"></i>
+                        <h4 class="text-white">Pending</h4>
+                        <h2 class="text-white">{{ "47"|default("0") }}</h2>
+                        <small class="text-light">Awaiting Approval</small>
+                        <div class="mt-2">
+                            <small class="text-light"><i class="fas fa-arrow-right me-1"></i>Permissions</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-danger">
-                <div class="card-body text-center">
-                    <i class="fas fa-user-times fa-3x text-white-50 mb-3"></i>
-                    <h4 class="text-white">Blocked</h4>
-                    <h2 class="text-white">{{ "23"|default("0") }}</h2>
-                    <small class="text-light">Security Block</small>
+            <a href="{{ url_for('user_management.bulk_operations') }}" class="text-decoration-none">
+                <div class="card bg-danger dashboard-stat-card hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-times fa-3x text-white-50 mb-3"></i>
+                        <h4 class="text-white">Blocked</h4>
+                        <h2 class="text-white">{{ "23"|default("0") }}</h2>
+                        <small class="text-light">Security Block</small>
+                        <div class="mt-2">
+                            <small class="text-light"><i class="fas fa-arrow-right me-1"></i>Bulk Operations</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -181,7 +205,7 @@
                                             <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="Avatar">
                                             <div>
                                                 <h6 class="mb-0">{{ user.username if user else "John Smith" }}</h6>
-                                                <small class="text-muted">john.smith@nvcbank.com</small>
+                                                <small class="text-light">john.smith@nvcbank.com</small>
                                             </div>
                                         </div>
                                     </td>
@@ -216,7 +240,7 @@
                                             <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="Avatar">
                                             <div>
                                                 <h6 class="mb-0">Sarah Johnson</h6>
-                                                <small class="text-muted">sarah.johnson@nvcbank.com</small>
+                                                <small class="text-light">sarah.johnson@nvcbank.com</small>
                                             </div>
                                         </div>
                                     </td>
@@ -251,7 +275,7 @@
                                             <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="Avatar">
                                             <div>
                                                 <h6 class="mb-0">Mike Davis</h6>
-                                                <small class="text-muted">mike.davis@nvcbank.com</small>
+                                                <small class="text-light">mike.davis@nvcbank.com</small>
                                             </div>
                                         </div>
                                     </td>
@@ -286,7 +310,7 @@
                                             <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="Avatar">
                                             <div>
                                                 <h6 class="mb-0">Emily Wilson</h6>
-                                                <small class="text-muted">emily.wilson@nvcbank.com</small>
+                                                <small class="text-light">emily.wilson@nvcbank.com</small>
                                             </div>
                                         </div>
                                     </td>

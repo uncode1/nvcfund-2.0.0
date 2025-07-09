@@ -1,1 +1,3 @@
-"""\nCompliance & Risk Module\n"""\n
+"""
+Compliance & Risk Module
+"""

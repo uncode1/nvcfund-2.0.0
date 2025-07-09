@@ -204,17 +204,21 @@ class EnterpriseLogger:
         # Configure logging levels
         log_level = logging.DEBUG if app.debug else logging.INFO
         
-        # Clear existing handlers to prevent duplicates
+        # Keep existing console handlers but clear file handlers to prevent duplicates
+        existing_console_handlers = [h for h in app.logger.handlers if isinstance(h, logging.StreamHandler) and h.stream.name == '<stderr>']
         app.logger.handlers.clear()
+        # Restore console handlers
+        for handler in existing_console_handlers:
+            app.logger.addHandler(handler)
         
         # Add contextual filter to all loggers
         contextual_filter = ContextualFilter()
         
-        # 1. Console Handler (development)
-        if app.debug:
+        # 1. Console Handler (only if debug mode or no handlers exist)
+        if app.debug or not app.logger.handlers:
             console_handler = logging.StreamHandler()
             console_handler.setFormatter(logging.Formatter(
-                '[%(asctime)s] %(levelname)s [%(request_id)s] %(module)s.%(funcName)s: %(message)s'
+                '[%(asctime)s] %(levelname)s %(module)s.%(funcName)s: %(message)s'
             ))
             console_handler.addFilter(contextual_filter)
             app.logger.addHandler(console_handler)

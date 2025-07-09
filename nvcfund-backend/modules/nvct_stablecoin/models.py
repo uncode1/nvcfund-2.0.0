@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship, validates
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
 import uuid
 
-from ..core.database import Base
+from modules.core.database import Base
 
 class NVCTOperationType(Enum):
     """Types of NVCT operations"""
@@ -136,7 +136,7 @@ class NVCTOperation(Base):
     gas_price_gwei = Column(Numeric(18, 9))
     
     # Authorization and compliance
-    authorized_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    authorized_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     authorization_level = Column(String(50), nullable=False)  # treasury_officer, board, emergency
     compliance_verified = Column(Boolean, default=False)
     
@@ -267,7 +267,7 @@ class NVCTGovernance(Base):
     proposal_type = Column(String(50), nullable=False)  # parameter_change, upgrade, emergency
     
     # Proposer information
-    proposed_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    proposed_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     proposer_stake = Column(Numeric(24, 2), nullable=False)
     
     # Proposal parameters
@@ -431,7 +431,7 @@ class NVCTAuditLog(Base):
     event_category = Column(String(50), nullable=False)  # operation, governance, security, maintenance
     
     # User and authorization
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
     user_role = Column(String(50))
     ip_address = Column(String(45))
     user_agent = Column(String(500))

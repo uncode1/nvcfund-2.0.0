@@ -65,11 +65,11 @@
     </style>
     
     <div class="nav-tabs">
-        <a href="/admin/" class="nav-tab {{ 'active' if request.endpoint == 'admin_management.admin_dashboard' }}">
+        <a href="/admin-management/" class="nav-tab {{ 'active' if request.endpoint == 'admin_management.admin_dashboard' }}">
             <i class="fas fa-tachometer-alt"></i>
             Admin Dashboard
         </a>
-        <a href="/system-management/dashboard" class="nav-tab {{ 'active' if request.endpoint == 'system_management.system_dashboard' }}">
+        <a href="/system-management/" class="nav-tab {{ 'active' if request.endpoint == 'system_management.system_dashboard' }}">
             <i class="fas fa-heartbeat"></i>
             System Health
         </a>
@@ -77,7 +77,7 @@
             <i class="fas fa-shield-alt"></i>
             Security Center
         </a>
-        <a href="/settlement/dashboard" class="nav-tab {{ 'active' if request.endpoint == 'settlement.settlement_dashboard' }}">
+        <a href="/settlement/" class="nav-tab {{ 'active' if request.endpoint == 'settlement.settlement_dashboard' }}">
             <i class="fas fa-handshake"></i>
             Settlement Ops
         </a>
@@ -85,23 +85,23 @@
     
     <div class="d-flex justify-content-between align-items-center">
         <div class="quick-nav">
-            <a href="/admin/users" class="quick-nav-btn">
+            <a href="/user-management/" class="quick-nav-btn">
                 <i class="fas fa-users"></i> Users
             </a>
-            <a href="/admin/branches" class="quick-nav-btn">
+            <a href="/admin-management/branches" class="quick-nav-btn">
                 <i class="fas fa-building"></i> Branches
             </a>
-            <a href="/admin/reports" class="quick-nav-btn">
+            <a href="/analytics/" class="quick-nav-btn">
                 <i class="fas fa-chart-bar"></i> Reports
             </a>
-            <a href="/admin/backups" class="quick-nav-btn">
+            <a href="/admin-management/backups" class="quick-nav-btn">
                 <i class="fas fa-database"></i> Backups
             </a>
-            <a href="/security/investigation" class="quick-nav-btn">
-                <i class="fas fa-search"></i> Investigation
+            <a href="/admin-management/logs" class="quick-nav-btn">
+                <i class="fas fa-search"></i> Logs
             </a>
-            <a href="/security/incident-response" class="quick-nav-btn">
-                <i class="fas fa-bell"></i> Incidents
+            <a href="/admin/sessions" class="quick-nav-btn">
+                <i class="fas fa-bell"></i> Sessions
             </a>
         </div>
         <div class="text-end">

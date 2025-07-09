@@ -63,10 +63,9 @@ class AdminManagementService:
                 # User distribution by role
                 role_distribution = {}
                 try:
-                    users_by_role = db.query(User.role, func.count(User.id)).group_by(User.role).all()
+                    users_by_role = db.query(User._role, func.count(User.id)).group_by(User._role).all()
                     for role, count in users_by_role:
-                        role_key = role.value if hasattr(role, 'value') else str(role)
-                        role_distribution[role_key] = count
+                        role_distribution[role] = count
                 except Exception as role_error:
                     logger.warning(f"Role distribution query failed: {role_error}")
                     role_distribution = {'unknown': total_users}
@@ -79,7 +78,7 @@ class AdminManagementService:
                         'id': user.id,
                         'username': user.username,
                         'email': user.email,
-                        'role': user.role.value if hasattr(user.role, 'value') else str(user.role),
+                        'role': user._role,
                         'created_at': user.created_at.strftime('%Y-%m-%d %H:%M'),
                         'is_active': user.is_active
                     })

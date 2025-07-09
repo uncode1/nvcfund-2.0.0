@@ -25,7 +25,7 @@ from modules.core.extensions import db
 from modules.auth.models import User
 from modules.core.models import Account
 
-from .routes import security_center_bp
+from .routes import security_center_bp, security_center_hyphen_bp, security_center_underscore_bp
 
 def init_security_center_module(app):
     """Initialize the security center module"""

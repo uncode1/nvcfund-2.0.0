@@ -1,13 +1,28 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer History - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f172a !important; color: #e2e8f0 !important; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important; margin: 0; padding: 20px; }
+        .dashboard-stat-card { background: #1e293b !important; border: 1px solid #334155 !important; border-radius: 8px !important; padding: 1.5rem; margin-bottom: 1rem; }
+        .card { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+        .btn-primary { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .table-dark { background: #1e293b !important; }
+        .table-dark td, .table-dark th { border-color: #334155 !important; color: #e2e8f0 !important; }
+    </style>
+</head>
+<body>
 
-{% block title %}Transfer History - NVC Banking Platform{% endblock %}
 
-{% block content %}
 <div class="container-fluid py-4">
     <!-- Transfer History Header -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card bg-gradient-primary">
+            <div class="dashboard-stat-card">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -126,7 +141,7 @@
                                             <div>
                                                 <strong>{{ transfer.created_at.strftime('%Y-%m-%d') if transfer.created_at else 'N/A' }}</strong>
                                                 <br>
-                                                <small class="text-muted">{{ transfer.created_at.strftime('%H:%M:%S') if transfer.created_at else 'N/A' }}</small>
+                                                <small class="text-light">{{ transfer.created_at.strftime('%H:%M:%S') if transfer.created_at else 'N/A' }}</small>
                                             </div>
                                         </td>
                                         <td>
@@ -148,14 +163,14 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="text-muted">{{ transfer.description or 'No description' }}</span>
+                                            <span class="text-light">{{ transfer.description or 'No description' }}</span>
                                         </td>
                                         <td class="text-end">
                                             <strong class="text-{{ 'success' if transfer.type == 'Deposit' else 'primary' }}">
                                                 {{ '+' if transfer.type == 'Deposit' else '' }}${{ "%.2f"|format(transfer.amount) }}
                                             </strong>
                                             <br>
-                                            <small class="text-muted">{{ transfer.currency }}</small>
+                                            <small class="text-light">{{ transfer.currency }}</small>
                                         </td>
                                         <td>
                                             <span class="badge bg-{{ 'success' if transfer.status == 'Completed' else 'warning' if transfer.status == 'Pending' else 'danger' }}">
@@ -199,9 +214,9 @@
                         </nav>
                     {% else %}
                         <div class="text-center py-5">
-                            <i class="fas fa-exchange-alt fa-4x text-muted mb-4"></i>
-                            <h4 class="text-muted">No Transfer History</h4>
-                            <p class="text-muted">You haven't made any transfers yet.</p>
+                            <i class="fas fa-exchange-alt fa-4x text-light mb-4"></i>
+                            <h4 class="text-light">No Transfer History</h4>
+                            <p class="text-light">You haven't made any transfers yet.</p>
                             <a href="{{ url_for('banking.transfers') }}" class="btn btn-primary">
                                 <i class="fas fa-plus me-2"></i>Make Your First Transfer
                             </a>
@@ -333,4 +348,6 @@ document.getElementById('filterForm').addEventListener('submit', function(e) {
     alert('Filters applied successfully!');
 });
 </script>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,67 +1,72 @@
-{% extends "banking/layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Payment - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="{{ url_for('static', filename='css/text_contrast_fix.css') }}" rel="stylesheet">
+    <style>
+        body { background: #0f172a !important; color: #e2e8f0 !important; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important; margin: 0; padding: 20px; }
+        .dashboard-stat-card { background: #1e293b !important; border: 1px solid #334155 !important; border-radius: 8px !important; padding: 1.5rem; margin-bottom: 1rem; }
+        .card { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+        .btn-primary { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .table-dark { background: #1e293b !important; }
+        .table-dark td, .table-dark th { border-color: #334155 !important; color: #e2e8f0 !important; }
+    </style>
+</head>
+<body>
 
-{% block title %}Bill Payment{% endblock %}
 
-{% block content %}
 <div class="container-fluid mt-4">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card bg-dark border-success">
-                <div class="card-header bg-gradient text-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h3 class="mb-0">
-                                <i class="fas fa-file-invoice-dollar me-2"></i>Bill Payment
-                            </h3>
-                            <small class="text-light">Pay bills and manage payees</small>
-                        </div>
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPayeeModal">
-                            <i class="fas fa-plus me-2"></i>Add Payee
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-white mb-1">
+                <i class="fas fa-file-invoice-dollar me-2"></i>Bill Payment
+            </h1>
+            <p class="text-light mb-0">Pay bills and manage payees</p>
         </div>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPayeeModal">
+            <i class="fas fa-plus me-2"></i>Add Payee
+        </button>
     </div>
 
     <!-- Bill Categories -->
     <div class="row mb-4">
         <div class="col-md-6">
-            <div class="card bg-dark border-primary">
-                <div class="card-header bg-gradient text-white">
-                    <h5 class="mb-0">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-white mb-0">
                         <i class="fas fa-th-list me-2"></i>Bill Categories
                     </h5>
                 </div>
-                <div class="card-body">
-                    <div class="list-group list-group-flush">
-                        {% for category in bill_data.bill_categories %}
-                        <div class="list-group-item list-group-item-action bg-dark text-white border-secondary">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-folder-open me-2 text-success"></i>
-                                    {{ category }}
-                                </div>
-                                <button class="btn btn-sm btn-outline-success">
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
+                <div class="list-group list-group-flush">
+                    {% for category in bill_data.bill_categories %}
+                    <div class="list-group-item list-group-item-action text-white border-secondary" style="background-color: #1e293b;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-folder-open me-2 text-primary"></i>
+                                {{ category }}
                             </div>
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
                         </div>
-                        {% endfor %}
                     </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
 
         <div class="col-md-6">
-            <div class="card bg-dark border-warning">
-                <div class="card-header bg-gradient text-white">
-                    <h5 class="mb-0">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-white mb-0">
                         <i class="fas fa-bookmark me-2"></i>Saved Payees
                     </h5>
                 </div>
-                <div class="card-body">
                     {% if bill_data.saved_payees %}
                         <div class="list-group list-group-flush">
                             {% for payee in bill_data.saved_payees %}
@@ -69,7 +74,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <strong>{{ payee.name }}</strong>
-                                        <small class="text-muted d-block">{{ payee.type }}</small>
+                                        <small class="text-light d-block">{{ payee.type }}</small>
                                     </div>
                                     <button class="btn btn-sm btn-outline-warning">
                                         <i class="fas fa-credit-card me-1"></i>Pay
@@ -80,9 +85,9 @@
                         </div>
                     {% else %}
                         <div class="text-center py-4">
-                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No saved payees</h5>
-                            <p class="text-muted">Add a payee to get started with bill payments</p>
+                            <i class="fas fa-inbox fa-3x text-light mb-3"></i>
+                            <h5 class="text-light">No saved payees</h5>
+                            <p class="text-light">Add a payee to get started with bill payments</p>
                         </div>
                     {% endif %}
                 </div>
@@ -90,39 +95,98 @@
         </div>
     </div>
 
-    <!-- Quick Pay Section -->
+    <!-- Quick Pay Options and Statistics -->
     <div class="row mb-4">
-        <div class="col-12">
-            <div class="card bg-dark border-info">
-                <div class="card-header bg-gradient text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-bolt me-2"></i>Quick Pay
+        <div class="col-md-6">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-white mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Pay Options
                     </h5>
                 </div>
-                <div class="card-body">
+                {% for option in bill_data.quick_pay_options %}
+                <div class="d-flex justify-content-between align-items-center p-3 mb-2 border rounded" style="background-color: #1e293b; border-color: #334155 !important;">
+                    <div>
+                        <div class="fw-bold text-white">{{ option.name }}</div>
+                        <small class="text-light">{{ option.category }}</small>
+                    </div>
+                    <div class="text-end">
+                        <div class="text-primary">${{ option.last_amount }}</div>
+                        <button class="btn btn-sm btn-primary quick-pay-btn" 
+                                data-payee="{{ option.name }}"
+                                data-amount="{{ option.last_amount }}"
+                                data-category="{{ option.category }}">
+                            Pay Now
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-white mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Monthly Summary
+                    </h5>
+                </div>
+                <div class="row text-center">
+                    <div class="col-12 mb-3">
+                        <div class="p-3 border rounded" style="background-color: #1e293b; border-color: #334155 !important;">
+                            <div class="text-primary fs-4">${{ "{:,.2f}".format(bill_data.monthly_stats.total_paid) }}</div>
+                            <small class="text-light">Total Paid This Month</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-2 border rounded" style="background-color: #1e293b; border-color: #334155 !important;">
+                            <div class="text-success">{{ bill_data.monthly_stats.payments_count }}</div>
+                            <small class="text-light">Payments</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-2 border rounded" style="background-color: #1e293b; border-color: #334155 !important;">
+                            <div class="text-warning">${{ "{:,.2f}".format(bill_data.monthly_stats.avg_amount) }}</div>
+                            <small class="text-light">Average</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Bill Payment Form -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-white mb-0">
+                        <i class="fas fa-credit-card me-2"></i>Make a Payment
+                    </h5>
+                </div>
                     <form method="POST" action="{{ url_for('banking.process_bill_payment') }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group mb-3">
-                                    <label for="payee_name" class="form-label text-light">Payee Name</label>
-                                    <input type="text" class="form-control bg-dark text-white border-secondary" 
+                                    <label for="payee_name" class="form-label text-white">Payee Name</label>
+                                    <input type="text" class="form-control" 
                                            id="payee_name" name="payee_name" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group mb-3">
-                                    <label for="account_number" class="form-label text-light">Account Number</label>
-                                    <input type="text" class="form-control bg-dark text-white border-secondary" 
+                                    <label for="account_number" class="form-label text-white">Account Number</label>
+                                    <input type="text" class="form-control" 
                                            id="account_number" name="account_number" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group mb-3">
-                                    <label for="amount" class="form-label text-light">Amount</label>
+                                    <label for="amount" class="form-label text-white">Amount</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-dark text-white border-secondary">$</span>
-                                        <input type="number" step="0.01" class="form-control bg-dark text-white border-secondary" 
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" step="0.01" class="form-control" 
                                                id="amount" name="amount" required>
                                     </div>
                                 </div>
@@ -131,8 +195,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="category" class="form-label text-light">Category</label>
-                                    <select class="form-select bg-dark text-white border-secondary" 
+                                    <label for="category" class="form-label text-white">Category</label>
+                                    <select class="form-select" 
                                             id="category" name="category" required>
                                         <option value="">Select Category</option>
                                         {% for category in bill_data.bill_categories %}
@@ -143,19 +207,64 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="due_date" class="form-label text-light">Due Date</label>
-                                    <input type="date" class="form-control bg-dark text-white border-secondary" 
+                                    <label for="due_date" class="form-label text-white">Due Date</label>
+                                    <input type="date" class="form-control" 
                                            id="due_date" name="due_date">
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group mb-3">
-                            <label for="memo" class="form-label text-light">Memo (Optional)</label>
-                            <textarea class="form-control bg-dark text-white border-secondary" 
-                                      id="memo" name="memo" rows="2"></textarea>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="memo" class="form-label text-white">Memo (Optional)</label>
+                                    <textarea class="form-control" 
+                                              id="memo" name="memo" rows="2"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="payment_type" class="form-label text-white">Payment Type</label>
+                                    <select class="form-select" id="payment_type" name="payment_type">
+                                        <option value="one_time">One-time Payment</option>
+                                        <option value="scheduled">Schedule for Later</option>
+                                        <option value="recurring">Recurring Payment</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
+                        
+                        <!-- Scheduling Options (hidden by default) -->
+                        <div id="scheduling_options" class="row" style="display: none;">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="scheduled_date" class="form-label text-white">Scheduled Date</label>
+                                    <input type="date" class="form-control" 
+                                           id="scheduled_date" name="scheduled_date">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="frequency" class="form-label text-white">Frequency</label>
+                                    <select class="form-select" id="frequency" name="frequency">
+                                        <option value="monthly">Monthly</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="quarterly">Quarterly</option>
+                                        <option value="yearly">Yearly</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Save Payee Option -->
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="save_payee" name="save_payee" value="true">
+                            <label class="form-check-label text-white" for="save_payee">
+                                Save this payee for future payments
+                            </label>
+                        </div>
+                        
                         <div class="text-center">
-                            <button type="submit" class="btn btn-success btn-lg">
+                            <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="fas fa-money-bill-wave me-2"></i>Pay Bill
                             </button>
                         </div>
@@ -168,15 +277,14 @@
     <!-- Recent Bill Payments -->
     <div class="row">
         <div class="col-12">
-            <div class="card bg-dark border-secondary">
-                <div class="card-header bg-gradient text-white">
-                    <h5 class="mb-0">
+            <div class="dashboard-stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-white mb-0">
                         <i class="fas fa-history me-2"></i>Recent Bill Payments
                     </h5>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-dark table-striped">
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -194,14 +302,14 @@
                                         <td>{{ payment.processed_at.strftime('%Y-%m-%d') }}</td>
                                         <td>
                                             <strong>{{ payment.payee_name }}</strong>
-                                            <small class="text-muted d-block">Acct: {{ payment.account_number[-4:].rjust(8, '*') }}</small>
+                                            <small class="text-light d-block">Acct: {{ payment.account_number[-4:].rjust(8, '*') }}</small>
                                         </td>
                                         <td>
                                             <span class="badge bg-secondary">{{ payment.category }}</span>
                                         </td>
                                         <td>
                                             <strong>${{ "%.2f"|format(payment.amount) }}</strong>
-                                            <small class="text-muted d-block">{{ payment.currency }}</small>
+                                            <small class="text-light d-block">{{ payment.currency }}</small>
                                         </td>
                                         <td>
                                             <span class="badge bg-success">{{ payment.status }}</span>
@@ -218,7 +326,7 @@
                                     {% endfor %}
                                 {% else %}
                                     <tr>
-                                        <td colspan="6" class="text-center text-muted py-4">
+                                        <td colspan="6" class="text-center text-light py-4">
                                             <i class="fas fa-file-invoice fa-2x mb-2"></i>
                                             <div>No recent bill payments</div>
                                             <small>Your bill payment history will appear here</small>
@@ -237,9 +345,9 @@
 <!-- Add Payee Modal -->
 <div class="modal fade" id="addPayeeModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content bg-dark text-white">
-            <div class="modal-header bg-gradient border-bottom border-secondary">
-                <h5 class="modal-title">Add New Payee</h5>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white">Add New Payee</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -247,15 +355,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label for="modal_payee_name" class="form-label">Payee Name</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" 
+                                <label for="modal_payee_name" class="form-label text-white">Payee Name</label>
+                                <input type="text" class="form-control" 
                                        id="modal_payee_name" name="payee_name" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label for="modal_category" class="form-label">Category</label>
-                                <select class="form-select bg-dark text-white border-secondary" 
+                                <label for="modal_category" class="form-label text-white">Category</label>
+                                <select class="form-select" 
                                         id="modal_category" name="category" required>
                                     <option value="">Select Category</option>
                                     {% for category in bill_data.bill_categories %}
@@ -266,24 +374,75 @@
                         </div>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="modal_account_number" class="form-label">Account Number</label>
-                        <input type="text" class="form-control bg-dark text-white border-secondary" 
+                        <label for="modal_account_number" class="form-label text-white">Account Number</label>
+                        <input type="text" class="form-control" 
                                id="modal_account_number" name="account_number" required>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="modal_notes" class="form-label">Notes (Optional)</label>
-                        <textarea class="form-control bg-dark text-white border-secondary" 
+                        <label for="modal_notes" class="form-label text-white">Notes (Optional)</label>
+                        <textarea class="form-control" 
                                   id="modal_notes" name="notes" rows="3"></textarea>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer border-top border-secondary">
+            <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-success">
+                <button type="button" class="btn btn-primary">
                     <i class="fas fa-save me-2"></i>Save Payee
                 </button>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle payment type changes to show/hide scheduling options
+    const paymentTypeSelect = document.getElementById('payment_type');
+    const schedulingOptions = document.getElementById('scheduling_options');
+    
+    if (paymentTypeSelect && schedulingOptions) {
+        paymentTypeSelect.addEventListener('change', function() {
+            if (this.value === 'scheduled' || this.value === 'recurring') {
+                schedulingOptions.style.display = 'block';
+                document.getElementById('scheduled_date').required = true;
+            } else {
+                schedulingOptions.style.display = 'none';
+                document.getElementById('scheduled_date').required = false;
+            }
+        });
+    }
+    
+    // Handle quick pay buttons
+    document.querySelectorAll('.quick-pay-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const payeeName = this.dataset.payee;
+            const amount = this.dataset.amount;
+            const category = this.dataset.category;
+            
+            // Fill form with quick pay data
+            if (document.getElementById('payee_name')) {
+                document.getElementById('payee_name').value = payeeName;
+            }
+            if (document.getElementById('amount')) {
+                document.getElementById('amount').value = amount;
+            }
+            if (document.getElementById('category')) {
+                document.getElementById('category').value = category;
+            }
+            
+            // Scroll to form
+            const formElement = document.querySelector('#payee_name');
+            if (formElement) {
+                formElement.scrollIntoView({ behavior: 'smooth' });
+                formElement.focus();
+            }
+        });
+    });
+});
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

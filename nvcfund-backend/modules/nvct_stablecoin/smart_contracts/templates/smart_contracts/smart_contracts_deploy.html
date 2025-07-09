@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Deploy Smart Contract{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-rocket me-2"></i>Deploy Smart Contract
+                    </h2>
+                    <p class="card-text mb-0">Deploy new blockchain smart contracts to supported networks</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Contract Templates -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-code me-2"></i>Contract Templates
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for template in contract_types %}
+                    <div class="card mb-3 template-card" data-template="{{ template.id }}">
+                        <div class="card-body p-3">
+                            <h6 class="card-title text-primary">{{ template.name }}</h6>
+                            <p class="card-text small">{{ template.description }}</p>
+                            <button class="btn btn-sm btn-outline-primary" onclick="selectTemplate('{{ template.id }}')">
+                                Select Template
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Deployment Form -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-cog me-2"></i>Contract Configuration
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="deploymentForm" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        
+                        <!-- Basic Information -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="contractName" class="form-label">Contract Name *</label>
+                                <input type="text" class="form-control" id="contractName" name="contract_name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="contractType" class="form-label">Contract Type *</label>
+                                <select class="form-select" id="contractType" name="contract_type" required>
+                                    <option value="">Select Type...</option>
+                                    {% for template in contract_types %}
+                                    <option value="{{ template.id }}">{{ template.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Network Selection -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="network" class="form-label">Blockchain Network *</label>
+                                <select class="form-select" id="network" name="network" required>
+                                    <option value="">Select Network...</option>
+                                    <option value="ethereum">Ethereum Mainnet</option>
+                                    <option value="polygon">Polygon</option>
+                                    <option value="binance">Binance Smart Chain</option>
+                                    <option value="arbitrum">Arbitrum</option>
+                                    <option value="optimism">Optimism</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="gasLimit" class="form-label">Gas Limit</label>
+                                <input type="number" class="form-control" id="gasLimit" name="gas_limit" value="3000000">
+                            </div>
+                        </div>
+
+                        <!-- Contract Parameters -->
+                        <div class="mb-3">
+                            <label for="contractParams" class="form-label">Contract Parameters (JSON)</label>
+                            <textarea class="form-control" id="contractParams" name="contract_params" rows="4" placeholder='{"name": "MyToken", "symbol": "MTK", "totalSupply": "1000000"}'></textarea>
+                            <div class="form-text">Enter contract constructor parameters in JSON format</div>
+                        </div>
+
+                        <!-- Smart Contract Code -->
+                        <div class="mb-3">
+                            <label for="contractCode" class="form-label">Smart Contract Code (Solidity)</label>
+                            <textarea class="form-control" id="contractCode" name="contract_code" rows="8" placeholder="// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+contract MyContract {
+    // Your contract code here
+}"></textarea>
+                            <div class="form-text">Enter your Solidity smart contract code</div>
+                        </div>
+
+                        <!-- Deployment Options -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="verifyContract" name="verify_contract" checked>
+                                    <label class="form-check-label" for="verifyContract">
+                                        Verify Contract
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="enableProxy" name="enable_proxy">
+                                    <label class="form-check-label" for="enableProxy">
+                                        Enable Proxy Pattern
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="pausable" name="pausable" checked>
+                                    <label class="form-check-label" for="pausable">
+                                        Make Pausable
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-outline-secondary" onclick="validateContract()">
+                                <i class="fas fa-check-circle me-2"></i>Validate Code
+                            </button>
+                            <button type="button" class="btn btn-info" onclick="estimateGas()">
+                                <i class="fas fa-calculator me-2"></i>Estimate Gas
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-rocket me-2"></i>Deploy Contract
+                            </button>
+                            <a href="{{ url_for('smart_contracts.smart_contracts_dashboard') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deployment Status Modal -->
+    <div class="modal fade" id="deploymentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Contract Deployment Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="deploymentProgress">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary mb-3" role="status">
+                                <span class="visually-hidden">Deploying...</span>
+                            </div>
+                            <h5>Deploying Contract...</h5>
+                            <p class="text-light">Please wait while your smart contract is being deployed to the blockchain.</p>
+                        </div>
+                    </div>
+                    <div id="deploymentResult" style="display: none;">
+                        <!-- Deployment result will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function selectTemplate(templateId) {
+    document.getElementById('contractType').value = templateId;
+    
+    // Template-specific configurations
+    const templates = {
+        'erc20': {
+            params: '{"name": "MyToken", "symbol": "MTK", "totalSupply": "1000000"}',
+            code: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract MyToken is ERC20, Ownable {
+    constructor(string memory name, string memory symbol, uint256 totalSupply) 
+        ERC20(name, symbol) 
+        Ownable(msg.sender) 
+    {
+        _mint(msg.sender, totalSupply * 10**decimals());
+    }
+}`
+        },
+        'multisig': {
+            params: '{"owners": ["0x...", "0x..."], "required": 2}',
+            code: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+contract MultiSigWallet {
+    address[] public owners;
+    uint public required;
+    
+    constructor(address[] memory _owners, uint _required) {
+        require(_owners.length > 0, "Owners required");
+        require(_required > 0 && _required <= _owners.length, "Invalid required");
+        
+        owners = _owners;
+        required = _required;
+    }
+}`
+        }
+    };
+    
+    if (templates[templateId]) {
+        document.getElementById('contractParams').value = templates[templateId].params;
+        document.getElementById('contractCode').value = templates[templateId].code;
+    }
+}
+
+function validateContract() {
+    const code = document.getElementById('contractCode').value;
+    if (!code.trim()) {
+        alert('Please enter contract code to validate');
+        return;
+    }
+    
+    // Show validation in progress
+    alert('Contract validation started. This may take a few moments...');
+    
+    // Here you would make an API call to validate the contract
+    // For demo purposes, we'll simulate validation
+    setTimeout(() => {
+        alert('Contract validation completed successfully!');
+    }, 2000);
+}
+
+function estimateGas() {
+    const code = document.getElementById('contractCode').value;
+    if (!code.trim()) {
+        alert('Please enter contract code to estimate gas');
+        return;
+    }
+    
+    // Simulate gas estimation
+    const estimatedGas = Math.floor(Math.random() * 1000000) + 2000000;
+    document.getElementById('gasLimit').value = estimatedGas;
+    alert(`Estimated gas requirement: ${estimatedGas.toLocaleString()}`);
+}
+
+// Handle form submission
+document.getElementById('deploymentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show deployment modal
+    const modal = new bootstrap.Modal(document.getElementById('deploymentModal'));
+    modal.show();
+    
+    // Simulate deployment process
+    setTimeout(() => {
+        document.getElementById('deploymentProgress').style.display = 'none';
+        document.getElementById('deploymentResult').style.display = 'block';
+        document.getElementById('deploymentResult').innerHTML = `
+            <div class="alert alert-success">
+                <h5 class="alert-heading">Contract Deployed Successfully!</h5>
+                <p><strong>Contract Address:</strong> <code>0x742d35cc6fa4b7c8a9e6e9e3e4a1f2b3c4d5e6f7</code></p>
+                <p><strong>Transaction Hash:</strong> <code>0x123abc...789def</code></p>
+                <p><strong>Gas Used:</strong> 2,845,672</p>
+                <p><strong>Deployment Cost:</strong> 0.0847 ETH</p>
+                <hr>
+                <p class="mb-0">Your contract has been successfully deployed and verified on the blockchain.</p>
+            </div>
+        `;
+    }, 3000);
+});
+</script>
+{% endblock %}

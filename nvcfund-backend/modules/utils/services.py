@@ -331,3 +331,53 @@ class ErrorLoggerService:
                 'timestamp': datetime.now().isoformat()
             }
         )
+
+class BankingLogger:
+    """
+    Banking Logger Service for WebSocket handlers and real-time operations
+    Provides structured logging for banking platform events
+    """
+    
+    def __init__(self, module_name="banking_platform"):
+        self.logger = logging.getLogger(module_name)
+        self.module_name = module_name
+    
+    def log_info(self, message: str, extra_data: Dict = None):
+        """Log informational messages"""
+        try:
+            if extra_data:
+                self.logger.info(f"{message} | Data: {extra_data}")
+            else:
+                self.logger.info(message)
+        except Exception as e:
+            self.logger.error(f"Failed to log info message: {str(e)}")
+    
+    def log_error(self, error_type: str, message: str, extra_data: Dict = None):
+        """Log error messages with context"""
+        try:
+            error_msg = f"[{error_type}] {message}"
+            if extra_data:
+                error_msg += f" | Context: {extra_data}"
+            self.logger.error(error_msg)
+        except Exception as e:
+            self.logger.error(f"Failed to log error: {str(e)}")
+    
+    def log_warning(self, message: str, extra_data: Dict = None):
+        """Log warning messages"""
+        try:
+            if extra_data:
+                self.logger.warning(f"{message} | Data: {extra_data}")
+            else:
+                self.logger.warning(message)
+        except Exception as e:
+            self.logger.error(f"Failed to log warning: {str(e)}")
+    
+    def log_debug(self, message: str, extra_data: Dict = None):
+        """Log debug messages"""
+        try:
+            if extra_data:
+                self.logger.debug(f"{message} | Data: {extra_data}")
+            else:
+                self.logger.debug(message)
+        except Exception as e:
+            self.logger.error(f"Failed to log debug message: {str(e)}")

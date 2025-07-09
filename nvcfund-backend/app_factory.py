@@ -16,13 +16,20 @@ from modules.core.extensions import (
 )
 
 # Import modular blueprint registration
-from modules.core.modular_blueprint_registration import register_all_modular_blueprints
+from modules.core.modular_blueprint_registration import register_all_modules
 
 # Import enterprise logging system
 from modules.core.enterprise_logging import get_enterprise_logger, EnterpriseLogger
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Import global security middleware
+from modules.core.global_security_middleware import register_global_security
+
+# Configure logging only if not already configured
+if not logging.getLogger().handlers:
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
 logger = logging.getLogger(__name__)
 
 # Initialize enterprise logging system
@@ -49,8 +56,11 @@ def create_app(config_name=None):
     # Initialize extensions
     initialize_extensions(app)
     
+    # Configure static file serving
+    configure_static_files(app)
+    
     # Register modular blueprints
-    register_all_modular_blueprints(app)
+    register_all_modules(app)
     
     # Register template context processors for role-based navigation
     from modules.core.template_context import register_template_context
@@ -83,6 +93,10 @@ def create_app(config_name=None):
     # Configure middleware
     configure_middleware(app)
     
+    # Initialize enterprise-grade global security middleware
+    register_global_security(app)
+    logger.info("Global Security Middleware initialized with enterprise-grade protection")
+    
     logger.info("NVC Banking Platform initialized with Pure Modular Architecture")
     
     return app
@@ -96,6 +110,10 @@ def configure_app(app, config_name):
     # Load appropriate configuration
     config_obj = config.get(config_name or 'development')
     app.config.from_object(config_obj)
+    
+    # Static file configuration - disable ETags and caching to prevent 304 responses
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.config['USE_X_SENDFILE'] = False
     
     # ProxyFix for Replit deployment
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
@@ -129,6 +147,8 @@ def initialize_extensions(app):
         return User.query.get(user_id)
     
     # Initialize CSRF protection with enhanced settings
+    # Enable CSRF protection for enhanced security
+    app.config['WTF_CSRF_ENABLED'] = True
     csrf.init_app(app)
     
     # Configure additional CSRF settings
@@ -139,6 +159,26 @@ def initialize_extensions(app):
     # Initialize SocketIO
     socketio.init_app(app, cors_allowed_origins="*", logger=True, engineio_logger=True)
     
+    # Initialize WebSocket handlers for all modules
+    try:
+        # Initialize real-time API handlers
+        from modules.services.api.realtime_handlers import init_socketio_handlers
+        init_socketio_handlers(socketio)
+        
+        # Initialize Binance WebSocket handlers
+        from modules.services.integrations.blockchain.websocket_handlers import handle_binance_connection
+        handle_binance_connection(socketio)
+        
+        # Initialize Trading WebSocket handlers
+        from modules.products.trading.websocket_handlers import handle_trading_connection
+        handle_trading_connection(socketio)
+        
+        # Initialize other module WebSocket handlers as needed
+        logger.info("All WebSocket handlers initialized successfully")
+        
+    except Exception as e:
+        logger.error(f"Error initializing WebSocket handlers: {e}")
+    
     # Initialize cache
     cache.init_app(app)
     
@@ -148,8 +188,11 @@ def initialize_extensions(app):
     # Initialize session interface
     session_interface.init_app(app)
     
-    # Initialize CORS
-    CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])
+    # Initialize CORS with environment-based configuration
+    cors_origins = app.config.get('CORS_ORIGINS', ['http://localhost:3000'])
+    if isinstance(cors_origins, str):
+        cors_origins = [origin.strip() for origin in cors_origins.split(',')]
+    CORS(app, origins=cors_origins)
     
     # Create database tables and apply migrations
     with app.app_context():
@@ -169,6 +212,50 @@ def initialize_extensions(app):
                 
         except Exception as e:
             logger.error(f"Database initialization error: {e}")
+
+def configure_static_files(app):
+    """Configure static file serving with proper cache control"""
+    
+    @app.after_request
+    def after_request(response):
+        """Add cache control headers to prevent 304 responses"""
+        # For static files, disable caching to force fresh content
+        if request.path.startswith('/static/'):
+            response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+            response.headers['Pragma'] = 'no-cache'
+            response.headers['Expires'] = '0'
+            # Remove ETag to prevent 304 responses
+            response.headers.pop('ETag', None)
+            # Always return 200 for static files
+            if response.status_code == 304:
+                response.status_code = 200
+        
+        # Add enhanced security headers
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        
+        # Content Security Policy for XSS prevention
+        csp_policy = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
+            "font-src 'self' https://fonts.gstatic.com; "
+            "img-src 'self' data: https:; "
+            "connect-src 'self' https:; "
+            "frame-ancestors 'none'; "
+            "form-action 'self'; "
+            "base-uri 'self';"
+        )
+        response.headers['Content-Security-Policy'] = csp_policy
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+        
+        # HSTS for production
+        if app.config.get('PREFERRED_URL_SCHEME') == 'https':
+            response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+        
+        return response
 
 def configure_error_handlers(app):
     """Configure comprehensive error handlers with enterprise logging"""
@@ -200,7 +287,7 @@ def configure_error_handlers(app):
             return {'error': 'Resource not found'}, 404
         
         try:
-            return render_template('errors/error_page.html', error_code=404), 404
+            return render_template('errors/404.html'), 404
         except:
             # Fallback to plain HTML if template fails
             return """
@@ -222,7 +309,7 @@ def configure_error_handlers(app):
             return {'error': 'Internal server error'}, 500
         
         try:
-            return render_template('errors/error_page.html', error_code=500), 500
+            return render_template('errors/500.html'), 500
         except:
             # Fallback to plain HTML if template fails
             return """
@@ -308,16 +395,19 @@ def configure_error_handlers(app):
 def configure_middleware(app):
     """Configure middleware"""
     
-    # Proxy fix for proper HTTPS handling
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    # Proxy fix for proper HTTPS handling (only if behind a proxy)
+    if app.config.get('BEHIND_PROXY', False):
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
     
     # Request logging middleware
     @app.before_request
     def log_request():
+        """Log incoming requests"""
         logger.info(f"Request: {request.method} {request.path}")
     
     @app.after_request
     def log_response(response):
+        """Log outgoing responses"""
         logger.info(f"Response: {response.status_code}")
         return response
 

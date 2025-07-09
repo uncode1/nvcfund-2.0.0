@@ -9,9 +9,27 @@ import logging
 from datetime import datetime
 from .services import NVCTStablecoinService, AssetBackingService, CrossChainService
 
-# Create blueprint
+# Create blueprint with hyphenated URL for professional banking appearance
 nvct_stablecoin_bp = Blueprint(
     'nvct_stablecoin',
+    __name__,
+    url_prefix='/nvct-stablecoin',
+    template_folder='templates',
+    static_folder='static'
+)
+
+# Create legacy redirect blueprint for underscore URL
+nvct_stablecoin_legacy_bp = Blueprint(
+    'nvct_stablecoin_legacy',
+    __name__,
+    url_prefix='/nvct_stablecoin',
+    template_folder='templates',
+    static_folder='static'
+)
+
+# Create legacy redirect blueprint for hyphenated URL
+nvct_stablecoin_hyphen_bp = Blueprint(
+    'nvct_stablecoin_hyphen',
     __name__,
     url_prefix='/nvct-stablecoin',
     template_folder='templates',
@@ -26,6 +44,7 @@ asset_service = AssetBackingService()
 crosschain_service = CrossChainService()
 
 @nvct_stablecoin_bp.route('/')
+@nvct_stablecoin_hyphen_bp.route('/')
 @login_required
 def nvct_dashboard():
     """NVCT Stablecoin main dashboard"""

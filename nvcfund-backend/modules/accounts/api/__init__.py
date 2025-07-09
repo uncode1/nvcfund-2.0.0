@@ -1,1 +1,3 @@
-"""\nAccounts Management Module\n"""\n
+"""
+Accounts Management Module
+"""

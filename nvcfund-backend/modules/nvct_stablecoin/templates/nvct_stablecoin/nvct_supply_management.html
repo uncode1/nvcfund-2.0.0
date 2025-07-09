@@ -1,4 +1,4 @@
-{% extends "nvct_stablecoin/layout.html" %}
+{% extends "base.html" %}
 
 {% block title %}NVCT Supply Management{% endblock %}
 
@@ -60,7 +60,7 @@
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ url_for('nvct_stablecoin.mint_nvct') }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
                         <div class="mb-3">
                             <label for="mint_amount" class="form-label">Amount (NVCT)</label>
                             <input type="number" class="form-control" id="mint_amount" name="amount" 
@@ -94,7 +94,7 @@
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ url_for('nvct_stablecoin.burn_nvct') }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
                         <div class="mb-3">
                             <label for="burn_amount" class="form-label">Amount (NVCT)</label>
                             <input type="number" class="form-control" id="burn_amount" name="amount" 

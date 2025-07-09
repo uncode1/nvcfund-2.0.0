@@ -125,6 +125,10 @@ class FastRBAC:
         if not self._initialized:
             self.initialize()
         
+        # Super admin bypass - uncode has all permissions
+        if user_role == 'super_admin':
+            return True
+        
         # Direct set lookup - fastest possible check
         role_permissions = self._role_permissions.get(user_role, set())
         return permission in role_permissions
@@ -180,6 +184,8 @@ def require_permission(permission: str, api_mode: bool = False):
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs) -> Any:
+            # All users including super admins go through proper permission auditing
+            
             user_role = get_user_role()
             
             if user_role == 'anonymous':

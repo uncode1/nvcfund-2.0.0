@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship, validates
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
 import uuid
 
-from ..core.database import Base
+from modules.core.database import Base
 
 class TreasuryOperationType(Enum):
     """Types of treasury operations"""
@@ -63,7 +63,7 @@ class NVCTSupplyOperation(Base):
     operation_reason = Column(String(200), nullable=False)
     
     # Authorization
-    authorized_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    authorized_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     authorization_level = Column(String(50), nullable=False)  # treasury_officer, board, emergency
     
     # Supply metrics
@@ -198,7 +198,7 @@ class AssetTransaction(Base):
     settlement_date = Column(DateTime, nullable=False)
     
     # Authorization
-    authorized_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    authorized_by = Column(Integer, ForeignKey('users.id'), nullable=False)
     authorization_level = Column(String(50), nullable=False)
     
     # Portfolio impact
@@ -255,8 +255,8 @@ class AssetValuation(Base):
     data_staleness_hours = Column(Integer, default=0)
     
     # Auditing
-    valued_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    reviewed_by = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    valued_by = Column(Integer, ForeignKey('users.id'), nullable=False)
+    reviewed_by = Column(Integer, ForeignKey('users.id'))
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -347,8 +347,8 @@ class MonetaryPolicyOperation(Base):
     market_reaction = Column(Text)
     
     # Authorization and execution
-    authorized_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    executed_by = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    authorized_by = Column(Integer, ForeignKey('users.id'), nullable=False)
+    executed_by = Column(Integer, ForeignKey('users.id'))
     
     # Status and timing
     status = Column(String(20), default=TreasuryTransactionStatus.PENDING.value)

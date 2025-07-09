@@ -6,6 +6,9 @@ Comprehensive authentication routes with role-based redirection logic
 from flask import Blueprint, request, render_template, redirect, flash, session, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired, Length
 from datetime import datetime, timedelta
 import logging
 import random
@@ -15,16 +18,46 @@ from .config import AuthConfig
 from .services import AuthService
 from .models import User
 from modules.core.extensions import db, csrf, login_manager
-from modules.communications.services import EmailService, PersonalizedMessageService
+from modules.services.communications.services import EmailService, PersonalizedMessageService
+# Enhanced security imports with error handling
+try:
+    from modules.core.enhanced_security import enhanced_security
+    from modules.core.mfa_system import mfa_system
+    from modules.core.centralized_audit_logger import centralized_audit_logger, AuditEventType, AuditSeverity
+    ENHANCED_SECURITY_AVAILABLE = True
+except ImportError as e:
+    print(f"Enhanced security modules not available: {e}")
+    ENHANCED_SECURITY_AVAILABLE = False
+    # Create dummy objects to prevent errors
+    class DummyLogger:
+        def log_event(self, *args, **kwargs):
+            pass
+    centralized_audit_logger = DummyLogger()
+    class DummyEventType:
+        LOGIN = "login"
+        LOGIN_FAILED = "login_failed" 
+        SECURITY_INCIDENT = "security_incident"
+    AuditEventType = DummyEventType()
+    class DummySeverity:
+        MEDIUM = "medium"
+        HIGH = "high"
+    AuditSeverity = DummySeverity()
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
-# Create Auth Module Blueprint
-auth_bp = Blueprint('auth', __name__, url_prefix='/auth', template_folder='templates')
+# Create Auth Module Blueprint (URL prefix handled in registration)
+auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
 # Initialize auth service
 auth_service = AuthService()
+
+# Login form with CSRF protection
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=50)])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Sign In')
 
 # Configure login manager user loader
 @login_manager.user_loader
@@ -44,46 +77,116 @@ def login():
     """
     logger.info("🔐 Auth Module: Login route accessed - Method: %s", request.method)
     
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        remember_me = request.form.get('remember_me') is not None
+    # Redirect authenticated users away from login page
+    if current_user.is_authenticated:
+        logger.info("🔐 Auth Module: User already authenticated, redirecting to dashboard")
+        return redirect(url_for('dashboard.main_dashboard'))
+    
+    # Create form with CSRF protection
+    form = LoginForm()
+    
+    if request.method == 'POST' and form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        remember_me = form.remember_me.data
         
         if not username or not password:
             flash('Username and password are required', 'error')
-            return render_template('auth/modular_auth_login.html')
+            return render_template('auth/modular_auth_login.html', form=form)
         
         try:
             # Authenticate user
             user = User.query.filter_by(username=username).first()
             
             if user and user.is_active and check_password_hash(user.password_hash, password):
-                # Update login tracking
-                user.last_login = datetime.utcnow()
-                user.login_count = (user.login_count or 0) + 1
-                db.session.commit()
+                # Reset failed login attempts
+                user.failed_login_attempts = 0
+                user.account_locked_until = None
                 
-                # Login user with Flask-Login
-                login_user(user, remember=remember_me)
-                session.permanent = True
-                
-                logger.info("✅ Auth Module: Successful login for user: %s (Role: %s)", username, user.role)
-                
-                # Role-based dashboard redirection
-                dashboard_url = auth_service.determine_dashboard_redirect(username, user.role)
-                logger.info("🔀 Auth Module: Redirecting user %s to: %s", username, dashboard_url)
-                
-                return redirect(dashboard_url)
+                # Check if MFA is enabled (only if enhanced security is available)
+                if ENHANCED_SECURITY_AVAILABLE and getattr(user, 'mfa_enabled', False) and getattr(user, 'mfa_config', None):
+                    # Store user ID for MFA verification
+                    session['mfa_user_id'] = user.id
+                    session['remember_me'] = remember_me
+                    
+                    # Log MFA required
+                    centralized_audit_logger.log_event(
+                        AuditEventType.LOGIN,
+                        AuditSeverity.MEDIUM,
+                        f"MFA verification required for user {username}",
+                        resource="authentication",
+                        resource_id=str(user.id)
+                    )
+                    
+                    logger.info("✅ Auth Module: User %s requires MFA verification", username)
+                    return redirect(url_for('enhanced_auth.mfa_verify'))
+                else:
+                    # Standard login without MFA
+                    user.last_login = datetime.utcnow()
+                    user.login_count = (user.login_count or 0) + 1
+                    db.session.commit()
+                    
+                    # Login user with Flask-Login
+                    login_user(user, remember=remember_me)
+                    session.permanent = True
+                    
+                    # Log successful login
+                    centralized_audit_logger.log_event(
+                        AuditEventType.LOGIN,
+                        AuditSeverity.MEDIUM,
+                        f"Successful login for user {username}",
+                        resource="authentication",
+                        resource_id=str(user.id)
+                    )
+                    
+                    logger.info("✅ Auth Module: Successful login for user: %s (Role: %s)", username, user.role)
+                    
+                    # Role-based dashboard redirection
+                    dashboard_url = auth_service.determine_dashboard_redirect(username, user.role)
+                    logger.info("🔀 Auth Module: Redirecting user %s to: %s", username, dashboard_url)
+                    
+                    return redirect(dashboard_url)
                 
             else:
+                # Handle failed login attempt
+                if user:
+                    user.failed_login_attempts = (user.failed_login_attempts or 0) + 1
+                    
+                    # Lock account after 5 failed attempts
+                    if user.failed_login_attempts >= 5:
+                        user.account_locked_until = datetime.utcnow() + timedelta(minutes=30)
+                        db.session.commit()
+                        
+                        # Log security incident
+                        centralized_audit_logger.log_event(
+                            AuditEventType.SECURITY_INCIDENT,
+                            AuditSeverity.HIGH,
+                            f"Account locked due to {user.failed_login_attempts} failed login attempts",
+                            resource="authentication",
+                            resource_id=str(user.id)
+                        )
+                        
+                        flash('Account temporarily locked due to multiple failed login attempts. Try again in 30 minutes.', 'error')
+                    else:
+                        db.session.commit()
+                        flash('Invalid username or password', 'error')
+                else:
+                    # Log failed login attempt for non-existent user
+                    centralized_audit_logger.log_event(
+                        AuditEventType.LOGIN_FAILED,
+                        AuditSeverity.MEDIUM,
+                        f"Failed login attempt for non-existent username: {username}",
+                        resource="authentication"
+                    )
+                    flash('Invalid username or password', 'error')
+                
                 logger.warning("❌ Auth Module: Failed login attempt for username: %s", username)
-                flash('Invalid username or password', 'error')
                 
         except Exception as e:
             logger.error("❌ Auth Module: Authentication error: %s", str(e))
             flash('Authentication service unavailable. Please try again later.', 'error')
     
-    return render_template('auth/modular_auth_login.html')
+    return render_template('auth/modular_auth_login.html', form=form)
 
 @auth_bp.route('/logout')
 @login_required
@@ -110,6 +213,11 @@ def register():
     Handles new user registration with KYC compliance
     """
     logger.info("📝 Auth Module: Registration route accessed - Method: %s", request.method)
+    
+    # Redirect authenticated users away from registration page
+    if current_user.is_authenticated:
+        logger.info("📝 Auth Module: User already authenticated, redirecting to dashboard")
+        return redirect(url_for('dashboard.main_dashboard'))
     
     if request.method == 'POST':
         try:

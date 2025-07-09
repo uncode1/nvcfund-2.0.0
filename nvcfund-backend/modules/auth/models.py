@@ -3,6 +3,7 @@ Authentication Models
 Self-contained models for user management, KYC, and authentication
 """
 
+import logging
 from datetime import datetime, timezone
 from decimal import Decimal
 from enum import Enum
@@ -15,7 +16,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 import uuid
 
-from ..core.extensions import db
+from modules.core.extensions import db
+
+logger = logging.getLogger(__name__)
 
 class UserRole(Enum):
     """Enhanced user roles for comprehensive banking operations"""
@@ -158,6 +161,7 @@ class User(UserMixin, db.Model):
     
     # Cross-module relationships - handled via core models
     # These relationships are defined in core models to avoid circular imports
+    # trading_accounts = relationship("TradingAccount", back_populates="user")
     
     @property
     def role(self):
@@ -188,7 +192,51 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(password)
     
     def check_password(self, password: str) -> bool:
-        """Check password against hash"""
+        """Check password against hash - supports multiple hash formats"""
+        # Handle scrypt format password hashes (existing database format)
+        if self.password_hash.startswith('scrypt:'):
+            try:
+                # Parse scrypt format: scrypt:n:r:p$salt$hash
+                parts = self.password_hash.split('$')
+                if len(parts) >= 3:
+                    from hashlib import scrypt
+                    import base64
+                    
+                    # Extract parameters from format like 'scrypt:32768:8:1'
+                    scrypt_header = parts[0]  # scrypt:32768:8:1
+                    salt_b64 = parts[1]       # base64 encoded salt
+                    stored_hash_b64 = parts[2]  # base64 encoded hash
+                    
+                    # Parse scrypt parameters
+                    scrypt_params = scrypt_header.split(':')
+                    if len(scrypt_params) == 4 and scrypt_params[0] == 'scrypt':
+                        n = int(scrypt_params[1])
+                        r = int(scrypt_params[2])
+                        p = int(scrypt_params[3])
+                        
+                        # Decode salt and stored hash
+                        salt = base64.b64decode(salt_b64.encode('ascii'))
+                        stored_hash = base64.b64decode(stored_hash_b64.encode('ascii'))
+                        
+                        # Compute hash for provided password
+                        computed_hash = scrypt(
+                            password.encode('utf-8'),
+                            salt=salt,
+                            n=n,
+                            r=r,
+                            p=p,
+                            dklen=len(stored_hash)
+                        )
+                        
+                        # Compare hashes securely
+                        import hmac
+                        return hmac.compare_digest(stored_hash, computed_hash)
+                        
+            except (ValueError, TypeError, ImportError) as e:
+                logger.warning(f"Error processing scrypt password hash: {e}")
+                return False
+        
+        # Fall back to standard Werkzeug password check for modern hashes
         return check_password_hash(self.password_hash, password)
     
     def has_role(self, role: UserRole) -> bool:
@@ -227,7 +275,7 @@ class KYCVerification(db.Model):
     __table_args__ = {'extend_existing': True}
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     
     # KYC status and level
     verification_level = Column(String(20), nullable=False)  # basic, enhanced, enhanced_dd
@@ -262,7 +310,7 @@ class KYCVerification(db.Model):
     pep_check_passed = Column(Boolean, default=False)  # Politically Exposed Person
     
     # Verification metadata
-    verified_by = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    verified_by = Column(Integer, ForeignKey('users.id'))
     verification_notes = Column(Text)
     compliance_officer_notes = Column(Text)
     
@@ -304,7 +352,7 @@ class UserSessionLog(db.Model):
     __table_args__ = {'extend_existing': True}
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     
     # Session details
     session_id = Column(String(255), unique=True, nullable=False)
@@ -348,7 +396,7 @@ class ComplianceAction(db.Model):
     __table_args__ = {'extend_existing': True}
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     
     # Action details
     action_type = Column(String(50), nullable=False)  # kyc_review, aml_check, sanctions_screening
@@ -364,9 +412,9 @@ class ComplianceAction(db.Model):
     priority = Column(String(20), default='normal')  # low, normal, high, urgent
     
     # Assignment and workflow
-    assigned_to = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    assigned_to = Column(Integer, ForeignKey('users.id'))
     assigned_date = Column(DateTime)
-    completed_by = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    completed_by = Column(Integer, ForeignKey('users.id'))
     completion_date = Column(DateTime)
     
     # Action details

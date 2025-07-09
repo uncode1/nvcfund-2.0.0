@@ -249,9 +249,9 @@ class BankingService:
             return {'success': False, 'error': str(e)}
     
     def process_bill_payment(self, user_id: int, payment_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Process bill payment transaction"""
+        """Enhanced bill payment processing with advanced features"""
         try:
-            reference_id = f"BP-{str(uuid.uuid4())[:8].upper()}"
+            reference_id = f"BILL_{uuid.uuid4().hex[:8].upper()}"
             
             # Validate payment data
             required_fields = ['payee_name', 'account_number', 'amount', 'category']
@@ -263,6 +263,13 @@ class BankingService:
             amount = float(payment_data['amount'])
             if amount <= 0:
                 return {'success': False, 'error': 'Amount must be greater than zero'}
+            
+            # Enhanced validation for large payments
+            if amount > 10000:
+                return {'success': False, 'error': 'Amount exceeds daily limit. Please contact support for large payments.'}
+            
+            # Calculate dynamic fees based on amount and category
+            transaction_fee = self._calculate_bill_payment_fee(amount, payment_data.get('category'))
             
             bill_payment = {
                 'reference_id': reference_id,
@@ -276,11 +283,19 @@ class BankingService:
                 'memo': payment_data.get('memo', ''),
                 'status': 'Processed',
                 'processed_at': datetime.now(),
-                'transaction_fee': Decimal('2.50')  # Standard bill payment fee
+                'transaction_fee': transaction_fee,
+                'confirmation_number': f"CNF{uuid.uuid4().hex[:6].upper()}",
+                'processing_time': 'Instant',
+                'payee_id': f"payee_{uuid.uuid4().hex[:8]}",
+                'payment_method': 'Online Banking',
+                'estimated_delivery': self._calculate_delivery_date(payment_data.get('category'))
             }
             
             # Store the payment in our in-memory storage
             self.bill_payments.append(bill_payment)
+            
+            # Auto-save payee if new
+            self._save_payee_if_new(user_id, payment_data)
             
             self.logger.info(f"Bill payment processed: {reference_id} for user {user_id}")
             return {'success': True, 'reference_id': reference_id, 'payment': bill_payment}
@@ -290,6 +305,110 @@ class BankingService:
             return {'success': False, 'error': 'Invalid amount format'}
         except Exception as e:
             self.logger.error(f"Error processing bill payment: {str(e)}")
+            return {'success': False, 'error': str(e)}
+    
+    def _calculate_bill_payment_fee(self, amount: float, category: str) -> Decimal:
+        """Calculate dynamic fee based on amount and category"""
+        base_fee = Decimal('2.50')
+        
+        # Category-based fee adjustments
+        fee_multipliers = {
+            'Utilities': Decimal('1.0'),
+            'Telecom': Decimal('1.2'),
+            'Insurance': Decimal('0.8'),
+            'Loans': Decimal('1.5'),
+            'Credit Cards': Decimal('1.3')
+        }
+        
+        multiplier = fee_multipliers.get(category, Decimal('1.0'))
+        
+        # Amount-based fee scaling
+        if amount > 1000:
+            base_fee += Decimal('1.00')
+        if amount > 5000:
+            base_fee += Decimal('2.00')
+            
+        return base_fee * multiplier
+    
+    def _calculate_delivery_date(self, category: str) -> str:
+        """Calculate estimated delivery date based on category"""
+        delivery_times = {
+            'Utilities': '1-2 business days',
+            'Telecom': 'Same day',
+            'Insurance': '2-3 business days',
+            'Loans': '1 business day',
+            'Credit Cards': 'Same day'
+        }
+        return delivery_times.get(category, '1-2 business days')
+    
+    def _save_payee_if_new(self, user_id: int, payment_data: Dict[str, Any]) -> None:
+        """Auto-save payee information for future use"""
+        # In production, this would check if payee exists and save to database
+        payee_info = {
+            'user_id': user_id,
+            'payee_name': payment_data['payee_name'],
+            'account_number': payment_data['account_number'],
+            'category': payment_data['category'],
+            'saved_at': datetime.now()
+        }
+        self.logger.info(f"Payee auto-saved for user {user_id}: {payment_data['payee_name']}")
+    
+    def get_saved_payees(self, user_id: int) -> List[Dict[str, Any]]:
+        """Get saved payees for a user"""
+        try:
+            # Sample saved payees for demo
+            return [
+                {
+                    'payee_id': f"payee_{uuid.uuid4().hex[:8]}",
+                    'payee_name': 'Electric Company',
+                    'account_number': '****7891',
+                    'category': 'Utilities',
+                    'last_payment': datetime.now() - timedelta(days=30),
+                    'avg_amount': Decimal('125.45')
+                },
+                {
+                    'payee_id': f"payee_{uuid.uuid4().hex[:8]}",
+                    'payee_name': 'Internet Provider',
+                    'account_number': '****2345',
+                    'category': 'Telecom',
+                    'last_payment': datetime.now() - timedelta(days=15),
+                    'avg_amount': Decimal('89.99')
+                },
+                {
+                    'payee_id': f"payee_{uuid.uuid4().hex[:8]}",
+                    'payee_name': 'Auto Insurance',
+                    'account_number': '****6789',
+                    'category': 'Insurance',
+                    'last_payment': datetime.now() - timedelta(days=45),
+                    'avg_amount': Decimal('234.67')
+                }
+            ]
+        except Exception as e:
+            self.logger.error(f"Error getting saved payees: {str(e)}")
+            return []
+    
+    def schedule_bill_payment(self, user_id: int, payment_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Schedule a future bill payment"""
+        try:
+            schedule_id = f"SCH_{uuid.uuid4().hex[:8].upper()}"
+            
+            scheduled_payment = {
+                'schedule_id': schedule_id,
+                'user_id': user_id,
+                'payee_name': payment_data['payee_name'],
+                'amount': Decimal(str(payment_data['amount'])),
+                'category': payment_data['category'],
+                'scheduled_date': payment_data['scheduled_date'],
+                'frequency': payment_data.get('frequency', 'once'),  # once, monthly, quarterly
+                'status': 'Scheduled',
+                'created_at': datetime.now()
+            }
+            
+            self.logger.info(f"Bill payment scheduled: {schedule_id}")
+            return {'success': True, 'schedule_id': schedule_id, 'scheduled_payment': scheduled_payment}
+            
+        except Exception as e:
+            self.logger.error(f"Error scheduling bill payment: {str(e)}")
             return {'success': False, 'error': str(e)}
     
     def get_bill_payment_history(self, user_id: int, limit: int = 20) -> List[Dict[str, Any]]:
@@ -428,6 +547,23 @@ class BankingService:
             self.logger.error(f"Error getting payment history: {str(e)}")
             return []
     
+    def process_payment_gateway_transfer(self, transfer_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Process payment gateway transfer - delegates to payment_gateways module"""
+        try:
+            # Import here to avoid circular imports
+            from modules.services.integrations.payment_gateways.services import PaymentGatewayService
+            gateway_service = PaymentGatewayService()
+            
+            # Delegate to the payment gateways module
+            return gateway_service.process_gateway_transfer(transfer_data)
+            
+        except Exception as e:
+            self.logger.error(f"Payment gateway transfer delegation error: {str(e)}")
+            return {
+                'success': False,
+                'error': str(e)
+            }
+
     def process_payment(self, payment_data: Dict[str, Any]) -> Dict[str, Any]:
         """Process payment transaction"""
         try:

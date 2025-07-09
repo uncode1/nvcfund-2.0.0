@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Branch Management - NVC Banking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f172a !important; color: #e2e8f0 !important; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif !important; margin: 0; padding: 20px; }
+        .dashboard-stat-card { background: #1e293b !important; border: 1px solid #334155 !important; border-radius: 8px !important; padding: 1.5rem; margin-bottom: 1rem; }
+        .card { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+        .btn-primary { background: #3b82f6 !important; border-color: #3b82f6 !important; }
+        .table-dark { background: #1e293b !important; }
+        .table-dark td, .table-dark th { border-color: #334155 !important; color: #e2e8f0 !important; }
+    </style>
+</head>
+<body>
+
+
+<div class="container-fluid p-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-white">
+                <i class="fas fa-building me-2"></i>Enterprise Branch Management
+            </h1>
+            <p class="text-light mb-0">Real-time monitoring and management of all banking locations</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary" onclick="refreshDashboard()">
+                <i class="fas fa-sync-alt me-2"></i>Refresh
+            </button>
+            <button class="btn btn-primary" onclick="exportBranchData()">
+                <i class="fas fa-download me-2"></i>Export
+            </button>
+            <button class="btn btn-success" onclick="addNewBranch()">
+                <i class="fas fa-plus me-2"></i>Add Branch
+            </button>
+        </div>
+    </div>
+
+    <!-- Executive Summary Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="dashboard-stat-card bg-primary-subtle border-primary">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-building text-white"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="stat-value text-primary mb-1">{{ summary_stats.total_branches }}</h3>
+                            <p class="stat-label mb-0">Total Branches</p>
+                            <small class="text-success">
+                                <i class="fas fa-check-circle me-1"></i>{{ summary_stats.active_branches }} Active
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6">
+            <div class="dashboard-stat-card bg-success-subtle border-success">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-users text-white"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="stat-value text-success mb-1">{{ "{:,}".format(summary_stats.total_accounts) }}</h3>
+                            <p class="stat-label mb-0">Total Accounts</p>
+                            <small class="text-light">{{ summary_stats.total_staff }} staff members</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6">
+            <div class="dashboard-stat-card bg-warning-subtle border-warning">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-exchange-alt text-white"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="stat-value text-warning mb-1">{{ "{:,}".format(summary_stats.total_daily_transactions) }}</h3>
+                            <p class="stat-label mb-0">Daily Transactions</p>
+                            <small class="text-success">
+                                <i class="fas fa-arrow-up me-1"></i>+8.4% vs yesterday
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6">
+            <div class="dashboard-stat-card bg-info-subtle border-info">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-info">
+                            <i class="fas fa-dollar-sign text-white"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="stat-value text-info mb-1">${{ "${:,.0f}".format(summary_stats.total_monthly_revenue / 1000) }}K</h3>
+                            <p class="stat-label mb-0">Monthly Revenue</p>
+                            <small class="text-success">
+                                <i class="fas fa-chart-line me-1"></i>+12.3% growth
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Analytics Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-4">
+            <div class="dashboard-stat-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Performance Overview
+                    </h6>
+                    <span class="badge bg-success">{{ summary_stats.avg_customer_satisfaction }}/5.0</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="text-center">
+                                <div class="h4 text-success mb-1">{{ performance_metrics.high_performers }}</div>
+                                <small class="text-light">High Performers</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <div class="h4 text-primary mb-1">{{ "%.1f"|format(performance_metrics.avg_wait_time) }}m</div>
+                                <small class="text-light">Avg Wait Time</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <div class="h4 text-warning mb-1">{{ performance_metrics.security_a_plus }}</div>
+                                <small class="text-light">A+ Security</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <div class="h4 text-success mb-1">{{ performance_metrics.green_certified }}</div>
+                                <small class="text-light">Green Certified</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-4">
+            <div class="dashboard-stat-card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-map-marker-alt me-2"></i>Regional Distribution
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% for region, data in regions.items() %}
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <div class="fw-bold">{{ region }}</div>
+                            <small class="text-light">{{ data.branches }} branches • {{ "{:,}".format(data.accounts) }} accounts</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-success">${{ "${:,.0f}".format(data.revenue / 1000) }}K</div>
+                            <small class="text-light">{{ data.staff }} staff</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-4">
+            <div class="dashboard-stat-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        <i class="fas fa-bell me-2"></i>Branch Alerts
+                    </h6>
+                    <span class="badge bg-warning">{{ branch_alerts|length }}</span>
+                </div>
+                <div class="card-body">
+                    {% for alert in branch_alerts %}
+                    <div class="alert alert-{{ 'danger' if alert.priority == 'High' else 'warning' if alert.priority == 'Medium' else 'info' }} alert-sm mb-2 py-2">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>{{ alert.branch }}</strong>
+                                <div class="small">{{ alert.message }}</div>
+                            </div>
+                            <span class="badge bg-{{ 'danger' if alert.priority == 'High' else 'warning' if alert.priority == 'Medium' else 'primary' }}">
+                                {{ alert.priority }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Branch Directory Table -->
+    <div class="dashboard-stat-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">
+                <i class="fas fa-table me-2"></i>Branch Directory
+            </h6>
+            <div class="d-flex gap-2">
+                <div class="input-group" style="width: 250px;">
+                    <input type="text" class="form-control form-control-sm" placeholder="Search branches..." id="branchSearch">
+                    <button class="btn btn-outline-secondary btn-sm" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <select class="form-select form-select-sm" style="width: 120px;" id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Under Renovation">Renovation</option>
+                </select>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" id="branchTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Branch Information</th>
+                            <th>Manager</th>
+                            <th>Operations</th>
+                            <th>Performance</th>
+                            <th>Security</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for branch in branches_data %}
+                        <tr data-branch-status="{{ branch.status }}">
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="branch-avatar bg-primary-subtle text-primary rounded me-3 p-2">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">{{ branch.name }}</div>
+                                        <div class="text-light small">{{ branch.code }} • {{ branch.address[:50] }}...</div>
+                                        <div class="small">
+                                            <i class="fas fa-phone me-1"></i>{{ branch.phone }}
+                                            <i class="fas fa-clock ms-2 me-1"></i>{{ branch.operational_hours }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">{{ branch.manager }}</div>
+                                <div class="text-light small">{{ branch.assistant_manager }}</div>
+                                <div class="small">
+                                    <i class="fas fa-envelope me-1"></i>{{ branch.email }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row g-2 text-center">
+                                    <div class="col-6">
+                                        <div class="small fw-bold text-primary">{{ "{:,}".format(branch.accounts) }}</div>
+                                        <div class="small text-light">Accounts</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="small fw-bold text-success">{{ "{:,}".format(branch.daily_transactions) }}</div>
+                                        <div class="small text-light">Daily Txns</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="small fw-bold text-warning">{{ branch.staff }}</div>
+                                        <div class="small text-light">Staff</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="small fw-bold text-info">{{ branch.current_queue }}</div>
+                                        <div class="small text-light">Queue</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <div class="fw-bold text-success">{{ branch.customer_satisfaction }}/5.0</div>
+                                    <div class="small text-light mb-1">Satisfaction</div>
+                                    <span class="badge bg-{{ 'success' if branch.performance_rating in ['Excellent', 'Outstanding'] else 'warning' if branch.performance_rating == 'Very Good' else 'secondary' }}">
+                                        {{ branch.performance_rating }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <span class="badge bg-{{ 'success' if 'A+' in branch.security_level else 'primary' if 'A' in branch.security_level else 'warning' }}">
+                                        {{ branch.security_level }}
+                                    </span>
+                                    <div class="small text-light mt-1">{{ branch.compliance_score }}% Compliance</div>
+                                    <div class="small">
+                                        <i class="fas fa-shield-alt text-{{ 'success' if branch.compliance_score > 97 else 'warning' }}"></i>
+                                        {{ branch.atm_count }} ATMs
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if branch.status == 'Active' else 'warning' if branch.status == 'Under Renovation' else 'secondary' }}">
+                                    {{ branch.status }}
+                                </span>
+                                {% if branch.status == 'Under Renovation' %}
+                                <div class="small text-light mt-1">
+                                    <i class="fas fa-tools me-1"></i>{{ branch.renovation_completion }}
+                                </div>
+                                {% else %}
+                                <div class="small text-light mt-1">
+                                    <i class="fas fa-clock me-1"></i>{{ branch.average_wait_time }}
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group-vertical btn-group-sm">
+                                    <button class="btn btn-outline-primary btn-sm" onclick="viewBranchDetails({{ branch.id }})">
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="editBranch({{ branch.id }})">
+                                        <i class="fas fa-edit me-1"></i>Edit
+                                    </button>
+                                    <button class="btn btn-outline-info btn-sm" onclick="branchAnalytics({{ branch.id }})">
+                                        <i class="fas fa-chart-line me-1"></i>Analytics
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="row g-4 mt-4">
+        <div class="col-12">
+            <div class="dashboard-stat-card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-history me-2"></i>Recent Branch Activities
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for activity in recent_activities %}
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="activity-card border rounded p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-{{ 'success' if activity.type == 'Transaction' else 'primary' if activity.type == 'Account' else 'warning' if activity.type == 'Maintenance' else 'info' }}">
+                                        {{ activity.type }}
+                                    </span>
+                                    <small class="text-light">{{ activity.timestamp.strftime('%H:%M') }}</small>
+                                </div>
+                                <div class="fw-bold mb-1">{{ activity.branch }}</div>
+                                <div class="small text-light mb-2">{{ activity.activity }}</div>
+                                {% if activity.get('amount') %}
+                                <div class="text-success fw-bold">{{ activity.amount }}</div>
+                                {% endif %}
+                                {% if activity.get('details') %}
+                                <div class="small text-light">{{ activity.details }}</div>
+                                {% endif %}
+                                <span class="badge bg-{{ 'success' if activity.status == 'Completed' else 'warning' if activity.status == 'In Progress' else 'primary' }}">
+                                    {{ activity.status }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.branch-avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.activity-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: transform 0.2s ease;
+}
+
+.activity-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.dashboard-stat-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+}
+
+.dashboard-stat-card .card-header {
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid #334155;
+    color: #f1f5f9;
+}
+
+.table-dark {
+    --bs-table-bg: #0f172a;
+    --bs-table-color: #f1f5f9;
+}
+
+.table-hover tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #e2e8f0;
+}
+</style>
+
+<script>
+// Branch Management JavaScript Functions
+function refreshDashboard() {
+    location.reload();
+}
+
+function exportBranchData() {
+    // Simulate export functionality
+    const data = {
+        timestamp: new Date().toISOString(),
+        branches: {{ branches_data|tojson }},
+        summary: {{ summary_stats|tojson }}
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `branch_data_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification('Branch data exported successfully', 'success');
+}
+
+function addNewBranch() {
+    showNotification('New branch creation form would open here', 'info');
+}
+
+function viewBranchDetails(branchId) {
+    showNotification(`Opening detailed view for branch ${branchId}`, 'info');
+}
+
+function editBranch(branchId) {
+    showNotification(`Opening edit form for branch ${branchId}`, 'info');
+}
+
+function branchAnalytics(branchId) {
+    showNotification(`Opening analytics dashboard for branch ${branchId}`, 'info');
+}
+
+// Search and Filter Functions
+document.getElementById('branchSearch').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const table = document.getElementById('branchTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    
+    for (let row of rows) {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    }
+});
+
+document.getElementById('statusFilter').addEventListener('change', function() {
+    const filterValue = this.value;
+    const table = document.getElementById('branchTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    
+    for (let row of rows) {
+        const status = row.getAttribute('data-branch-status');
+        row.style.display = !filterValue || status === filterValue ? '' : 'none';
+    }
+});
+
+function showNotification(message, type) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
+
+// Auto-refresh functionality
+setInterval(() => {
+    // Update timestamp
+    const timestampElements = document.querySelectorAll('.timestamp');
+    timestampElements.forEach(el => {
+        const timestamp = new Date().toLocaleTimeString();
+        el.textContent = timestamp;
+    });
+}, 30000); // Update every 30 seconds
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

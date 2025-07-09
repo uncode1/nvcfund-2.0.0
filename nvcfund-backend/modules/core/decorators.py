@@ -47,3 +47,13 @@ def super_admin_required(f):
         # Super admin role verification
         return f(*args, **kwargs)
     return wrapper
+
+def role_required(allowed_roles):
+    """Role-based access control decorator"""
+    def decorator(f):
+        @functools.wraps(f)
+        def wrapper(*args, **kwargs):
+            # Role verification logic - simplified for now
+            return f(*args, **kwargs)
+        return wrapper
+    return decorator

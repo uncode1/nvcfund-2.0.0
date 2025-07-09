@@ -39,8 +39,11 @@ class Config:
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = 3600
     
-    # CORS
-    CORS_ORIGINS = ["http://localhost:3000", "https://*.replit.dev"]
+    # CORS - Environment configurable
+    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
+    
+    # Proxy configuration
+    BEHIND_PROXY = os.environ.get('BEHIND_PROXY', 'false').lower() == 'true'
     
     # File Upload
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
@@ -155,6 +158,43 @@ class ProductionConfig(Config):
     
     DEBUG = False
     TESTING = False
+    
+    # Production database URI - will be validated at runtime
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://user:pass@localhost/nvc_banking_prod')
+    
+    # Enable proxy fix in production (typically behind nginx/apache)
+    BEHIND_PROXY = True
+    
+    # Enhanced security settings
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    
+    # Shorter session timeout for production
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=15)
+    
+    # Rate limiting - more restrictive in production
+    RATELIMIT_DEFAULT = '100 per hour'
+    
+    # Logging
+    LOG_LEVEL = 'INFO'
+    
+    # CORS - more restrictive in production (should be set via environment)
+    CORS_ORIGINS = []
+    
+    # SSL/TLS
+    PREFERRED_URL_SCHEME = 'https'
+    
+    @classmethod
+    def validate_production_requirements(cls):
+        """Validate required environment variables for production"""
+        required_vars = ['SECRET_KEY', 'DATABASE_URL']
+        missing_vars = [var for var in required_vars if not os.environ.get(var)]
+        
+        if missing_vars:
+            raise ValueError(
+                f"Production requires the following environment variables: {', '.join(missing_vars)}"
+            )
     
     # Database - Use PostgreSQL for production
     SQLALCHEMY_DATABASE_URI = os.environ.get(

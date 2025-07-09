@@ -9,22 +9,28 @@ from datetime import datetime
 import logging
 
 from modules.core.decorators import admin_required, super_admin_required
-from modules.core.security_enforcement import secure_banking_route
 from .services import SecurityCenterService
 
 logger = logging.getLogger(__name__)
 
-# Create blueprint with template support
+# Create blueprint with hyphenated URL for professional banking appearance
 security_center_bp = Blueprint('security_center', __name__, url_prefix='/security-center')
+
+# Create legacy redirect blueprint for hyphenated URL
+security_center_hyphen_bp = Blueprint('security_center_hyphen', __name__, url_prefix='/security-center')
+
+# Create legacy redirect blueprint for underscored URL
+security_center_underscore_bp = Blueprint('security_center_underscore', __name__, url_prefix='/security_center')
 security_service = SecurityCenterService()
 
 # Dashboard Routes
 
 @security_center_bp.route('/')
 @security_center_bp.route('/dashboard')
+@security_center_underscore_bp.route('/')
+@security_center_underscore_bp.route('/dashboard')
 @login_required
 @admin_required
-@secure_banking_route()
 def security_dashboard():
     """Main security center dashboard with real-time threat monitoring"""
     try:
@@ -51,7 +57,7 @@ def security_dashboard():
 @security_center_bp.route('/threat-monitoring')
 @login_required
 @admin_required  
-@secure_banking_route()
+
 def threat_monitoring():
     """Threat monitoring dashboard"""
     try:
@@ -77,7 +83,7 @@ def threat_monitoring():
 @security_center_bp.route('/incident-response')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def incident_response_dropdown():
     """Incident response dashboard"""
     try:
@@ -104,7 +110,7 @@ def incident_response_dropdown():
 @security_center_bp.route('/')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def security_dashboard_new():
     """Security center main dashboard"""
     try:
@@ -124,7 +130,7 @@ def security_dashboard_new():
 @security_center_bp.route('/investigation')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def investigation_tools():
     """Security investigation tools"""
     try:
@@ -144,7 +150,7 @@ def investigation_tools():
 @security_center_bp.route('/api/dashboard')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_security_dashboard():
     """Get security dashboard data via API for real-time updates"""
     try:
@@ -171,7 +177,7 @@ def api_security_dashboard():
 @security_center_bp.route('/threats/detailed-analysis')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def threats_detailed_analysis():
     """Detailed threat analysis with real-time intelligence"""
     try:
@@ -198,7 +204,7 @@ def threats_detailed_analysis():
 @security_center_bp.route('/incidents/management')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def incidents_management():
     """Security incidents management with response workflows"""
     try:
@@ -225,7 +231,7 @@ def incidents_management():
 @security_center_bp.route('/blocked-attacks/analysis')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def blocked_attacks_analysis():
     """Blocked attacks analysis with attack vectors and patterns"""
     try:
@@ -252,7 +258,7 @@ def blocked_attacks_analysis():
 @security_center_bp.route('/vulnerabilities/assessment')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def vulnerabilities_assessment():
     """Comprehensive vulnerability assessment and remediation tracking"""
     try:
@@ -279,7 +285,7 @@ def vulnerabilities_assessment():
 @security_center_bp.route('/intrusions/detection')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def intrusions_detection():
     """Intrusion detection system monitoring and analysis"""
     try:
@@ -306,7 +312,7 @@ def intrusions_detection():
 @security_center_bp.route('/compliance/monitoring')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def compliance_monitoring():
     """Security compliance monitoring and reporting"""
     try:
@@ -333,7 +339,7 @@ def compliance_monitoring():
 @security_center_bp.route('/systems/<system_id>/monitor')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def system_monitor(system_id):
     """Individual security system monitoring with real-time metrics"""
     try:
@@ -362,7 +368,7 @@ def system_monitor(system_id):
 @security_center_bp.route('/threats/<threat_id>/investigate')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def threat_investigation(threat_id):
     """Individual threat investigation with forensics and remediation"""
     try:
@@ -391,7 +397,7 @@ def threat_investigation(threat_id):
 @security_center_bp.route('/incidents/<incident_id>/response')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def incident_response(incident_id):
     """Individual incident response management with timeline and actions"""
     try:
@@ -420,7 +426,7 @@ def incident_response(incident_id):
 @security_center_bp.route('/api/threat-intelligence')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_threat_intelligence():
     """Get threat intelligence data via API"""
     try:
@@ -445,7 +451,7 @@ def api_threat_intelligence():
 @security_center_bp.route('/api/intrusion-detection')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_intrusion_detection():
     """Get intrusion detection data via API"""
     try:
@@ -470,7 +476,7 @@ def api_intrusion_detection():
 @security_center_bp.route('/api/incident-response')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_incident_response():
     """Get incident response data via API"""
     try:
@@ -495,7 +501,7 @@ def api_incident_response():
 @security_center_bp.route('/api/incidents', methods=['POST'])
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_create_incident():
     """Create new security incident via API"""
     try:
@@ -533,7 +539,7 @@ def api_create_incident():
 @security_center_bp.route('/api/compliance-monitoring')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_compliance_monitoring():
     """Get compliance monitoring data via API"""
     try:
@@ -558,7 +564,7 @@ def api_compliance_monitoring():
 @security_center_bp.route('/api/waf')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_waf():
     """Get Web Application Firewall data via API"""
     try:
@@ -583,7 +589,7 @@ def api_waf():
 @security_center_bp.route('/api/waf/rules', methods=['PUT'])
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_update_waf_rules():
     """Update WAF rules via API"""
     try:
@@ -621,7 +627,7 @@ def api_update_waf_rules():
 @security_center_bp.route('/api/network-security')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_network_security():
     """Get network security data via API"""
     try:
@@ -646,7 +652,7 @@ def api_network_security():
 @security_center_bp.route('/api/vulnerability-assessment')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_vulnerability_assessment():
     """Get vulnerability assessment data via API"""
     try:
@@ -671,7 +677,7 @@ def api_vulnerability_assessment():
 @security_center_bp.route('/api/security-policies')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_security_policies():
     """Get security policies data via API"""
     try:
@@ -698,7 +704,7 @@ def api_security_policies():
 @security_center_bp.route('/key-management')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def key_management():
     """Cryptographic key management dashboard"""
     try:
@@ -725,7 +731,7 @@ def key_management():
 @security_center_bp.route('/api-keys')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def api_keys():
     """API key management and rotation dashboard"""
     try:
@@ -752,7 +758,7 @@ def api_keys():
 @security_center_bp.route('/firewall-management')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def firewall_management():
     """Firewall configuration and management dashboard"""
     try:
@@ -779,7 +785,7 @@ def firewall_management():
 @security_center_bp.route('/security-settings')
 @login_required
 @admin_required
-@secure_banking_route()
+
 def security_settings():
     """Security settings and configuration panel"""
     try:
@@ -808,7 +814,7 @@ def security_settings():
 @security_center_bp.route('/rotate-key/<key_name>', methods=['POST'])
 @login_required
 @admin_required
-@secure_banking_route()
+
 def rotate_key(key_name):
     """Rotate a specific cryptographic key"""
     try:
@@ -842,7 +848,7 @@ def rotate_key(key_name):
 @security_center_bp.route('/generate-api-key', methods=['POST'])
 @login_required
 @admin_required
-@secure_banking_route()
+
 def generate_api_key():
     """Generate new API key"""
     try:
@@ -977,3 +983,47 @@ def health():
             'error': str(e),
             'timestamp': datetime.utcnow().isoformat()
         }), 500
+
+# Drill-down routes for detailed views
+@security_center_bp.route('/threats/analysis')
+@login_required
+@admin_required
+
+def threats_analysis():
+    """Threat analysis drill-down view"""
+    try:
+        return render_template('security_center/threats_analysis.html',
+                             user=current_user,
+                             page_title='Threat Analysis')
+    except Exception as e:
+        logger.error(f"Threats analysis error: {e}")
+        return redirect(url_for('security_center.security_dashboard'))
+
+@security_center_bp.route('/incidents/management')
+@security_center_bp.route('/access/monitoring')
+@login_required
+@admin_required
+
+def access_monitoring():
+    """Access monitoring drill-down view"""
+    try:
+        return render_template('security_center/access_monitoring.html',
+                             user=current_user,
+                             page_title='Access Monitoring')
+    except Exception as e:
+        logger.error(f"Access monitoring error: {e}")
+        return redirect(url_for('security_center.security_dashboard'))
+
+@security_center_bp.route('/compliance/audit')
+@login_required
+@admin_required
+
+def compliance_audit():
+    """Compliance audit drill-down view"""
+    try:
+        return render_template('security_center/compliance_audit.html',
+                             user=current_user,
+                             page_title='Compliance Audit')
+    except Exception as e:
+        logger.error(f"Compliance audit error: {e}")
+        return redirect(url_for('security_center.security_dashboard'))

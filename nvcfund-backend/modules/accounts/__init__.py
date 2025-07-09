@@ -8,3 +8,7 @@ This module provides:
 - Account balance and transaction tracking
 - Multi-currency account support
 """
+
+from .routes import accounts_bp
+
+__all__ = ['accounts_bp']
